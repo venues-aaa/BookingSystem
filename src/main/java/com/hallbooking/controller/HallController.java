@@ -7,9 +7,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,12 +30,17 @@ public class HallController {
             @RequestParam(required = false) Integer capacity,
             @RequestParam(required = false) String location,
             @RequestParam(required = false) String amenities,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDateTime,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDateTime,
             @RequestParam(defaultValue = "id") String sortBy) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).ascending());
         Page<HallResponse> halls;
 
-        if (capacity != null || location != null || amenities != null) {
+        // If date range is provided, use availability search
+        if (startDateTime != null && endDateTime != null) {
+            halls = hallService.searchHallsWithAvailability(capacity, location, amenities, startDateTime, endDateTime, pageable);
+        } else if (capacity != null || location != null || amenities != null) {
             halls = hallService.searchHalls(capacity, location, amenities, pageable);
         } else {
             halls = hallService.getAllHalls(pageable);

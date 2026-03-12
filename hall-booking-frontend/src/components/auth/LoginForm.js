@@ -154,6 +154,9 @@ const LoginForm = () => {
                 <p style={{ fontSize: '12px', margin: '5px 0', color: '#707079' }}>
                   <strong>Admin:</strong> admin / admin123
                 </p>
+                <p style={{ fontSize: '12px', margin: '5px 0', color: '#707079' }}>
+                  <strong>Vendor:</strong> vendor / vendor123
+                </p>
               </div>
             </div>
           </div>

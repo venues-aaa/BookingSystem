@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+//@Component  // Disabled temporarily - requires MongoDB
 public class UserDaoImpl implements UserDao {
 
 	@Autowired

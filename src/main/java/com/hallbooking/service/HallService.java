@@ -4,11 +4,15 @@ import com.hallbooking.dto.request.CreateHallRequest;
 import com.hallbooking.dto.request.UpdateHallRequest;
 import com.hallbooking.dto.response.HallResponse;
 import com.hallbooking.entity.Hall;
+import com.hallbooking.entity.User;
 import com.hallbooking.dao.impl.HallRepository;
+import com.hallbooking.dao.impl.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class HallService {
@@ -16,7 +20,13 @@ public class HallService {
     @Autowired
     private HallRepository hallRepository;
 
-    public Hall createHall(CreateHallRequest request) {
+    @Autowired
+    private UserRepository userRepository;
+
+    public Hall createHall(CreateHallRequest request, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
         Hall hall = new Hall();
         hall.setName(request.getName());
         hall.setDescription(request.getDescription());
@@ -26,6 +36,7 @@ public class HallService {
         hall.setAmenities(request.getAmenities());
         hall.setImageUrl(request.getImageUrl());
         hall.setIsActive(true);
+        hall.setCreatedBy(user);
 
         return hallRepository.save(hall);
     }
@@ -52,6 +63,13 @@ public class HallService {
         hallRepository.delete(hall);
     }
 
+    public Hall toggleHallStatus(Long id) {
+        Hall hall = hallRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Hall not found with id: " + id));
+        hall.setIsActive(!hall.getIsActive());
+        return hallRepository.save(hall);
+    }
+
     public HallResponse getHallById(Long id) {
         Hall hall = hallRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Hall not found with id: " + id));
@@ -68,6 +86,24 @@ public class HallService {
                 .map(this::mapToHallResponse);
     }
 
+    public Page<HallResponse> searchHallsWithAvailability(Integer capacity, String location, String amenities,
+                                                          LocalDateTime startDateTime, LocalDateTime endDateTime,
+                                                          Pageable pageable) {
+        return hallRepository.searchHallsWithAvailability(capacity, location, amenities, startDateTime, endDateTime, pageable)
+                .map(this::mapToHallResponse);
+    }
+
+    public Page<HallResponse> getHallsByVendor(Long vendorId, Pageable pageable) {
+        return hallRepository.findByCreatedById(vendorId, pageable)
+                .map(this::mapToHallResponse);
+    }
+
+    public Page<HallResponse> adminSearchHalls(String name, Integer capacity, String location,
+                                               Long createdById, Boolean isActive, Pageable pageable) {
+        return hallRepository.adminSearchHalls(name, capacity, location, createdById, isActive, pageable)
+                .map(this::mapToHallResponse);
+    }
+
     private HallResponse mapToHallResponse(Hall hall) {
         return new HallResponse(
                 hall.getId(),
@@ -79,6 +115,7 @@ public class HallService {
                 hall.getAmenities(),
                 hall.getImageUrl(),
                 hall.getIsActive(),
+                hall.getCreatedBy() != null ? hall.getCreatedBy().getId() : null,
                 hall.getCreatedAt(),
                 hall.getUpdatedAt()
         );

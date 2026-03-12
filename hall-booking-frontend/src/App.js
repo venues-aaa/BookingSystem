@@ -13,6 +13,9 @@ import BookingPage from './pages/BookingPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageHallsPage from './pages/admin/ManageHallsPage';
+import ManageUsersPage from './pages/admin/ManageUsersPage';
+import VendorDashboard from './pages/vendor/VendorDashboard';
+import VendorManageHallsPage from './pages/vendor/VendorManageHallsPage';
 
 function App() {
   return (
@@ -60,6 +63,32 @@ function App() {
               element={
                 <ProtectedRoute adminOnly={true}>
                   <ManageHallsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/users"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <ManageUsersPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Vendor Routes */}
+            <Route
+              path="/vendor"
+              element={
+                <ProtectedRoute vendorOnly={true}>
+                  <VendorDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vendor/halls"
+              element={
+                <ProtectedRoute vendorOnly={true}>
+                  <VendorManageHallsPage />
                 </ProtectedRoute>
               }
             />

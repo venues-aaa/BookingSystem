@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.UUID;
 
-@Component
+//@Component  // Disabled temporarily - requires MongoDB
 public class UserDetailsProcessor {
 
 	@Autowired

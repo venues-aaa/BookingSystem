@@ -324,47 +324,45 @@ const AdminDashboard = () => {
             </div>
 
             <div className="col-lg-4 col-md-6">
-              <div style={{
-                background: '#ffffff',
-                boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
-                padding: '40px 30px',
-                textAlign: 'center',
-                transition: 'all 0.3s',
-                marginBottom: '30px',
-                borderTop: '4px solid #f093fb',
-                cursor: 'pointer',
-                opacity: 0.7
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.15)';
-                e.currentTarget.style.transform = 'translateY(-5px)';
-                e.currentTarget.style.opacity = '1';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 5px 20px rgba(0,0,0,0.08)';
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.opacity = '0.7';
-              }}
-              >
+              <Link to="/admin/users" style={{ textDecoration: 'none' }}>
                 <div style={{
-                  width: '80px',
-                  height: '80px',
-                  background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 25px',
-                  fontSize: '32px'
-                }}>
-                  <i className="fa fa-users-cog" style={{ color: '#ffffff' }}></i>
+                  background: '#ffffff',
+                  boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
+                  padding: '40px 30px',
+                  textAlign: 'center',
+                  transition: 'all 0.3s',
+                  marginBottom: '30px',
+                  borderTop: '4px solid #f093fb',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 10px 40px rgba(0,0,0,0.15)';
+                  e.currentTarget.style.transform = 'translateY(-5px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 5px 20px rgba(0,0,0,0.08)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+                >
+                  <div style={{
+                    width: '80px',
+                    height: '80px',
+                    background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 25px',
+                    fontSize: '32px'
+                  }}>
+                    <i className="fa fa-users-cog" style={{ color: '#ffffff' }}></i>
+                  </div>
+                  <h4 style={{ fontSize: '22px', marginBottom: '15px', color: '#19191a' }}>Manage Users</h4>
+                  <p style={{ color: '#707079', fontSize: '14px', lineHeight: '1.6' }}>
+                    Create, edit, and delete user accounts. Manage roles and permissions.
+                  </p>
                 </div>
-                <h4 style={{ fontSize: '22px', marginBottom: '15px', color: '#19191a' }}>Manage Users</h4>
-                <p style={{ color: '#707079', fontSize: '14px', lineHeight: '1.6' }}>
-                  View user accounts, manage permissions, and monitor activity.
-                </p>
-                <span style={{ fontSize: '12px', color: '#999', fontStyle: 'italic' }}>(Coming Soon)</span>
-              </div>
+              </Link>
             </div>
           </div>
         </div>

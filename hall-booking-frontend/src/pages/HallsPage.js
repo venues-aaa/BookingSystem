@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { getHalls } from '../services/hallService';
 import HallList from '../components/hall/HallList';
 import HallSearch from '../components/hall/HallSearch';
@@ -10,6 +10,23 @@ const HallsPage = () => {
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [filters, setFilters] = useState({});
+  const location = useLocation();
+
+  // Initialize filters from URL query parameters
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const initialFilters = {};
+
+    if (searchParams.get('capacity')) initialFilters.capacity = searchParams.get('capacity');
+    if (searchParams.get('location')) initialFilters.location = searchParams.get('location');
+    if (searchParams.get('amenities')) initialFilters.amenities = searchParams.get('amenities');
+    if (searchParams.get('startDateTime')) initialFilters.startDateTime = searchParams.get('startDateTime');
+    if (searchParams.get('endDateTime')) initialFilters.endDateTime = searchParams.get('endDateTime');
+
+    if (Object.keys(initialFilters).length > 0) {
+      setFilters(initialFilters);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     fetchHalls();
@@ -66,7 +83,7 @@ const HallsPage = () => {
           {/* Search Filters */}
           <div className="row" style={{ marginBottom: '50px' }}>
             <div className="col-lg-12">
-              <HallSearch onSearch={handleSearch} />
+              <HallSearch onSearch={handleSearch} initialFilters={filters} />
             </div>
           </div>
 

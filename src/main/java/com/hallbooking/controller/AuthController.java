@@ -2,6 +2,7 @@ package com.hallbooking.controller;
 
 import com.hallbooking.dto.request.LoginRequest;
 import com.hallbooking.dto.request.RegisterRequest;
+import com.hallbooking.dto.request.VerifyOtpRequest;
 import com.hallbooking.dto.response.AuthResponse;
 import com.hallbooking.dto.response.UserResponse;
 import com.hallbooking.model.User;
@@ -27,30 +28,48 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @Autowired
-    private UserDetailsProcessor userDetailsProcessor;
+    // @Autowired
+    // private UserDetailsProcessor userDetailsProcessor;  // MongoDB-based - disabled
 
-    @PostMapping(value = "/create", consumes = "application/json")
-    public ResponseEntity<Map<String, Object>> createUser(@RequestBody RegisterRequest request) {
-        com.hallbooking.model.User user = ObjectMapper.mapDtoToUser(request);
-        userDetailsProcessor.createUser(user);
+    @PostMapping(value = "/register", consumes = "application/json")
+    public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody RegisterRequest request) {
+        String otp = authService.initiateRegistration(request);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "User registered successfully");
+        response.put("message", "OTP sent to your phone number");
+        response.put("phoneNumber", request.getPhoneNumber());
+        // For development only - remove in production
+        response.put("otp", otp);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping(value = "/verify-otp", consumes = "application/json")
+    public ResponseEntity<Map<String, Object>> verifyOtp(@Valid @RequestBody VerifyOtpRequest request) {
+        authService.completeRegistration(request.getPhoneNumber(), request.getOtp());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Registration completed successfully. You can now login.");
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /*@PostMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
-    }*/
+    }
 
     @PostMapping(value = "/validateUser")
-    public ResponseEntity<com.hallbooking.model.User> validateUser(@RequestBody com.hallbooking.model.User user) {
+    public ResponseEntity<AuthResponse> validateUser(@RequestBody Map<String, String> credentials) {
+        // Support old frontend format with "emailId" field
+        String usernameOrEmail = credentials.getOrDefault("emailId", credentials.get("usernameOrEmail"));
+        String password = credentials.get("password");
 
-        User userDetails = userDetailsProcessor.validateUserDetails(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDetails);
+        LoginRequest request = new LoginRequest();
+        request.setUsernameOrEmail(usernameOrEmail);
+        request.setPassword(password);
+
+        AuthResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/me")

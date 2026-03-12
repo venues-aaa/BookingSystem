@@ -52,6 +52,10 @@ export const AuthProvider = ({ children }) => {
     return user?.role === 'ADMIN';
   };
 
+  const isVendor = () => {
+    return user?.role === 'VENDOR';
+  };
+
   const value = {
     user,
     token,
@@ -60,6 +64,7 @@ export const AuthProvider = ({ children }) => {
     loading,
     isAuthenticated: !!token,
     isAdmin,
+    isVendor,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

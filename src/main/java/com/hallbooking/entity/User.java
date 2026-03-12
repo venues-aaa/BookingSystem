@@ -34,6 +34,9 @@ public class User {
     @NotBlank(message = "Email is required")
     private String email;
 
+    @Column(unique = true)
+    private String phoneNumber;
+
     @Column(nullable = false)
     @NotBlank(message = "Password is required")
     @JsonIgnore
@@ -46,6 +49,17 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USER;
+
+    @Column(nullable = false)
+    private Boolean isActive = true;
+
+    @Column(nullable = false)
+    private Boolean isVerified = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    @JsonIgnore
+    private User createdBy;
 
     @CreationTimestamp
     @Column(updatable = false)

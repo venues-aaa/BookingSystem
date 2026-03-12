@@ -50,6 +50,11 @@ public class Hall {
     @Column(nullable = false)
     private Boolean isActive = true;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "created_by")
+    @JsonIgnore
+    private User createdBy;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;

@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
-  const { isAuthenticated, user, logout, isAdmin } = useAuth();
+  const { isAuthenticated, user, logout, isAdmin, isVendor } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -146,11 +146,13 @@ const Navbar = () => {
 
                 {isAuthenticated ? (
                   <>
-                    <li>
-                      <Link to="/my-bookings" className={isActive('/my-bookings')}>
-                        MY BOOKINGS
-                      </Link>
-                    </li>
+                    {!isAdmin() && !isVendor() && (
+                      <li>
+                        <Link to="/my-bookings" className={isActive('/my-bookings')}>
+                          MY BOOKINGS
+                        </Link>
+                      </li>
+                    )}
 
                     {isAdmin() ? (
                       <li className="header__menu__dropdown">
@@ -164,6 +166,27 @@ const Navbar = () => {
                             </li>
                             <li>
                               <Link to="/admin/halls">Manage Halls</Link>
+                            </li>
+                            <li>
+                              <a href="#!" onClick={handleLogout}>
+                                <i className="fa fa-sign-out-alt"></i> Logout
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                    ) : isVendor() ? (
+                      <li className="header__menu__dropdown">
+                        <a href="#!">
+                          VENDOR
+                        </a>
+                        <div className="dropdown__menu">
+                          <ul>
+                            <li>
+                              <Link to="/vendor">Dashboard</Link>
+                            </li>
+                            <li>
+                              <Link to="/vendor/halls">My Halls</Link>
                             </li>
                             <li>
                               <a href="#!" onClick={handleLogout}>

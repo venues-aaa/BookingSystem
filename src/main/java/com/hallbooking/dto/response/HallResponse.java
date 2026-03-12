@@ -20,6 +20,7 @@ public class HallResponse {
     private String amenities;
     private String imageUrl;
     private Boolean isActive;
+    private Long createdById;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

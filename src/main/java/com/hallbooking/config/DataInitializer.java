@@ -45,12 +45,26 @@ public class DataInitializer implements CommandLineRunner {
             user.setRole(Role.USER);
             userRepository.save(user);
 
+            User vendor = new User();
+            vendor.setUsername("vendor");
+            vendor.setEmail("vendor@hallbooking.com");
+            vendor.setPassword(passwordEncoder.encode("vendor123"));
+            vendor.setFirstName("Vendor");
+            vendor.setLastName("Smith");
+            vendor.setRole(Role.VENDOR);
+            userRepository.save(vendor);
+
             System.out.println("Sample users created:");
             System.out.println("Admin - Username: admin, Password: admin123");
             System.out.println("User - Username: john, Password: password123");
+            System.out.println("Vendor - Username: vendor, Password: vendor123");
         }
 
         if (hallRepository.count() == 0) {
+            // Get admin and vendor users
+            User adminUser = userRepository.findByUsername("admin").orElse(null);
+            User vendorUser = userRepository.findByUsername("vendor").orElse(null);
+
             Hall hall1 = new Hall();
             hall1.setName("Grand Conference Hall");
             hall1.setDescription("Large conference hall perfect for corporate events and seminars");
@@ -60,6 +74,7 @@ public class DataInitializer implements CommandLineRunner {
             hall1.setAmenities("Projector, Sound System, WiFi, Air Conditioning, Whiteboard");
             hall1.setImageUrl("https://images.unsplash.com/photo-1540575467063-178a50c2df87");
             hall1.setIsActive(true);
+            hall1.setCreatedBy(adminUser);
             hallRepository.save(hall1);
 
             Hall hall2 = new Hall();
@@ -71,6 +86,7 @@ public class DataInitializer implements CommandLineRunner {
             hall2.setAmenities("Video Conferencing, WiFi, Coffee Machine, Whiteboard");
             hall2.setImageUrl("https://images.unsplash.com/photo-1497366216548-37526070297c");
             hall2.setIsActive(true);
+            hall2.setCreatedBy(vendorUser);
             hallRepository.save(hall2);
 
             Hall hall3 = new Hall();
@@ -82,6 +98,7 @@ public class DataInitializer implements CommandLineRunner {
             hall3.setAmenities("Stage, Sound System, Lighting, Catering Area, Parking");
             hall3.setImageUrl("https://images.unsplash.com/photo-1464366400600-7168b8af9bc3");
             hall3.setIsActive(true);
+            hall3.setCreatedBy(vendorUser);
             hallRepository.save(hall3);
 
             Hall hall4 = new Hall();
@@ -93,9 +110,10 @@ public class DataInitializer implements CommandLineRunner {
             hall4.setAmenities("Projector, WiFi, Movable Chairs, Whiteboard");
             hall4.setImageUrl("https://images.unsplash.com/photo-1524758631624-e2822e304c36");
             hall4.setIsActive(true);
+            hall4.setCreatedBy(adminUser);
             hallRepository.save(hall4);
 
-            System.out.println("Sample halls created: 4 halls");
+            System.out.println("Sample halls created: 4 halls (2 by admin, 2 by vendor)");
         }
     }
 }

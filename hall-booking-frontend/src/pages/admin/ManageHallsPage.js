@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getHalls, createHall, updateHall, deleteHall } from '../../services/hallService';
+import { createHall, updateHall } from '../../services/hallService';
+import { toggleHallStatus, getAdminHalls, getAllUsers } from '../../services/adminService';
 
 const ManageHallsPage = () => {
   const [halls, setHalls] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingHall, setEditingHall] = useState(null);
@@ -17,14 +19,51 @@ const ManageHallsPage = () => {
     imageUrl: '',
   });
 
+  const [filters, setFilters] = useState({
+    name: '',
+    capacity: '',
+    location: '',
+    createdById: '',
+    isActive: '',
+  });
+
+  const [sorting, setSorting] = useState({
+    sortBy: 'id',
+    sortDirection: 'asc',
+  });
+
   useEffect(() => {
     fetchHalls();
-  }, []);
+    fetchUsers();
+  }, [filters, sorting]);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await getAllUsers({ page: 0, size: 1000 });
+      setUsers(response.users || []);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+    }
+  };
 
   const fetchHalls = async () => {
     setLoading(true);
     try {
-      const response = await getHalls({ page: 0, size: 100 });
+      const params = {
+        page: 0,
+        size: 1000,
+        ...filters,
+        ...sorting,
+      };
+
+      // Remove empty filters
+      Object.keys(params).forEach(key => {
+        if (params[key] === '' || params[key] === null) {
+          delete params[key];
+        }
+      });
+
+      const response = await getAdminHalls(params);
       setHalls(response.halls);
     } catch (error) {
       console.error('Failed to fetch halls:', error);
@@ -82,17 +121,48 @@ const ManageHallsPage = () => {
     setShowForm(true);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this hall?')) return;
+  const handleToggleStatus = async (id, currentStatus) => {
+    const action = currentStatus ? 'deactivate' : 'activate';
+    if (!window.confirm(`Are you sure you want to ${action} this hall?`)) return;
 
     try {
-      await deleteHall(id);
-      alert('Hall deleted successfully');
+      const response = await toggleHallStatus(id);
+      alert(response.message || `Hall ${action}d successfully`);
       fetchHalls();
     } catch (error) {
-      console.error('Failed to delete hall:', error);
-      alert('Failed to delete hall');
+      console.error('Failed to toggle hall status:', error);
+      alert(`Failed to ${action} hall`);
     }
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({
+      ...filters,
+      [name]: value,
+    });
+  };
+
+  const handleSort = (field) => {
+    setSorting({
+      sortBy: field,
+      sortDirection: sorting.sortBy === field && sorting.sortDirection === 'asc' ? 'desc' : 'asc',
+    });
+  };
+
+  const resetFilters = () => {
+    setFilters({
+      name: '',
+      capacity: '',
+      location: '',
+      createdById: '',
+      isActive: '',
+    });
+  };
+
+  const getUserName = (userId) => {
+    const user = users.find(u => u.id === userId);
+    return user ? `${user.username} (${user.role})` : 'Unknown';
   };
 
   const resetForm = () => {
@@ -289,6 +359,107 @@ const ManageHallsPage = () => {
             </div>
           )}
 
+          {/* Filter Controls */}
+          {!showForm && (
+            <div className="row mb-4">
+              <div className="col-lg-12">
+                <div style={{
+                  background: '#ffffff',
+                  padding: '25px',
+                  boxShadow: '0 5px 20px rgba(0,0,0,0.08)',
+                  marginBottom: '20px'
+                }}>
+                  <h4 style={{ marginBottom: '20px', color: '#19191a' }}>
+                    <i className="fa fa-filter" style={{ marginRight: '10px', color: '#dfa974' }}></i>
+                    Filter & Sort Halls
+                  </h4>
+                  <div className="row">
+                    <div className="col-md-4 mb-3">
+                      <label style={{ fontSize: '13px', fontWeight: '600', color: '#19191a', marginBottom: '8px' }}>Hall Name</label>
+                      <input
+                        type="text"
+                        name="name"
+                        className="form-control"
+                        value={filters.name}
+                        onChange={handleFilterChange}
+                        placeholder="Search by name..."
+                      />
+                    </div>
+                    <div className="col-md-4 mb-3">
+                      <label style={{ fontSize: '13px', fontWeight: '600', color: '#19191a', marginBottom: '8px' }}>Min Capacity</label>
+                      <input
+                        type="number"
+                        name="capacity"
+                        className="form-control"
+                        value={filters.capacity}
+                        onChange={handleFilterChange}
+                        placeholder="Minimum capacity..."
+                      />
+                    </div>
+                    <div className="col-md-4 mb-3">
+                      <label style={{ fontSize: '13px', fontWeight: '600', color: '#19191a', marginBottom: '8px' }}>Location</label>
+                      <input
+                        type="text"
+                        name="location"
+                        className="form-control"
+                        value={filters.location}
+                        onChange={handleFilterChange}
+                        placeholder="Search by location..."
+                      />
+                    </div>
+                    <div className="col-md-4 mb-3">
+                      <label style={{ fontSize: '13px', fontWeight: '600', color: '#19191a', marginBottom: '8px' }}>Created By</label>
+                      <select
+                        name="createdById"
+                        className="form-control"
+                        value={filters.createdById}
+                        onChange={handleFilterChange}
+                      >
+                        <option value="">All Users</option>
+                        {users.map(user => (
+                          <option key={user.id} value={user.id}>
+                            {user.username} ({user.role})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="col-md-4 mb-3">
+                      <label style={{ fontSize: '13px', fontWeight: '600', color: '#19191a', marginBottom: '8px' }}>Status</label>
+                      <select
+                        name="isActive"
+                        className="form-control"
+                        value={filters.isActive}
+                        onChange={handleFilterChange}
+                      >
+                        <option value="">All</option>
+                        <option value="true">Active</option>
+                        <option value="false">Inactive</option>
+                      </select>
+                    </div>
+                    <div className="col-md-4 mb-3" style={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <button
+                        onClick={resetFilters}
+                        style={{
+                          background: '#dc3545',
+                          color: '#ffffff',
+                          border: 'none',
+                          padding: '10px 20px',
+                          fontSize: '13px',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          width: '100%'
+                        }}
+                      >
+                        <i className="fa fa-times" style={{ marginRight: '8px' }}></i>
+                        Reset Filters
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Halls List */}
           <div className="row">
             <div className="col-lg-12">
@@ -314,12 +485,115 @@ const ManageHallsPage = () => {
                     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                       <thead>
                         <tr style={{ background: '#f9f9f9', borderBottom: '2px solid #dfa974' }}>
-                          <th style={{ padding: '20px', textAlign: 'left', fontWeight: '600', color: '#19191a', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>ID</th>
-                          <th style={{ padding: '20px', textAlign: 'left', fontWeight: '600', color: '#19191a', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Hall Name</th>
-                          <th style={{ padding: '20px', textAlign: 'left', fontWeight: '600', color: '#19191a', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Capacity</th>
-                          <th style={{ padding: '20px', textAlign: 'left', fontWeight: '600', color: '#19191a', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</th>
-                          <th style={{ padding: '20px', textAlign: 'left', fontWeight: '600', color: '#19191a', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price/Hour</th>
-                          <th style={{ padding: '20px', textAlign: 'left', fontWeight: '600', color: '#19191a', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</th>
+                          <th
+                            onClick={() => handleSort('id')}
+                            style={{
+                              padding: '20px',
+                              textAlign: 'left',
+                              fontWeight: '600',
+                              color: '#19191a',
+                              fontSize: '14px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              cursor: 'pointer',
+                              userSelect: 'none'
+                            }}
+                          >
+                            ID {sorting.sortBy === 'id' && (
+                              <i className={`fa fa-sort-${sorting.sortDirection === 'asc' ? 'up' : 'down'}`} style={{ marginLeft: '5px', color: '#dfa974' }}></i>
+                            )}
+                          </th>
+                          <th
+                            onClick={() => handleSort('name')}
+                            style={{
+                              padding: '20px',
+                              textAlign: 'left',
+                              fontWeight: '600',
+                              color: '#19191a',
+                              fontSize: '14px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              cursor: 'pointer',
+                              userSelect: 'none'
+                            }}
+                          >
+                            Hall Name {sorting.sortBy === 'name' && (
+                              <i className={`fa fa-sort-${sorting.sortDirection === 'asc' ? 'up' : 'down'}`} style={{ marginLeft: '5px', color: '#dfa974' }}></i>
+                            )}
+                          </th>
+                          <th
+                            onClick={() => handleSort('capacity')}
+                            style={{
+                              padding: '20px',
+                              textAlign: 'left',
+                              fontWeight: '600',
+                              color: '#19191a',
+                              fontSize: '14px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              cursor: 'pointer',
+                              userSelect: 'none'
+                            }}
+                          >
+                            Capacity {sorting.sortBy === 'capacity' && (
+                              <i className={`fa fa-sort-${sorting.sortDirection === 'asc' ? 'up' : 'down'}`} style={{ marginLeft: '5px', color: '#dfa974' }}></i>
+                            )}
+                          </th>
+                          <th
+                            onClick={() => handleSort('location')}
+                            style={{
+                              padding: '20px',
+                              textAlign: 'left',
+                              fontWeight: '600',
+                              color: '#19191a',
+                              fontSize: '14px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              cursor: 'pointer',
+                              userSelect: 'none'
+                            }}
+                          >
+                            Location {sorting.sortBy === 'location' && (
+                              <i className={`fa fa-sort-${sorting.sortDirection === 'asc' ? 'up' : 'down'}`} style={{ marginLeft: '5px', color: '#dfa974' }}></i>
+                            )}
+                          </th>
+                          <th
+                            onClick={() => handleSort('pricePerHour')}
+                            style={{
+                              padding: '20px',
+                              textAlign: 'left',
+                              fontWeight: '600',
+                              color: '#19191a',
+                              fontSize: '14px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              cursor: 'pointer',
+                              userSelect: 'none'
+                            }}
+                          >
+                            Price/Hour {sorting.sortBy === 'pricePerHour' && (
+                              <i className={`fa fa-sort-${sorting.sortDirection === 'asc' ? 'up' : 'down'}`} style={{ marginLeft: '5px', color: '#dfa974' }}></i>
+                            )}
+                          </th>
+                          <th style={{ padding: '20px', textAlign: 'left', fontWeight: '600', color: '#19191a', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Created By</th>
+                          <th
+                            onClick={() => handleSort('isActive')}
+                            style={{
+                              padding: '20px',
+                              textAlign: 'left',
+                              fontWeight: '600',
+                              color: '#19191a',
+                              fontSize: '14px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.5px',
+                              cursor: 'pointer',
+                              userSelect: 'none'
+                            }}
+                          >
+                            Status {sorting.sortBy === 'isActive' && (
+                              <i className={`fa fa-sort-${sorting.sortDirection === 'asc' ? 'up' : 'down'}`} style={{ marginLeft: '5px', color: '#dfa974' }}></i>
+                            )}
+                          </th>
                           <th style={{ padding: '20px', textAlign: 'center', fontWeight: '600', color: '#19191a', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Actions</th>
                         </tr>
                       </thead>
@@ -346,6 +620,9 @@ const ManageHallsPage = () => {
                             <td style={{ padding: '20px', fontSize: '14px', color: '#707079' }}>{hall.location || 'N/A'}</td>
                             <td style={{ padding: '20px', fontSize: '14px', color: '#dfa974', fontWeight: '600' }}>
                               {hall.pricePerHour ? `₹${parseFloat(hall.pricePerHour).toLocaleString('en-IN')}` : 'N/A'}
+                            </td>
+                            <td style={{ padding: '20px', fontSize: '14px', color: '#707079' }}>
+                              {hall.createdById ? getUserName(hall.createdById) : 'N/A'}
                             </td>
                             <td style={{ padding: '20px' }}>
                               <span style={{
@@ -390,11 +667,11 @@ const ManageHallsPage = () => {
                                 Edit
                               </button>
                               <button
-                                onClick={() => handleDelete(hall.id)}
+                                onClick={() => handleToggleStatus(hall.id, hall.isActive)}
                                 style={{
                                   background: 'transparent',
-                                  border: '1px solid #dc3545',
-                                  color: '#dc3545',
+                                  border: hall.isActive ? '1px solid #dc3545' : '1px solid #28a745',
+                                  color: hall.isActive ? '#dc3545' : '#28a745',
                                   padding: '6px 15px',
                                   fontSize: '12px',
                                   fontWeight: '600',
@@ -403,16 +680,16 @@ const ManageHallsPage = () => {
                                   transition: 'all 0.3s'
                                 }}
                                 onMouseEnter={(e) => {
-                                  e.target.style.background = '#dc3545';
+                                  e.target.style.background = hall.isActive ? '#dc3545' : '#28a745';
                                   e.target.style.color = '#ffffff';
                                 }}
                                 onMouseLeave={(e) => {
                                   e.target.style.background = 'transparent';
-                                  e.target.style.color = '#dc3545';
+                                  e.target.style.color = hall.isActive ? '#dc3545' : '#28a745';
                                 }}
                               >
-                                <i className="fa fa-trash" style={{ marginRight: '5px' }}></i>
-                                Delete
+                                <i className={`fa ${hall.isActive ? 'fa-toggle-off' : 'fa-toggle-on'}`} style={{ marginRight: '5px' }}></i>
+                                {hall.isActive ? 'Deactivate' : 'Activate'}
                               </button>
                             </td>
                           </tr>

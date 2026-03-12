@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import '../datepicker-custom.css';
 import { getHallById } from '../services/hallService';
 import { createBooking } from '../services/bookingService';
 
@@ -65,8 +68,8 @@ const BookingPage = () => {
     try {
       const bookingData = {
         hallId: parseInt(hallId),
-        startDateTime: formData.startDateTime,
-        endDateTime: formData.endDateTime,
+        startDateTime: formData.startDateTime instanceof Date ? formData.startDateTime.toISOString() : formData.startDateTime,
+        endDateTime: formData.endDateTime instanceof Date ? formData.endDateTime.toISOString() : formData.endDateTime,
         purpose: formData.purpose,
         numberOfAttendees: formData.numberOfAttendees ? parseInt(formData.numberOfAttendees) : null,
       };
@@ -164,14 +167,17 @@ const BookingPage = () => {
                     <div className="col-md-6">
                       <div className="form-group">
                         <label>Start Date & Time <span style={{ color: '#dfa974' }}>*</span></label>
-                        <input
-                          type="datetime-local"
-                          name="startDateTime"
+                        <DatePicker
+                          selected={formData.startDateTime ? new Date(formData.startDateTime) : null}
+                          onChange={(date) => setFormData({ ...formData, startDateTime: date })}
+                          showTimeSelect
+                          timeFormat="HH:mm"
+                          timeIntervals={15}
+                          dateFormat="dd/MM/yyyy HH:mm"
+                          placeholderText="Select start date & time"
+                          minDate={new Date()}
                           className="form-control"
-                          value={formData.startDateTime}
-                          onChange={handleChange}
                           required
-                          min={new Date().toISOString().slice(0, 16)}
                         />
                       </div>
                     </div>
@@ -179,14 +185,17 @@ const BookingPage = () => {
                     <div className="col-md-6">
                       <div className="form-group">
                         <label>End Date & Time <span style={{ color: '#dfa974' }}>*</span></label>
-                        <input
-                          type="datetime-local"
-                          name="endDateTime"
+                        <DatePicker
+                          selected={formData.endDateTime ? new Date(formData.endDateTime) : null}
+                          onChange={(date) => setFormData({ ...formData, endDateTime: date })}
+                          showTimeSelect
+                          timeFormat="HH:mm"
+                          timeIntervals={15}
+                          dateFormat="dd/MM/yyyy HH:mm"
+                          placeholderText="Select end date & time"
+                          minDate={formData.startDateTime || new Date()}
                           className="form-control"
-                          value={formData.endDateTime}
-                          onChange={handleChange}
                           required
-                          min={formData.startDateTime || new Date().toISOString().slice(0, 16)}
                         />
                       </div>
                     </div>

@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getHalls } from '../services/hallService';
+import HallSearch from '../components/hall/HallSearch';
+import HallCard from '../components/hall/HallCard';
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [premiumHalls, setPremiumHalls] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Hero slider images
   const heroImages = [
@@ -43,6 +50,39 @@ const HomePage = () => {
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Fetch premium halls for homepage
+  useEffect(() => {
+    fetchPremiumHalls();
+  }, []);
+
+  const fetchPremiumHalls = async (filters = {}) => {
+    setLoading(true);
+    try {
+      const response = await getHalls({ page: 0, size: 6, ...filters });
+      setPremiumHalls(response.halls || []);
+    } catch (error) {
+      console.error('Failed to fetch halls:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = (searchFilters) => {
+    // Clean up empty filters
+    const cleanFilters = Object.fromEntries(
+      Object.entries(searchFilters).filter(([_, value]) => value !== '')
+    );
+
+    if (Object.keys(cleanFilters).length > 0) {
+      // If there are filters, navigate to halls page with filters
+      const queryParams = new URLSearchParams(cleanFilters).toString();
+      navigate(`/halls?${queryParams}`);
+    } else {
+      // If no filters, just refresh the premium halls
+      fetchPremiumHalls();
+    }
+  };
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % heroImages.length);
@@ -195,8 +235,51 @@ const HomePage = () => {
             </div>
           </div>
 
-          {/* Features */}
+          {/* Search Section */}
           <div className="row mt-5">
+            <div className="col-lg-12">
+              <HallSearch onSearch={handleSearch} />
+            </div>
+          </div>
+
+          {/* Premium Halls Section */}
+          <div className="row mt-5">
+            <div className="col-lg-12">
+              <div className="section-title" style={{ marginBottom: '40px' }}>
+                <span>Featured Venues</span>
+                <h2>Premium Halls</h2>
+              </div>
+            </div>
+          </div>
+
+          {/* Halls Grid - 2 rows x 3 columns */}
+          {loading ? (
+            <div className="row">
+              <div className="col-lg-12 text-center" style={{ padding: '60px 0' }}>
+                <div className="spinner-border text-gold" role="status" style={{ width: '3rem', height: '3rem' }}>
+                  <span className="sr-only">Loading...</span>
+                </div>
+                <p style={{ marginTop: '20px', color: '#707079' }}>Loading premium halls...</p>
+              </div>
+            </div>
+          ) : premiumHalls.length > 0 ? (
+            <div className="row">
+              {premiumHalls.map((hall) => (
+                <div className="col-lg-4 col-md-6" key={hall.id} style={{ marginBottom: '30px' }}>
+                  <HallCard hall={hall} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="row">
+              <div className="col-lg-12 text-center" style={{ padding: '40px 0' }}>
+                <p style={{ fontSize: '18px', color: '#707079' }}>No halls available at the moment.</p>
+              </div>
+            </div>
+          )}
+
+          {/* Features */}
+          <div className="row mt-5 pt-5" style={{ borderTop: '1px solid #e5e5e5' }}>
             <div className="col-lg-4 col-md-6">
               <div className="text-center mb-4">
                 <i className="fas fa-crown fa-3x text-gold mb-3"></i>

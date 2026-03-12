@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+//@RestController  // Disabled temporarily - requires MongoDB
 //@CrossOrigin(origins="http://localhost:8081", maxAge=3600)
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/user")
