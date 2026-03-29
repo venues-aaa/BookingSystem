@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-//@Component  // Disabled temporarily - requires MongoDB
+@Component
 public class UserDaoImpl implements UserDao {
 
 	@Autowired
@@ -43,7 +43,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public String createUser(User user) {
 		mongoTemplate.save(user);
-		return user.get_id();
+		return user.getId();
 	}
 	
 	@Override
@@ -58,7 +58,7 @@ public class UserDaoImpl implements UserDao {
 	
 	public void incrementWrongPasswordCount(User user) {
 		Query query = new Query();
-		query.addCriteria(Criteria.where(DBConstants.USER_ID).is(user.get_id()));
+		query.addCriteria(Criteria.where(DBConstants.USER_ID).is(user.getId()));
 		
 		Update update = new Update();
 		update.set("wrongPasswordCount", user.getWrongPasswordCount() + 1);

@@ -1,8 +1,9 @@
+/*
 package com.hallbooking.service;
 
 import com.hallbooking.dto.request.CreateHallRequest;
 import com.hallbooking.dto.request.UpdateHallRequest;
-import com.hallbooking.dto.response.HallResponse;
+import com.hallbooking.dto.response.ItemResponse;
 import com.hallbooking.entity.Hall;
 import com.hallbooking.entity.User;
 import com.hallbooking.dao.impl.HallRepository;
@@ -70,42 +71,42 @@ public class HallService {
         return hallRepository.save(hall);
     }
 
-    public HallResponse getHallById(Long id) {
+    public ItemResponse getHallById(Long id) {
         Hall hall = hallRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Hall not found with id: " + id));
         return mapToHallResponse(hall);
     }
 
-    public Page<HallResponse> getAllHalls(Pageable pageable) {
+    public Page<ItemResponse> getAllHalls(Pageable pageable) {
         return hallRepository.findByIsActive(true, pageable)
                 .map(this::mapToHallResponse);
     }
 
-    public Page<HallResponse> searchHalls(Integer capacity, String location, String amenities, Pageable pageable) {
+    public Page<ItemResponse> searchHalls(Integer capacity, String location, String amenities, Pageable pageable) {
         return hallRepository.searchHalls(capacity, location, amenities, pageable)
                 .map(this::mapToHallResponse);
     }
 
-    public Page<HallResponse> searchHallsWithAvailability(Integer capacity, String location, String amenities,
+    public Page<ItemResponse> searchHallsWithAvailability(Integer capacity, String location, String amenities,
                                                           LocalDateTime startDateTime, LocalDateTime endDateTime,
                                                           Pageable pageable) {
         return hallRepository.searchHallsWithAvailability(capacity, location, amenities, startDateTime, endDateTime, pageable)
                 .map(this::mapToHallResponse);
     }
 
-    public Page<HallResponse> getHallsByVendor(Long vendorId, Pageable pageable) {
+    public Page<ItemResponse> getHallsByVendor(Long vendorId, Pageable pageable) {
         return hallRepository.findByCreatedById(vendorId, pageable)
                 .map(this::mapToHallResponse);
     }
 
-    public Page<HallResponse> adminSearchHalls(String name, Integer capacity, String location,
+    public Page<ItemResponse> adminSearchHalls(String name, Integer capacity, String location,
                                                Long createdById, Boolean isActive, Pageable pageable) {
         return hallRepository.adminSearchHalls(name, capacity, location, createdById, isActive, pageable)
                 .map(this::mapToHallResponse);
     }
 
-    private HallResponse mapToHallResponse(Hall hall) {
-        return new HallResponse(
+    private ItemResponse mapToHallResponse(Hall hall) {
+        return new ItemResponse(
                 hall.getId(),
                 hall.getName(),
                 hall.getDescription(),
@@ -121,3 +122,4 @@ public class HallService {
         );
     }
 }
+*/

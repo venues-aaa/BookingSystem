@@ -1,3 +1,4 @@
+/*
 package com.hallbooking.controller;
 
 import com.hallbooking.dto.request.LoginRequest;
@@ -78,3 +79,4 @@ public class AuthController {
         return ResponseEntity.ok(user);
     }
 }
+*/

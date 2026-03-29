@@ -1,3 +1,4 @@
+/*
 package com.hallbooking.config;
 
 import com.hallbooking.entity.Hall;
@@ -117,3 +118,4 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 }
+*/

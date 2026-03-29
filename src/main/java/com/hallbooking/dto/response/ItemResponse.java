@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class HallResponse {
+public class ItemResponse {
     private Long id;
     private String name;
     private String description;

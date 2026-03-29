@@ -1,6 +1,6 @@
 package com.hallbooking.dto.response;
 
-import com.hallbooking.entity.Role;
+import com.hallbooking.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
