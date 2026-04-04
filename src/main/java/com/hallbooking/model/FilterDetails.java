@@ -1,35 +1,19 @@
 package com.hallbooking.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class FilterDetails implements Serializable {
 
-	private String seatingCapcity;
+	private Integer seatingCapcity;
 	private String tempControl;
 	private double amount;
 
-	public String getSeatingCapcity() {
-		return seatingCapcity;
-	}
-	public void setSeatingCapcity(String seatingCapcity) {
-		this.seatingCapcity = seatingCapcity;
-	}
-	public String getTempControl() {
-		return tempControl;
-	}
-	public void setTempControl(String tempControl) {
-		this.tempControl = tempControl;
-	}
-	public double getAmount() {
-		return amount;
-	}
-	public void setAmount(double amount) {
-		this.amount = amount;
-	}
-	
-	
-	
-	
-	
 	
 }

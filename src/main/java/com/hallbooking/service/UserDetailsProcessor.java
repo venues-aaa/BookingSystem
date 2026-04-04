@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 import java.util.UUID;
 
-//@Component  // Disabled temporarily - requires MongoDB
+@Component  // Disabled temporarily - requires MongoDB
 public class UserDetailsProcessor {
 
 	@Autowired
@@ -86,7 +86,7 @@ public class UserDetailsProcessor {
 	public void createUser(User user) {
 		   
 		User userDetails = userDetailsDao.retrieveUserDetails(user);
-		if(null == userDetails || userDetails.get_id() == null) {
+		if(null == userDetails || userDetails.getId() == null) {
 	        // Protect user's password. The generated value can be stored in DB.
 	        String mySecurePassword = passwordEncoder.encode(user.getPassword());
 	        
@@ -227,7 +227,7 @@ public class UserDetailsProcessor {
 	
 	public void userSignout(String userId) {
 		User user = new User();
-		user.set_id(userId);
+		user.setId(userId);
 		userDetailsDao.updateUserAuthId(user);
 	}
 

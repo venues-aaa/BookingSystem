@@ -1,6 +1,6 @@
 package com.hallbooking.dto.request;
 
-import com.hallbooking.entity.Role;
+import com.hallbooking.model.Role;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;

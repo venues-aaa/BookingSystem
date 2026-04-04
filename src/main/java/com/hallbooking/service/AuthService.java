@@ -1,3 +1,5 @@
+/*
+
 package com.hallbooking.service;
 
 import com.hallbooking.dto.request.LoginRequest;
@@ -156,3 +158,5 @@ public class AuthService {
         );
     }
 }
+
+*/

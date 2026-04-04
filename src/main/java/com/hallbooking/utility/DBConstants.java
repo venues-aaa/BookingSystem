@@ -4,7 +4,7 @@ public class DBConstants {
 
 	public static String ITEM_TYPE = "type";
 	public static String ITEM_PLACE_ID = "placeId";
-	public static String ITEM_ID = "_id";
+	public static String ITEM_ID = "id";
 	public static String ITEM_VENDOR_ID = "vendorId";
 	public static String ITEM_DETAILS = "details";
 	public static String ITEM_DETAILS_CONTACT_NUM = "details.contactNum";
@@ -30,7 +30,7 @@ public class DBConstants {
 	//public static String ITEM_IMAGE_FILENAME = "images.$.fileName";
 	
 	//UserDetails
-	public static String USER_ID = "_id";
+	public static String USER_ID = "id";
 	public static String USER_NAME = "name";
 	public static String USER_PASSWORD = "password";
 	public static String USER_EMAILID = "emailId";
@@ -54,13 +54,13 @@ public class DBConstants {
 	public static String BOOKING_TO_DATE = "bookingToDate";
 	public static String BOOKING_VENDOR_ID = "vendorId";
 	public static String BOOKING_USER_ID = "userId";
-	public static String BOOKING_ID = "_id";
+	public static String BOOKING_ID = "id";
 	public static String BOOKING_STATUS = "status";
 	public static String BOOKING_LASTUPDATED_USER = "lastUpdateUserId";
 	public static String BOOKING_LASTUPDATED_DATE = "lastUpdateDate";
 	
 	//Notification
-	public static String NOTIFICATION_ID = "_id";
+	public static String NOTIFICATION_ID = "id";
 	public static String NOTIFICATION_VENDOR_ID = "vendorId";
 	public static String NOTIFICATION_IS_READ = "isRead";
 	
