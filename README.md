@@ -138,6 +138,11 @@ src/main/java/com/hallbooking/
    - Install "Language Support for Java" extension
    - Lombok should work automatically
 
+   **MongoDB setup and execute:**
+   - Install MongoDB - used version mongodb-win32-x86_64-2008plus-ssl-4.0.6
+   - To start mongodb, from command prompt go into the bin folder and then type the command 'mongod'
+
+
 2. **Build the project:**
    ```bash
    mvn clean install
