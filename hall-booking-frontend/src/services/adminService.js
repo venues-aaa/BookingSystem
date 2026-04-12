@@ -1,62 +1,139 @@
 import api from './api';
 
+// NOTE: Backend doesn't have /admin endpoints yet
+// Using available endpoints as workarounds
+
 export const getAllBookings = async (params = {}) => {
-  const { page = 0, size = 10, hallId, userId, status } = params;
-  const response = await api.get('/admin/bookings', {
-    params: { page, size, hallId, userId, status }
+  const { page = 0, size = 10, userId, status } = params;
+  // Backend doesn't have /admin/bookings
+  // Use /bookings/history as workaround
+  const response = await api.get('/bookings/history', {
+    params: { page, size }
   });
   return response.data;
 };
 
 export const getAllUsers = async (params = {}) => {
   const { page = 0, size = 10 } = params;
-  const response = await api.get('/admin/users', {
+  // Backend uses /api/user/retrieveAll
+  const response = await api.get('/api/user/retrieveAll', {
     params: { page, size }
   });
   return response.data;
 };
 
 export const getStatistics = async () => {
-  const response = await api.get('/admin/statistics');
-  return response.data;
+  // Backend doesn't have /admin/statistics
+  // Return mock data for now
+  return {
+    totalHalls: 0,
+    totalBookings: 0,
+    totalUsers: 0,
+    activeBookings: 0
+  };
 };
 
-// Admin Hall Management
-export const toggleHallStatus = async (id) => {
-  const response = await api.patch(`/admin/halls/${id}/toggle-status`);
-  return response.data;
-};
+// Admin Hall Management - using /item endpoints
+export const toggleHallStatus = async (id, currentStatus) => {
+  // Fetch full hall data first
+  const hallResponse = await api.get(`/item/${id}`);
+  const hall = hallResponse.data.halls || hallResponse.data;
 
-export const getAdminHalls = async (params = {}) => {
-  const { page = 0, size = 10, name, capacity, location, createdById, isActive, sortBy = 'id', sortDirection = 'asc' } = params;
-  const response = await api.get('/admin/halls', {
-    params: { page, size, name, capacity, location, createdById, isActive, sortBy, sortDirection }
+  // Update only the status, keeping all other fields
+  const response = await api.put('/item/update', {
+    ...hall,
+    status: currentStatus === 'Active' ? 'Inactive' : 'Active'
   });
   return response.data;
 };
 
-// User Management APIs
+export const getAdminHalls = async (params = {}) => {
+  const { page = 0, size = 10, type = 'Hotel', sortBy = 'createdOn' } = params;
+  // Use POST /item/fetch
+  const response = await api.post('/item/fetch',
+    { type },
+    { params: { page, size, sortBy } }
+  );
+
+  // Transform backend structure to flat structure for admin table
+  const transformedHalls = (response.data.halls || []).map(hall => ({
+    id: hall.id,
+    name: hall.details?.name,
+    description: hall.details?.description,
+    capacity: hall.details?.qtyAvailable,
+    location: hall.details?.address,
+    pricePerHour: hall.price?.baseRate,
+    imageUrl: hall.details?.mainImageUrl,
+    amenities: hall.details?.amenities
+      ? Object.values(hall.details.amenities).filter(a => a).join(', ')
+      : '',
+    status: hall.status,
+    isActive: hall.status === 'Active',
+    availableSlotTypes: hall.details?.availableSlotTypes || {
+      fullday: true,
+      morning: true,
+      evening: true
+    },
+    // Keep original nested structure for updates
+    vendorId: hall.vendorId,
+    placeId: hall.placeId,
+    type: hall.type,
+    createdBy: hall.createdBy,
+    createdById: hall.createdBy // For filtering
+  }));
+
+  return {
+    ...response.data,
+    halls: transformedHalls
+  };
+};
+
+// User Management APIs - using /api/user endpoints
 export const createUser = async (userData) => {
-  const response = await api.post('/admin/users', userData);
+  const response = await api.post('/api/user/create', {
+    emailId: userData.email || userData.emailId,
+    password: userData.password,
+    details: {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      phoneNumber: userData.phoneNumber,
+      role: userData.role || 'USER'
+    }
+  });
   return response.data;
 };
 
 export const getUserById = async (id) => {
-  const response = await api.get(`/admin/users/${id}`);
+  // Backend uses POST /api/user/retrieve with body
+  const response = await api.post('/api/user/retrieve', { userId: id });
   return response.data;
 };
 
 export const updateUser = async (id, userData) => {
-  const response = await api.put(`/admin/users/${id}`, userData);
+  const response = await api.put('/api/user/update', {
+    id,
+    emailId: userData.email || userData.emailId,
+    details: {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      phoneNumber: userData.phoneNumber,
+      role: userData.role
+    }
+  });
   return response.data;
 };
 
-export const toggleUserStatus = async (id) => {
-  const response = await api.patch(`/admin/users/${id}/toggle-status`);
+export const toggleUserStatus = async (id, currentStatus) => {
+  // Backend uses PUT /api/user/update/status
+  const response = await api.put('/api/user/update/status', {
+    userId: id,
+    status: currentStatus === 'Active' ? 'Inactive' : 'Active'
+  });
   return response.data;
 };
 
 export const deleteUser = async (id) => {
-  const response = await api.delete(`/admin/users/${id}`);
-  return response.data;
+  // Backend doesn't have delete user endpoint
+  // Use status update as workaround
+  return toggleUserStatus(id, 'Active'); // Set to Inactive
 };

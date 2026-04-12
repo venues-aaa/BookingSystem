@@ -22,7 +22,7 @@ const VendorDashboard = () => {
 
       setStats({
         totalHalls: halls.length,
-        activeHalls: halls.filter(h => h.isActive).length,
+        activeHalls: halls.filter(h => h.status === 'Active').length,
       });
     } catch (error) {
       console.error('Failed to fetch stats:', error);

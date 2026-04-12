@@ -168,6 +168,9 @@ const Navbar = () => {
                               <Link to="/admin/halls">Manage Halls</Link>
                             </li>
                             <li>
+                              <Link to="/my-bookings">My Bookings</Link>
+                            </li>
+                            <li>
                               <a href="#!" onClick={handleLogout}>
                                 <i className="fa fa-sign-out-alt"></i> Logout
                               </a>
@@ -187,6 +190,9 @@ const Navbar = () => {
                             </li>
                             <li>
                               <Link to="/vendor/halls">My Halls</Link>
+                            </li>
+                            <li>
+                              <Link to="/my-bookings">My Bookings</Link>
                             </li>
                             <li>
                               <a href="#!" onClick={handleLogout}>

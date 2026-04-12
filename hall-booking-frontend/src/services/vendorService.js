@@ -2,33 +2,33 @@ import api from './api';
 
 // Get vendor's halls
 export const getVendorHalls = async (params = {}) => {
-  const { page = 0, size = 10, sortBy = 'id' } = params;
-  const response = await api.get('/vendor/halls', {
+  const { vendorId, page = 0, size = 10, sortBy = 'createdOn' } = params;
+
+  // Get vendorId from localStorage if not provided
+  let id = vendorId;
+  if (!id) {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    id = user.id || user._id;
+    if (!id) throw new Error('Vendor ID not found');
+  }
+
+  // Backend uses GET /item/vendor/{vendorId}
+  const response = await api.get(`/item/vendor/${id}`, {
     params: { page, size, sortBy }
   });
   return response.data;
 };
 
-// Create hall as vendor
-export const createVendorHall = async (hallData) => {
-  const response = await api.post('/vendor/halls', hallData);
-  return response.data;
-};
-
-// Update vendor's hall
-export const updateVendorHall = async (id, hallData) => {
-  const response = await api.put(`/vendor/halls/${id}`, hallData);
-  return response.data;
-};
-
 // Toggle vendor's hall active status
-export const toggleVendorHallStatus = async (id) => {
-  const response = await api.patch(`/vendor/halls/${id}/toggle-status`);
+export const toggleVendorHallStatus = async (id, currentStatus, fullItemData) => {
+  // Backend doesn't have toggle endpoint, use update with full item data
+  // We need to send the complete item object to avoid setting other fields to null
+  const response = await api.put('/item/update', {
+    ...fullItemData, // Keep all existing fields
+    status: currentStatus === 'Active' ? 'Inactive' : 'Active'
+  });
   return response.data;
 };
 
-// Delete vendor's hall
-export const deleteVendorHall = async (id) => {
-  const response = await api.delete(`/vendor/halls/${id}`);
-  return response.data;
-};
+// NOTE: Create, update, and delete operations now use hallService
+// This keeps the code DRY and ensures consistency between admin and vendor

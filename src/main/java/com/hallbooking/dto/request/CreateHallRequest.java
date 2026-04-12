@@ -1,5 +1,6 @@
 package com.hallbooking.dto.request;
 
+import com.hallbooking.model.AvailableSlotTypes;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -24,4 +25,6 @@ public class CreateHallRequest {
     private String amenities;
 
     private String imageUrl;
+
+    private AvailableSlotTypes availableSlotTypes;
 }

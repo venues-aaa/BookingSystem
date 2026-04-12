@@ -1,58 +1,93 @@
 package com.hallbooking.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.net.HttpHeaders;
 import com.hallbooking.dto.request.CreateBookingRequest;
 import com.hallbooking.dto.response.BookingResponse;
-import com.hallbooking.entity.Booking;
-import com.hallbooking.entity.BookingStatus;
+import com.hallbooking.mapper.BookingMapper;
+import com.hallbooking.model.Booking;
+import com.hallbooking.model.Notification;
+import com.hallbooking.model.ResponseModel;
+import com.hallbooking.model.User;
 import com.hallbooking.service.BookingService;
+import com.itextpdf.text.DocumentException;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/bookings")
+@RequestMapping("/bookings")
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class BookingController {
 
     @Autowired
     private BookingService bookingService;
 
-    @PostMapping
-    public ResponseEntity<BookingResponse> createBooking(
-            @Valid @RequestBody CreateBookingRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
-
-        Booking booking = bookingService.createBooking(request, userDetails.getUsername());
-        BookingResponse response = bookingService.getBookingById(booking.getId());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    @GetMapping("/")
+    public ResponseEntity<String> heartbeat() {
+        System.out.println("Inside heartbeat - BookingService");
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        System.out.println("Current DateTime: " + currentDateTime);
+        return ResponseEntity.status(HttpStatus.OK).body("Success - BookingController is Up and Running");
     }
 
-    @GetMapping("/my-bookings")
+    /**
+     * Method to create Booking and send the response back with booking id
+     * @param request
+     * @param
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/create")
+    public ResponseEntity<BookingResponse> createBooking(
+            @Valid @RequestBody CreateBookingRequest request/*,
+            @AuthenticationPrincipal UserDetails userDetails*/) throws Exception {
+
+        Booking bookingObj = new Booking();
+        BookingMapper.toBooking(request, bookingObj);
+        Booking booking = bookingService.createBooking(bookingObj, /*userDetails.getUsername()*/"aaa");
+        BookingResponse bookingResponse = new BookingResponse();
+        BeanUtils.copyProperties(booking, bookingResponse);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookingResponse);
+    }
+
+    /*@GetMapping("/my-bookings")
     public ResponseEntity<Map<String, Object>> getMyBookings(
             @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) BookingStatus status) {
+            @RequestParam(required = false) String status) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<BookingResponse> bookings;
+        Page<Booking> bookings;
 
         if (status != null) {
-            bookings = bookingService.getUserBookingsByStatus(userDetails.getUsername(), status, pageable);
+            bookings = bookingService.retrieveUserBookedDetails(userDetails.getUsername(), status, pageable);
         } else {
-            bookings = bookingService.getUserBookings(userDetails.getUsername(), pageable);
+            bookings = bookingService.retrieveUserBookedDetails(userDetails.getUsername(), null, pageable);
         }
 
         Map<String, Object> response = new HashMap<>();
@@ -62,7 +97,7 @@ public class BookingController {
         response.put("totalElements", bookings.getTotalElements());
 
         return ResponseEntity.ok(response);
-    }
+    }*/
 
     @GetMapping("/history")
     public ResponseEntity<Map<String, Object>> getBookingHistory(
@@ -71,7 +106,7 @@ public class BookingController {
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<BookingResponse> bookings = bookingService.getUserBookings(userDetails.getUsername(), pageable);
+        Page<Booking> bookings = bookingService.retrieveUserBookedDetails(userDetails.getUsername(), null, pageable);
 
         Map<String, Object> response = new HashMap<>();
         response.put("bookings", bookings.getContent());
@@ -82,22 +117,215 @@ public class BookingController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BookingResponse> getBookingById(@PathVariable Long id) {
-        BookingResponse booking = bookingService.getBookingById(id);
-        return ResponseEntity.ok(booking);
+    @GetMapping("/bookingById/{bookingId}")
+    public ResponseEntity<BookingResponse> getBookingById(@PathVariable("bookingId") String bookingId) throws Exception {
+
+        BookingResponse bookingResponse = new BookingResponse();
+        Booking booking = bookingService.getBookingById(bookingId);
+        BeanUtils.copyProperties(booking, bookingResponse);
+        return ResponseEntity.ok(bookingResponse);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{bookingId}")
     public ResponseEntity<Map<String, String>> cancelBooking(
-            @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @PathVariable String bookingId,
+            @RequestParam(required = false) String cancelReason) {
 
-        bookingService.cancelBooking(id, userDetails.getUsername());
+        bookingService.cancelBooking(bookingId, null, cancelReason);
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Booking cancelled successfully");
 
         return ResponseEntity.ok(response);
+    }
+
+    /*---------------------------- Availability Details --------------------------------------------------------------------*/
+
+    /**
+     * Method to retrieve Item availability details based on ItemId, type and date.
+     * For listing in the Item List Page
+     * @param bookingObj
+     * @return List<Booking>
+     */
+    @PostMapping("/avail/fetch")
+    public ResponseEntity<Map<String, Object>> fetchAvailabilityBasedOn(@RequestBody Booking bookingObj) {
+
+        List<Booking> availabilityDetailsList = bookingService.fetchAvailabilityBasedOn(bookingObj);
+        Map<String, Object> response = new HashMap<>();
+        response.put("availability", availabilityDetailsList);
+      /*  response.put("currentPage", bookings.getNumber());
+        response.put("totalPages", bookings.getTotalPages());
+        response.put("totalElements", bookings.getTotalElements());*/
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Method to confirm availability of an item based on itemId and date
+     * @param bookingObj
+     * @return Booking
+     * @throws Exception
+     */
+    @PostMapping("/avail/confirm")
+    public ResponseEntity<Boolean> confirmItemAvailability(@RequestBody Booking bookingObj) throws Exception {
+
+        boolean availabilityFlag = bookingService.confirmItemAvailability(bookingObj);
+        return ResponseEntity.ok(availabilityFlag);
+    }
+
+    /**
+     * Method to check availability and suggest alternative slots
+     * @param request
+     * @return availability status and suggested slots
+     * @throws Exception
+     */
+    @PostMapping("/check-availability")
+    public ResponseEntity<Map<String, Object>> checkAvailabilityWithSuggestions(
+            @RequestBody Map<String, Object> request) throws Exception {
+
+        String itemId = (String) request.get("itemId");
+        String bookingDate = (String) request.get("bookingDate");
+        String slotType = (String) request.get("slotType");
+
+        Map<String, Object> result = bookingService.checkAvailabilityWithSuggestions(itemId, bookingDate, slotType);
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     * Method to insert the availability details for a month
+     * @param bookingObj
+     * @return
+     * @throws JsonProcessingException
+     * @throws ParseException
+     * @throws DocumentException
+     * @throws FileNotFoundException
+     */
+    //Check----
+    @PostMapping("/block/")
+    public ResponseEntity<?> blockBooking(@RequestBody Booking bookingObj) throws JsonProcessingException, ParseException, FileNotFoundException, DocumentException {
+
+      //  String response = bookingService.blockBooking(bookingObj);
+        ResponseModel responseModel = new ResponseModel();
+    //    responseModel.setResponseMsg(response);
+        return ResponseEntity.ok(responseModel);
+    }
+
+   /**
+     * Method to update availability based on cancel/refund
+     * @param bookingObj
+     * @return
+     * @throws JsonProcessingException
+     * @throws ParseException
+     */
+    @PutMapping("/update")
+    public void updateBooking(@RequestBody Booking bookingObj) throws JsonProcessingException, ParseException {
+
+        bookingService.updateBooking(bookingObj);
+
+    }
+
+    /**
+     * Method to retrieve booked details for a user
+     * @param userId
+     * @return List<Booking>
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Map<String, Object>> retrieveUserBookedDetails(
+            @PathVariable("userId") String userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String status) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("bookingFromDate").descending());
+        Page<Booking> bookings = bookingService.retrieveUserBookedDetails(userId, status, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("availability", bookings.getContent());
+        response.put("currentPage", bookings.getNumber());
+        response.put("totalPages", bookings.getTotalPages());
+        response.put("totalElements", bookings.getTotalElements());
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Method to retrieve booked details based on vendorId
+     * @param vendorId
+     * @return List<Booking>
+     */
+    @GetMapping("/vendor/{vendorId}")
+    public ResponseEntity<Map<String, Object>> retrieveVendorBookedDetails(@PathVariable("vendorId") String vendorId) {
+
+        List<Booking> bookedDetails = bookingService.retrieveVendorBookedDetails(vendorId);
+        Map<String, Object> response = new HashMap<>();
+        response.put("availability", bookedDetails);
+      /*  response.put("currentPage", bookings.getNumber());
+        response.put("totalPages", bookings.getTotalPages());
+        response.put("totalElements", bookings.getTotalElements());*/
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Method to retrieve booked details based on vendorId
+     * @param userId
+     * @return List<Booking>
+     */
+    /*@GetMapping("user/{userId}")
+    public ResponseEntity<Map<String, Object>> retrieveUserBookedDetails(@PathVariable("userId") String userId) {
+
+        List<Booking> bookedDetails = bookingProcessor.retrieveUserBookedDetails(userId);
+
+        return ResponseEntity.ok(bookedDetails);
+    }*/
+
+    /**
+     * Method to retrieve booked details based on vendorId
+     * @param bookedId
+     * @return List<Booking>
+     */
+    /*@GetMapping("/bookedDetails/{bookedId}")
+    public ResponseEntity<Map<String, Object>> retrieveBookedDetailsBasedOn(@PathVariable("bookedId") String bookedId) {
+
+        Booking bookedDetails = bookingService.retrieveBookedDetailsBasedOn(bookedId);
+
+        return ResponseEntity.ok(bookedDetails);
+    }*/
+
+    @GetMapping("/genrateInvoice/{bookedId}")
+    public ResponseEntity<?> generateInvoice(@PathVariable("bookedId") String bookedId) {
+
+        Path path = Paths.get("SimpleTable.pdf");
+        Resource resource = null;
+        try {
+            resource = new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\" SimpleTable.pdf + \"")
+                .body(resource);
+    }
+
+
+    @GetMapping("/notificationCount/{vendorId}")
+    public ResponseEntity<Integer> getNotificationCountForVendor(@PathVariable String vendorId) {
+        int notificationCount = bookingService.getNotificationCountForVendor(vendorId);
+
+        return ResponseEntity.ok(notificationCount);
+    }
+
+    /**
+     * Method to retrieve booked details based on vendorId
+     * @param vendorId
+     * @return List<Booking>
+     */
+    @GetMapping("/notification/{vendorId}")
+    public ResponseEntity<List<Notification>> getNotificationForVendor(@PathVariable("vendorId") String vendorId) {
+
+        List<Notification> notificationList = bookingService.getNotificationForVendor(vendorId);
+
+        return ResponseEntity.ok(notificationList);
     }
 }

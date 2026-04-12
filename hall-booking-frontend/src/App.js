@@ -12,10 +12,9 @@ import HallDetailsPage from './pages/HallDetailsPage';
 import BookingPage from './pages/BookingPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
-import ManageHallsPage from './pages/admin/ManageHallsPage';
 import ManageUsersPage from './pages/admin/ManageUsersPage';
 import VendorDashboard from './pages/vendor/VendorDashboard';
-import VendorManageHallsPage from './pages/vendor/VendorManageHallsPage';
+import ManageHallsPage from './pages/shared/ManageHallsPage';
 
 function App() {
   return (
@@ -88,7 +87,7 @@ function App() {
               path="/vendor/halls"
               element={
                 <ProtectedRoute vendorOnly={true}>
-                  <VendorManageHallsPage />
+                  <ManageHallsPage />
                 </ProtectedRoute>
               }
             />

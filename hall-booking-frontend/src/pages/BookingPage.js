@@ -12,6 +12,8 @@ const BookingPage = () => {
   const [hall, setHall] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
+    bookingDate: '',
+    slotType: 'fullday', // fullday, morning, evening
     startDateTime: '',
     endDateTime: '',
     purpose: '',
@@ -19,6 +21,9 @@ const BookingPage = () => {
   });
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [availabilityChecking, setAvailabilityChecking] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(null);
+  const [suggestedSlots, setSuggestedSlots] = useState([]);
 
   useEffect(() => {
     fetchHallDetails();
@@ -29,6 +34,20 @@ const BookingPage = () => {
     try {
       const data = await getHallById(hallId);
       setHall(data);
+
+      // Auto-select the first available slot type
+      const availableSlotTypes = data.availableSlotTypes || { fullday: true, morning: true, evening: true };
+      let defaultSlot = 'fullday';
+
+      if (availableSlotTypes.fullday !== false) {
+        defaultSlot = 'fullday';
+      } else if (availableSlotTypes.morning !== false) {
+        defaultSlot = 'morning';
+      } else if (availableSlotTypes.evening !== false) {
+        defaultSlot = 'evening';
+      }
+
+      setFormData(prev => ({ ...prev, slotType: defaultSlot }));
     } catch (error) {
       console.error('Failed to fetch hall details:', error);
       alert('Failed to load hall details');
@@ -42,6 +61,126 @@ const BookingPage = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const calculateSlotTimes = (date, slotType) => {
+    if (!date) return { start: null, end: null };
+
+    // Parse date manually to avoid timezone shift
+    const [year, month, day] = date.split('-').map(Number);
+    let startTime, endTime;
+
+    switch (slotType) {
+      case 'fullday':
+        startTime = new Date(year, month - 1, day, 0, 0, 0, 0);
+        endTime = new Date(year, month - 1, day, 23, 59, 59, 999);
+        break;
+      case 'morning':
+        startTime = new Date(year, month - 1, day, 0, 0, 0, 0);
+        endTime = new Date(year, month - 1, day, 16, 0, 0, 0); // 4:00 PM
+        break;
+      case 'evening':
+        startTime = new Date(year, month - 1, day, 17, 0, 0, 0); // 5:00 PM
+        endTime = new Date(year, month - 1, day, 22, 0, 0, 0); // 10:00 PM
+        break;
+      default:
+        return { start: null, end: null };
+    }
+
+    return { start: startTime, end: endTime };
+  };
+
+  const formatLocalDateTime = (date) => {
+    if (!date) return null;
+    const d = date instanceof Date ? date : new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  const checkAvailability = async (date, slotType) => {
+    if (!date || !slotType) return;
+
+    setAvailabilityChecking(true);
+    setError('');
+    setSuggestedSlots([]);
+
+    try {
+      const { start, end } = calculateSlotTimes(date, slotType);
+      if (!start || !end) return;
+
+      const response = await fetch(`http://localhost:8080/bookings/check-availability`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache'
+        },
+        body: JSON.stringify({
+          itemId: hallId,
+          bookingDate: date,
+          slotType: slotType,
+          startDateTime: formatLocalDateTime(start),
+          endDateTime: formatLocalDateTime(end),
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log('Availability check response:', {
+        requestedDate: date,
+        available: data.available,
+        suggestedSlots: data.suggestedSlots,
+        suggestedDates: data.suggestedSlots?.map(s => s.date) || []
+      });
+
+      setIsAvailable(data.available);
+      if (!data.available && data.suggestedSlots) {
+        // Filter out the requested date from suggestions (extra safety check)
+        const filteredSlots = data.suggestedSlots.filter(slot => slot.date !== date);
+        console.log('After filtering requested date:', filteredSlots.map(s => s.date));
+        setSuggestedSlots(filteredSlots);
+      }
+
+      // Update form with calculated times
+      setFormData(prev => ({
+        ...prev,
+        startDateTime: start,
+        endDateTime: end,
+      }));
+
+    } catch (err) {
+      console.error('Availability check failed:', err);
+      setError('Failed to check availability');
+    } finally {
+      setAvailabilityChecking(false);
+    }
+  };
+
+  const handleDateSlotChange = (field, value) => {
+    const newFormData = { ...formData, [field]: value };
+    setFormData(newFormData);
+
+    // Auto-check availability when both date and slot are selected
+    if (field === 'bookingDate' || field === 'slotType') {
+      const dateToCheck = field === 'bookingDate' ? value : newFormData.bookingDate;
+      const slotToCheck = field === 'slotType' ? value : newFormData.slotType;
+
+      if (dateToCheck && slotToCheck) {
+        checkAvailability(dateToCheck, slotToCheck);
+      }
+    }
+  };
+
+  const selectSuggestedSlot = (slot) => {
+    setFormData(prev => ({
+      ...prev,
+      bookingDate: slot.date,
+    }));
+    checkAvailability(slot.date, formData.slotType);
   };
 
   const calculateHours = () => {
@@ -66,19 +205,23 @@ const BookingPage = () => {
     setSubmitting(true);
 
     try {
+      // Get user ID from localStorage
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+
       const bookingData = {
-        hallId: parseInt(hallId),
-        startDateTime: formData.startDateTime instanceof Date ? formData.startDateTime.toISOString() : formData.startDateTime,
-        endDateTime: formData.endDateTime instanceof Date ? formData.endDateTime.toISOString() : formData.endDateTime,
-        purpose: formData.purpose,
+        itemId: hallId, // Backend expects itemId (String), not hallId
+        startDateTime: formatLocalDateTime(formData.startDateTime),
+        endDateTime: formatLocalDateTime(formData.endDateTime),
+        functionType: formData.purpose, // Backend calls it functionType, not purpose
         numberOfAttendees: formData.numberOfAttendees ? parseInt(formData.numberOfAttendees) : null,
+        userId: user.id, // Add userId from logged-in user
       };
 
       await createBooking(bookingData);
       alert('Booking created successfully!');
       navigate('/my-bookings');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create booking. Please try again.');
+      setError(err.response?.data?.message || err.response?.data?.error || 'Failed to create booking. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -123,22 +266,35 @@ const BookingPage = () => {
     <>
       {/* Page Header */}
       <div style={{
-        background: '#ffffff',
-        padding: '60px 0 10px',
+        background: 'linear-gradient(135deg, #dfa974 0%, #c89860 100%)',
+        padding: '60px 0 30px',
         marginTop: '130px',
-        textAlign: 'center'
+        textAlign: 'center',
+        boxShadow: '0 4px 20px rgba(223, 169, 116, 0.3)'
       }}>
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
-              <h2 style={{ fontFamily: "'Lora', serif", fontSize: '48px', fontWeight: '400', color: '#19191a', marginBottom: '20px' }}>Book Hall</h2>
+              <div style={{ marginBottom: '10px', color: '#ffffff', fontSize: '14px', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '2px' }}>
+                Book Your Hall
+              </div>
+              <h2 style={{
+                fontFamily: "'Lora', serif",
+                fontSize: '52px',
+                fontWeight: '700',
+                color: '#ffffff',
+                marginBottom: '15px',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.2)'
+              }}>
+                {hall.name}
+              </h2>
               {/* Breadcrumb */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '15px', fontFamily: "'Cabin', sans-serif" }}>
-                <Link to="/" style={{ color: '#19191a', fontSize: '16px', fontWeight: '500', textDecoration: 'none' }}>Home</Link>
-                <i className="fa fa-angle-right" style={{ color: '#dfa974' }}></i>
-                <Link to={`/halls/${hallId}`} style={{ color: '#707079', textDecoration: 'none' }}>{hall.name}</Link>
-                <i className="fa fa-angle-right" style={{ color: '#dfa974' }}></i>
-                <span style={{ color: '#dfa974' }}>Booking</span>
+                <Link to="/" style={{ color: '#ffffff', fontSize: '16px', fontWeight: '500', textDecoration: 'none', opacity: 0.9 }}>Home</Link>
+                <i className="fa fa-angle-right" style={{ color: '#ffffff', opacity: 0.7 }}></i>
+                <Link to={`/halls/${hallId}`} style={{ color: '#ffffff', textDecoration: 'none', opacity: 0.9 }}>{hall.name}</Link>
+                <i className="fa fa-angle-right" style={{ color: '#ffffff', opacity: 0.7 }}></i>
+                <span style={{ color: '#ffffff', fontWeight: '600' }}>Booking</span>
               </div>
             </div>
           </div>
@@ -163,43 +319,143 @@ const BookingPage = () => {
               <div className="booking-form">
                 <h3>Booking Details</h3>
                 <form onSubmit={handleSubmit}>
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="form-group">
-                        <label>Start Date & Time <span style={{ color: '#dfa974' }}>*</span></label>
-                        <DatePicker
-                          selected={formData.startDateTime ? new Date(formData.startDateTime) : null}
-                          onChange={(date) => setFormData({ ...formData, startDateTime: date })}
-                          showTimeSelect
-                          timeFormat="HH:mm"
-                          timeIntervals={15}
-                          dateFormat="dd/MM/yyyy HH:mm"
-                          placeholderText="Select start date & time"
-                          minDate={new Date()}
-                          className="form-control"
-                          required
-                        />
-                      </div>
-                    </div>
+                  {/* Date Selection */}
+                  <div className="form-group">
+                    <label>Select Date <span style={{ color: '#dfa974' }}>*</span></label>
+                    <input
+                      type="date"
+                      name="bookingDate"
+                      className="form-control"
+                      value={formData.bookingDate}
+                      onChange={(e) => handleDateSlotChange('bookingDate', e.target.value)}
+                      min={new Date().toISOString().split('T')[0]}
+                      required
+                    />
+                  </div>
 
-                    <div className="col-md-6">
-                      <div className="form-group">
-                        <label>End Date & Time <span style={{ color: '#dfa974' }}>*</span></label>
-                        <DatePicker
-                          selected={formData.endDateTime ? new Date(formData.endDateTime) : null}
-                          onChange={(date) => setFormData({ ...formData, endDateTime: date })}
-                          showTimeSelect
-                          timeFormat="HH:mm"
-                          timeIntervals={15}
-                          dateFormat="dd/MM/yyyy HH:mm"
-                          placeholderText="Select end date & time"
-                          minDate={formData.startDateTime || new Date()}
-                          className="form-control"
-                          required
-                        />
-                      </div>
+                  {/* Slot Type Selection */}
+                  <div className="form-group">
+                    <label>Select Time Slot <span style={{ color: '#dfa974' }}>*</span></label>
+                    <small style={{ display: 'block', marginBottom: '10px', color: '#707079' }}>
+                      <i className="fa fa-info-circle" style={{ marginRight: '5px' }}></i>
+                      Available booking options for {hall.name}
+                    </small>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '15px' }}>
+                      {(!hall?.availableSlotTypes || hall?.availableSlotTypes?.fullday !== false) && (
+                        <div
+                          onClick={() => handleDateSlotChange('slotType', 'fullday')}
+                          style={{
+                            padding: '20px',
+                            border: `2px solid ${formData.slotType === 'fullday' ? '#dfa974' : '#e5e5e5'}`,
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            textAlign: 'center',
+                            background: formData.slotType === 'fullday' ? '#fff8f0' : '#ffffff',
+                            transition: 'all 0.3s'
+                          }}
+                        >
+                          <i className="fa fa-sun" style={{ fontSize: '24px', color: '#dfa974', marginBottom: '10px', display: 'block' }}></i>
+                          <strong style={{ display: 'block', marginBottom: '5px' }}>Full Day</strong>
+                          <small style={{ color: '#707079' }}>All Day</small>
+                        </div>
+                      )}
+                      {(!hall?.availableSlotTypes || hall?.availableSlotTypes?.morning !== false) && (
+                        <div
+                          onClick={() => handleDateSlotChange('slotType', 'morning')}
+                          style={{
+                            padding: '20px',
+                            border: `2px solid ${formData.slotType === 'morning' ? '#dfa974' : '#e5e5e5'}`,
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            textAlign: 'center',
+                            background: formData.slotType === 'morning' ? '#fff8f0' : '#ffffff',
+                            transition: 'all 0.3s'
+                          }}
+                        >
+                          <i className="fa fa-cloud-sun" style={{ fontSize: '24px', color: '#dfa974', marginBottom: '10px', display: 'block' }}></i>
+                          <strong style={{ display: 'block', marginBottom: '5px' }}>Morning</strong>
+                          <small style={{ color: '#707079' }}>Until 4:00 PM</small>
+                        </div>
+                      )}
+                      {(!hall?.availableSlotTypes || hall?.availableSlotTypes?.evening !== false) && (
+                        <div
+                          onClick={() => handleDateSlotChange('slotType', 'evening')}
+                          style={{
+                            padding: '20px',
+                            border: `2px solid ${formData.slotType === 'evening' ? '#dfa974' : '#e5e5e5'}`,
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            textAlign: 'center',
+                            background: formData.slotType === 'evening' ? '#fff8f0' : '#ffffff',
+                            transition: 'all 0.3s'
+                          }}
+                        >
+                          <i className="fa fa-moon" style={{ fontSize: '24px', color: '#dfa974', marginBottom: '10px', display: 'block' }}></i>
+                          <strong style={{ display: 'block', marginBottom: '5px' }}>Evening</strong>
+                          <small style={{ color: '#707079' }}>5:00 PM - 10:00 PM</small>
+                        </div>
+                      )}
                     </div>
                   </div>
+
+                  {/* Availability Status */}
+                  {availabilityChecking && (
+                    <div style={{ padding: '15px', background: '#f0f8ff', border: '1px solid #1e90ff', borderRadius: '4px', marginBottom: '20px' }}>
+                      <i className="fa fa-spinner fa-spin" style={{ marginRight: '8px' }}></i>
+                      Checking availability...
+                    </div>
+                  )}
+
+                  {isAvailable === true && (
+                    <div style={{ padding: '15px', background: '#d4edda', border: '1px solid #28a745', borderRadius: '4px', marginBottom: '20px' }}>
+                      <i className="fa fa-check-circle" style={{ marginRight: '8px', color: '#155724' }}></i>
+                      <strong style={{ color: '#155724' }}>Great! This slot is available</strong>
+                    </div>
+                  )}
+
+                  {isAvailable === false && (
+                    <div style={{ padding: '20px', background: '#fff3cd', border: '1px solid #ffc107', borderRadius: '4px', marginBottom: '20px' }}>
+                      <h5 style={{ color: '#856404', marginBottom: '15px' }}>
+                        <i className="fa fa-exclamation-triangle" style={{ marginRight: '8px' }}></i>
+                        This slot is not available
+                      </h5>
+                      {suggestedSlots.length > 0 && (
+                        <>
+                          <p style={{ color: '#856404', marginBottom: '10px' }}>Here are some available alternatives:</p>
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '10px' }}>
+                            {suggestedSlots.map((slot, index) => {
+                              // Parse date correctly without timezone shift
+                              const [year, month, day] = slot.date.split('-');
+                              const dateObj = new Date(year, month - 1, day);
+
+                              return (
+                                <button
+                                  key={index}
+                                  type="button"
+                                  onClick={() => selectSuggestedSlot(slot)}
+                                  style={{
+                                    padding: '12px',
+                                    background: '#ffffff',
+                                    border: '2px solid #dfa974',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: '600',
+                                    color: '#19191a',
+                                    transition: 'all 0.3s'
+                                  }}
+                                  onMouseEnter={(e) => e.target.style.background = '#fff8f0'}
+                                  onMouseLeave={(e) => e.target.style.background = '#ffffff'}
+                                >
+                                  {dateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
 
                   <div className="form-group">
                     <label>Number of Attendees</label>

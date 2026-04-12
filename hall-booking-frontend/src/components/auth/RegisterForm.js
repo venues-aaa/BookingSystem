@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { register, verifyOtp } from '../../services/authService';
+import { register } from '../../services/authService';
 
 const RegisterForm = () => {
 
@@ -14,10 +14,6 @@ const RegisterForm = () => {
     lastName: ''
   });
 
-  const [showOtpVerification, setShowOtpVerification] = useState(false);
-  const [otp, setOtp] = useState('');
-  const [generatedOtp, setGeneratedOtp] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
@@ -54,57 +50,14 @@ const RegisterForm = () => {
 
     try {
       const { confirmPassword, ...registerData } = formData;
-      const response = await register(registerData);
+      await register(registerData);
 
-      // Store phone number and OTP for verification
-      setPhoneNumber(registerData.phoneNumber);
-      setGeneratedOtp(response.otp); // For development - shows OTP
-      setShowOtpVerification(true);
-      setSuccess(`OTP sent successfully! (Dev mode: ${response.otp})`);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleOtpSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-
-    if (otp.length !== 4) {
-      setError('OTP must be 4 digits');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      await verifyOtp({ phoneNumber, otp });
-      setSuccess('Registration completed successfully!');
+      setSuccess('Registration successful! Redirecting to login...');
       setTimeout(() => {
         navigate('/login');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.message || 'OTP verification failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendOtp = async () => {
-    setError('');
-    setSuccess('');
-    setLoading(true);
-
-    try {
-      const { confirmPassword, ...registerData } = formData;
-      const response = await register(registerData);
-      setGeneratedOtp(response.otp);
-      setSuccess(`OTP resent successfully! (Dev mode: ${response.otp})`);
-    } catch (err) {
-      setError('Failed to resend OTP. Please try again.');
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -120,12 +73,10 @@ const RegisterForm = () => {
                 <h1 style={{ fontSize: '48px', color: '#dfa974', fontFamily: 'Lora, serif' }}>BookNest</h1>
               </div>
 
-              {!showOtpVerification ? (
-                <>
-                  <h2>Create Your Account</h2>
-                  <p>Join us for an exclusive luxury experience</p>
+              <h2>Create Your Account</h2>
+              <p>Join us for an exclusive luxury experience</p>
 
-                  <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
@@ -329,12 +280,12 @@ const RegisterForm = () => {
                       {loading ? (
                         <>
                           <i className="fa fa-spinner fa-spin" style={{ marginRight: '8px' }}></i>
-                          Sending OTP...
+                          Registering...
                         </>
                       ) : (
                         <>
                           <i className="fa fa-user-plus" style={{ marginRight: '8px' }}></i>
-                          Continue with OTP
+                          Register
                         </>
                       )}
                     </button>
@@ -349,137 +300,6 @@ const RegisterForm = () => {
                       Back to Home
                     </Link>
                   </div>
-                </>
-              ) : (
-                <>
-                  <h2>Verify OTP</h2>
-                  <p>Enter the 4-digit OTP sent to {phoneNumber}</p>
-
-                  <form onSubmit={handleOtpSubmit}>
-                    <div className="form-group">
-                      <label style={{ fontWeight: '600', color: '#19191a', marginBottom: '10px', display: 'block' }}>
-                        Enter OTP <span style={{ color: '#dfa974' }}>*</span>
-                      </label>
-                      <div style={{ position: 'relative' }}>
-                        <i className="fa fa-key" style={{
-                          position: 'absolute',
-                          left: '15px',
-                          top: '50%',
-                          transform: 'translateY(-50%)',
-                          color: '#dfa974'
-                        }}></i>
-                        <input
-                          type="text"
-                          className="form-control"
-                          value={otp}
-                          onChange={(e) => setOtp(e.target.value)}
-                          required
-                          placeholder="Enter 4-digit OTP"
-                          pattern="[0-9]{4}"
-                          maxLength="4"
-                          style={{ paddingLeft: '45px', fontSize: '24px', letterSpacing: '8px', textAlign: 'center' }}
-                          autoFocus
-                        />
-                      </div>
-                    </div>
-
-                    {error && (
-                      <div style={{
-                        background: '#ffe6e6',
-                        border: '1px solid #ff4d4d',
-                        color: '#cc0000',
-                        padding: '12px',
-                        marginBottom: '20px',
-                        borderRadius: '4px',
-                        fontSize: '14px'
-                      }}>
-                        <i className="fa fa-exclamation-circle" style={{ marginRight: '8px' }}></i>
-                        {error}
-                      </div>
-                    )}
-
-                    {success && (
-                      <div style={{
-                        background: '#d4edda',
-                        border: '1px solid #28a745',
-                        color: '#155724',
-                        padding: '12px',
-                        marginBottom: '20px',
-                        borderRadius: '4px',
-                        fontSize: '14px'
-                      }}>
-                        <i className="fa fa-check-circle" style={{ marginRight: '8px' }}></i>
-                        {success}
-                      </div>
-                    )}
-
-                    <button type="submit" className="primary-btn" disabled={loading} style={{ marginBottom: '15px' }}>
-                      {loading ? (
-                        <>
-                          <i className="fa fa-spinner fa-spin" style={{ marginRight: '8px' }}></i>
-                          Verifying...
-                        </>
-                      ) : (
-                        <>
-                          <i className="fa fa-check" style={{ marginRight: '8px' }}></i>
-                          Verify & Complete Registration
-                        </>
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={handleResendOtp}
-                      disabled={loading}
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        background: 'transparent',
-                        border: '2px solid #dfa974',
-                        color: '#dfa974',
-                        fontSize: '14px',
-                        fontWeight: '700',
-                        borderRadius: '2px',
-                        cursor: 'pointer',
-                        transition: 'all 0.3s'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = '#dfa974';
-                        e.target.style.color = 'white';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = 'transparent';
-                        e.target.style.color = '#dfa974';
-                      }}
-                    >
-                      <i className="fa fa-redo" style={{ marginRight: '8px' }}></i>
-                      Resend OTP
-                    </button>
-                  </form>
-
-                  <div className="auth-links" style={{ marginTop: '20px' }}>
-                    <button
-                      onClick={() => {
-                        setShowOtpVerification(false);
-                        setOtp('');
-                        setError('');
-                        setSuccess('');
-                      }}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#707079',
-                        fontSize: '14px',
-                        cursor: 'pointer',
-                        textDecoration: 'underline'
-                      }}
-                    >
-                      <i className="fa fa-arrow-left" style={{ marginRight: '5px' }}></i>
-                      Back to Registration
-                    </button>
-                  </div>
-                </>
-              )}
             </div>
           </div>
         </div>

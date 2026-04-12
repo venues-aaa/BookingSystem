@@ -1,39 +1,21 @@
 package com.hallbooking.model;
 
+import lombok.*;
+
 import java.io.Serializable;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class ItemSearchCriteria implements Serializable{
 
 	private String type;
-	private int placeId;
+	private String placeId;
 	//For Auditorium
-	private int seatingCapacity;
+	private Integer seatingCapacity;
 	private String tempControl;
-	
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public int getPlaceId() {
-		return placeId;
-	}
-	public void setPlaceId(int placeId) {
-		this.placeId = placeId;
-	}
-	public int getSeatingCapacity() {
-		return seatingCapacity;
-	}
-	public void setSeatingCapacity(int seatingCapacity) {
-		this.seatingCapacity = seatingCapacity;
-	}
-	public String getTempControl() {
-		return tempControl;
-	}
-	public void setTempControl(String tempControl) {
-		this.tempControl = tempControl;
-	}
-	
-	
+	private String sortBy;
+
 }

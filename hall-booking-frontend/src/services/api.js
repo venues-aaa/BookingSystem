@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+// Base URL without /api prefix since backend endpoints have different paths
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,12 +10,25 @@ const api = axios.create({
   },
 });
 
-// Request interceptor to add JWT token
+// Request interceptor - JWT disabled, using session-based auth
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    // Backend doesn't use JWT tokens currently
+    // Session management is handled by user ID in localStorage
+    const user = localStorage.getItem('user');
+    if (user) {
+      try {
+        const userData = JSON.parse(user);
+        // Add user ID to request params for endpoints that need it
+        if (userData.id && !config.params) {
+          config.params = {};
+        }
+        if (userData.id && config.params) {
+          config.params.userId = userData.id;
+        }
+      } catch (e) {
+        console.error('Error parsing user data:', e);
+      }
     }
     return config;
   },
@@ -27,10 +41,14 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      // Don't redirect on auth endpoints
+      if (!error.config.url.includes('/api/user/validate') &&
+          !error.config.url.includes('/api/user/create')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

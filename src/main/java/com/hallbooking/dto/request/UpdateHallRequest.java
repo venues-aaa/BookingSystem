@@ -1,5 +1,6 @@
 package com.hallbooking.dto.request;
 
+import com.hallbooking.model.AvailableSlotTypes;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -22,4 +23,6 @@ public class UpdateHallRequest {
     private String imageUrl;
 
     private Boolean isActive;
+
+    private AvailableSlotTypes availableSlotTypes;
 }

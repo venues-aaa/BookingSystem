@@ -184,6 +184,34 @@ const HallDetailsPage = () => {
                       </ul>
                     </div>
                   </div>
+
+                  {/* Available Booking Options */}
+                  <div style={{ marginTop: '20px', padding: '20px', background: '#fff8f0', borderLeft: '4px solid #dfa974' }}>
+                    <h5 style={{ marginBottom: '15px', color: '#19191a' }}>
+                      <i className="fa fa-clock" style={{ marginRight: '10px', color: '#dfa974' }}></i>
+                      Available Booking Options
+                    </h5>
+                    <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                      {(!hall.availableSlotTypes || hall.availableSlotTypes.fullday !== false) && (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <i className="fa fa-sun" style={{ fontSize: '18px', color: '#dfa974', marginRight: '8px' }}></i>
+                          <span style={{ fontWeight: '500' }}>Full Day</span>
+                        </div>
+                      )}
+                      {(!hall.availableSlotTypes || hall.availableSlotTypes.morning !== false) && (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <i className="fa fa-cloud-sun" style={{ fontSize: '18px', color: '#dfa974', marginRight: '8px' }}></i>
+                          <span style={{ fontWeight: '500' }}>Morning (Until 4:00 PM)</span>
+                        </div>
+                      )}
+                      {(!hall.availableSlotTypes || hall.availableSlotTypes.evening !== false) && (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <i className="fa fa-moon" style={{ fontSize: '18px', color: '#dfa974', marginRight: '8px' }}></i>
+                          <span style={{ fontWeight: '500' }}>Evening (5:00 PM - 10:00 PM)</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
 
                 {/* Amenities */}

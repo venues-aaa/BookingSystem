@@ -1,119 +1,115 @@
 package com.hallbooking.config;
 
-import com.hallbooking.entity.Hall;
-import com.hallbooking.entity.Role;
-import com.hallbooking.entity.User;
-import com.hallbooking.dao.impl.HallRepository;
-import com.hallbooking.dao.impl.UserRepository;
+import com.hallbooking.model.User;
+import com.hallbooking.model.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+import java.util.Date;
 
+/**
+ * DataInitializer - Automatically creates default admin user on first startup
+ *
+ * This component runs on application startup and creates a default admin user
+ * if no users exist in the database. This ensures you can always log in to a
+ * fresh installation.
+ *
+ * Default Admin Credentials:
+ * - Email: admin@hallbooking.com
+ * - Password: admin123
+ *
+ * IMPORTANT: Change the admin password immediately after first login in production!
+ */
 @Component
 public class DataInitializer implements CommandLineRunner {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private HallRepository hallRepository;
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
-        if (userRepository.count() == 0) {
+        // Check if any users exist in the database
+        long userCount = mongoTemplate.count(new Query(), User.class);
+
+        if (userCount == 0) {
+            System.out.println("=== No users found in database. Creating default admin user... ===");
+
+            // Create default admin user
             User admin = new User();
-            admin.setUsername("admin");
-            admin.setEmail("admin@hallbooking.com");
+            admin.setId("admin001");
+            admin.setEmailId("admin@hallbooking.com");
             admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setFirstName("Admin");
-            admin.setLastName("User");
-            admin.setRole(Role.ADMIN);
-            userRepository.save(admin);
+            admin.setStatus("Active");
+            admin.setIsActive(true);
+            admin.setCreatedOn(new Date());
+            admin.setCreatedUser("system");
+            admin.setLastModifiedDate(new Date());
+            admin.setLastModifiedUser("system");
 
-            User user = new User();
-            user.setUsername("john");
-            user.setEmail("john@example.com");
-            user.setPassword(passwordEncoder.encode("password123"));
-            user.setFirstName("John");
-            user.setLastName("Doe");
-            user.setRole(Role.USER);
-            userRepository.save(user);
+            UserDetails adminDetails = new UserDetails();
+            adminDetails.setFirstName("Admin");
+            adminDetails.setLastName("User");
+            adminDetails.setRole("ADMIN");
+            admin.setDetails(adminDetails);
 
+            mongoTemplate.save(admin);
+
+            // Create default vendor user
             User vendor = new User();
-            vendor.setUsername("vendor");
-            vendor.setEmail("vendor@hallbooking.com");
+            vendor.setId("vendor001");
+            vendor.setEmailId("vendor@hallbooking.com");
             vendor.setPassword(passwordEncoder.encode("vendor123"));
-            vendor.setFirstName("Vendor");
-            vendor.setLastName("Smith");
-            vendor.setRole(Role.VENDOR);
-            userRepository.save(vendor);
+            vendor.setStatus("Active");
+            vendor.setIsActive(true);
+            vendor.setCreatedOn(new Date());
+            vendor.setCreatedUser("system");
+            vendor.setLastModifiedDate(new Date());
+            vendor.setLastModifiedUser("system");
 
-            System.out.println("Sample users created:");
-            System.out.println("Admin - Username: admin, Password: admin123");
-            System.out.println("User - Username: john, Password: password123");
-            System.out.println("Vendor - Username: vendor, Password: vendor123");
-        }
+            UserDetails vendorDetails = new UserDetails();
+            vendorDetails.setFirstName("John");
+            vendorDetails.setLastName("Vendor");
+            vendorDetails.setRole("VENDOR");
+            vendor.setDetails(vendorDetails);
 
-        if (hallRepository.count() == 0) {
-            // Get admin and vendor users
-            User adminUser = userRepository.findByUsername("admin").orElse(null);
-            User vendorUser = userRepository.findByUsername("vendor").orElse(null);
+            mongoTemplate.save(vendor);
 
-            Hall hall1 = new Hall();
-            hall1.setName("Grand Conference Hall");
-            hall1.setDescription("Large conference hall perfect for corporate events and seminars");
-            hall1.setCapacity(200);
-            hall1.setLocation("Downtown, Floor 5");
-            hall1.setPricePerHour(new BigDecimal("5500.00"));
-            hall1.setAmenities("Projector, Sound System, WiFi, Air Conditioning, Whiteboard");
-            hall1.setImageUrl("https://images.unsplash.com/photo-1540575467063-178a50c2df87");
-            hall1.setIsActive(true);
-            hall1.setCreatedBy(adminUser);
-            hallRepository.save(hall1);
+            // Create default regular user
+            User user = new User();
+            user.setId("user001");
+            user.setEmailId("user@hallbooking.com");
+            user.setPassword(passwordEncoder.encode("user123"));
+            user.setStatus("Active");
+            user.setIsActive(true);
+            user.setCreatedOn(new Date());
+            user.setCreatedUser("system");
+            user.setLastModifiedDate(new Date());
+            user.setLastModifiedUser("system");
 
-            Hall hall2 = new Hall();
-            hall2.setName("Executive Meeting Room");
-            hall2.setDescription("Modern meeting room ideal for board meetings and small gatherings");
-            hall2.setCapacity(20);
-            hall2.setLocation("West Wing, Floor 3");
-            hall2.setPricePerHour(new BigDecimal("7500.00"));
-            hall2.setAmenities("Video Conferencing, WiFi, Coffee Machine, Whiteboard");
-            hall2.setImageUrl("https://images.unsplash.com/photo-1497366216548-37526070297c");
-            hall2.setIsActive(true);
-            hall2.setCreatedBy(vendorUser);
-            hallRepository.save(hall2);
+            UserDetails userDetails = new UserDetails();
+            userDetails.setFirstName("Jane");
+            userDetails.setLastName("Doe");
+            userDetails.setRole("USER");
+            user.setDetails(userDetails);
 
-            Hall hall3 = new Hall();
-            hall3.setName("Banquet Hall");
-            hall3.setDescription("Elegant banquet hall suitable for weddings and social events");
-            hall3.setCapacity(500);
-            hall3.setLocation("Main Building, Ground Floor");
-            hall3.setPricePerHour(new BigDecimal("3000.00"));
-            hall3.setAmenities("Stage, Sound System, Lighting, Catering Area, Parking");
-            hall3.setImageUrl("https://images.unsplash.com/photo-1464366400600-7168b8af9bc3");
-            hall3.setIsActive(true);
-            hall3.setCreatedBy(vendorUser);
-            hallRepository.save(hall3);
+            mongoTemplate.save(user);
 
-            Hall hall4 = new Hall();
-            hall4.setName("Training Room");
-            hall4.setDescription("Versatile training room with modern amenities");
-            hall4.setCapacity(50);
-            hall4.setLocation("East Wing, Floor 2");
-            hall4.setPricePerHour(new BigDecimal("5000.00"));
-            hall4.setAmenities("Projector, WiFi, Movable Chairs, Whiteboard");
-            hall4.setImageUrl("https://images.unsplash.com/photo-1524758631624-e2822e304c36");
-            hall4.setIsActive(true);
-            hall4.setCreatedBy(adminUser);
-            hallRepository.save(hall4);
-
-            System.out.println("Sample halls created: 4 halls (2 by admin, 2 by vendor)");
+            System.out.println("=== Default users created successfully! ===");
+            System.out.println("Admin   - Email: admin@hallbooking.com,  Password: admin123");
+            System.out.println("Vendor  - Email: vendor@hallbooking.com, Password: vendor123");
+            System.out.println("User    - Email: user@hallbooking.com,   Password: user123");
+            System.out.println("=======================================================");
+            System.out.println("IMPORTANT: Change the admin password after first login!");
+            System.out.println("=======================================================");
+        } else {
+            System.out.println("Users already exist in database. Skipping initialization.");
         }
     }
 }

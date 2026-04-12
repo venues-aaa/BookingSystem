@@ -35,11 +35,31 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const response = await loginApi(credentials);
-    setToken(response.token);
-    setUser(response.user);
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('user', JSON.stringify(response.user));
-    return response;
+
+    console.log('Login response from backend:', response);
+
+    // Backend returns user object directly (no JWT token)
+    // Use user ID as "token" for session management
+    const userToken = response.id || response._id || response.authId || response.emailId || 'session-active';
+    const userData = {
+      id: response.id || response._id || response.authId || response.emailId,
+      email: response.emailId || response.email,
+      emailId: response.emailId || response.email,
+      firstName: response.details?.firstName,
+      lastName: response.details?.lastName,
+      phoneNumber: response.details?.phoneNumber || response.details?.contactNbr,
+      role: response.details?.role || 'USER',
+      isActive: response.isActive
+    };
+
+    console.log('Processed user data:', userData);
+
+    setToken(userToken);
+    setUser(userData);
+    localStorage.setItem('token', userToken);
+    localStorage.setItem('user', JSON.stringify(userData));
+
+    return { token: userToken, user: userData };
   };
 
   const logout = () => {
