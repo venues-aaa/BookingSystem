@@ -1,0 +1,82 @@
+This patch fixes the GridLayout width calculation issue.
+
+The problem: containerWidth is being set to a very small value (~100px) instead of the actual canvas width.
+
+Root cause: The canvas ref measurement happens before the CSS has finished calculating the actual width.
+
+Solution: Use a more robust width calculation with multiple fallbacks and delayed measurement.
+
+Apply this fix to DesignCanvas.js:
+
+1. Change the initial containerWidth from 1200 to a calculated value based on window
+2. Add multiple measurement attempts
+3. Use requestAnimationFrame for proper timing
+
+Replace the width calculation useEffect with this:
+
+```javascript
+// Calculate container width dynamically and handle window resize
+useEffect(() => {
+  let mounted = true;
+
+  const updateWidth = () => {
+    if (!mounted) return;
+
+    if (canvasRef.current) {
+      // Get the actual rendered width
+      const rect = canvasRef.current.getBoundingClientRect();
+      const width = rect.width || canvasRef.current.offsetWidth || canvasRef.current.clientWidth;
+
+      console.log('DesignCanvas width measurement:', {
+        'getBoundingClientRect': rect.width,
+        'offsetWidth': canvasRef.current.offsetWidth,
+        'clientWidth': canvasRef.current.clientWidth,
+        'selected': width
+      });
+
+      // Account for padding (24px on each side = 48px total)
+      const adjustedWidth = Math.max(width - 48, 800); // Minimum 800px
+
+      if (adjustedWidth !== containerWidth) {
+        console.log(`Updating containerWidth from ${containerWidth} to ${adjustedWidth}`);
+        setContainerWidth(adjustedWidth);
+      }
+    } else {
+      console.log('DesignCanvas: canvasRef.current is null');
+      // Fallback to window-based calculation
+      const fallbackWidth = Math.min(window.innerWidth - 400, 1200); // Account for sidebars
+      if (fallbackWidth !== containerWidth) {
+        setContainerWidth(fallbackWidth);
+      }
+    }
+  };
+
+  // Multiple measurement attempts
+  const measure = () => {
+    updateWidth();
+
+    // Try again after a frame to ensure CSS has loaded
+    requestAnimationFrame(() => {
+      if (mounted) updateWidth();
+    });
+
+    // One more try after a short delay
+    setTimeout(() => {
+      if (mounted) updateWidth();
+    }, 100);
+  };
+
+  // Initial measurement
+  measure();
+
+  // Update on window resize
+  window.addEventListener('resize', updateWidth);
+
+  return () => {
+    mounted = false;
+    window.removeEventListener('resize', updateWidth);
+  };
+}, [containerWidth]); // Include containerWidth as dependency
+```
+
+This should fix the width calculation issue.

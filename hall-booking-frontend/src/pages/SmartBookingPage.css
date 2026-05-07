@@ -1,0 +1,468 @@
+.smart-booking-page {
+  margin-top: 130px;
+  padding: 40px 0 80px;
+  background: #f8f9fa;
+  min-height: 600px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+  background: white;
+  padding: 40px 20px;
+  border-radius: 8px;
+}
+
+.breadcrumb {
+  font-size: 14px;
+  color: #707079;
+  margin-bottom: 15px;
+}
+
+.breadcrumb a {
+  color: #dfa974;
+  text-decoration: none;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  color: #19191a;
+  margin-bottom: 10px;
+}
+
+.provider-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #dfa974;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.booking-form {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.booking-section {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.booking-section h3 {
+  font-size: 20px;
+  color: #19191a;
+  margin-bottom: 10px;
+}
+
+.section-description {
+  color: #707079;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.basic-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .basic-fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #19191a;
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px;
+  border: 2px solid #e5e5e5;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #dfa974;
+}
+
+.required {
+  color: #dc3545;
+}
+
+/* Menu Items Grid */
+.menu-items-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+@media (max-width: 768px) {
+  .menu-items-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.menu-item-card {
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 15px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.menu-item-card.selected {
+  border-color: #dfa974;
+  background: #fff9f5;
+}
+
+.menu-item-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.checkbox-container {
+  position: relative;
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: white;
+  border: 2px solid #dfa974;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: #dfa974;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.menu-item-info h4 {
+  font-size: 16px;
+  color: #19191a;
+  margin: 0 0 5px 0;
+}
+
+.food-type-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.food-type-badge.veg {
+  background: #d4edda;
+  color: #155724;
+}
+
+.food-type-badge.non-veg {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.food-type-badge.vegan {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.menu-item-details .category {
+  font-size: 12px;
+  color: #707079;
+  margin-bottom: 5px;
+}
+
+.menu-item-details .description {
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.menu-item-details .price {
+  font-size: 14px;
+  font-weight: 700;
+  color: #dfa974;
+}
+
+.quantity-selector {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.quantity-selector label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #19191a;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity-controls button {
+  width: 35px;
+  height: 35px;
+  border: 2px solid #dfa974;
+  background: white;
+  color: #dfa974;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.quantity-controls button:hover {
+  background: #dfa974;
+  color: white;
+}
+
+.quantity-controls input {
+  width: 80px;
+  text-align: center;
+  padding: 8px;
+  border: 2px solid #e5e5e5;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+/* Options Grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.option-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.option-card:hover {
+  border-color: #dfa974;
+}
+
+.option-card input:checked + .option-label {
+  font-weight: 700;
+  color: #dfa974;
+}
+
+.option-card input {
+  margin: 0;
+  cursor: pointer;
+}
+
+.option-label {
+  font-size: 14px;
+  color: #19191a;
+}
+
+/* Amenities */
+.amenities-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.amenity-badge {
+  background: #f8f9fa;
+  border: 1px solid #e5e5e5;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #19191a;
+}
+
+.error-message {
+  background: #ffe5e5;
+  color: #dc3545;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 20px 30px;
+  background: white;
+  border-radius: 8px;
+}
+
+.btn-secondary {
+  padding: 12px 30px;
+  background: #f8f9fa;
+  border: 2px solid #e5e5e5;
+  color: #19191a;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background: #e5e5e5;
+}
+
+.primary-btn {
+  padding: 12px 30px;
+  background: #dfa974;
+  border: 2px solid #dfa974;
+  color: white;
+  border-radius: 5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary-btn:hover:not(:disabled) {
+  background: #c08f5c;
+}
+
+.primary-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 100px 20px;
+}
+
+.loading-state .spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid #dfa974;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Payment Options Styles */
+.payment-options-section {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  margin-top: 25px;
+}
+
+.vendor-payment-terms {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #dfa974;
+}
+
+.terms-label {
+  font-size: 13px;
+  color: #707079;
+  margin-bottom: 5px;
+}
+
+.terms-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #19191a;
+  margin: 0;
+}
+
+.custom-terms {
+  font-size: 14px;
+  color: #555;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.payment-amount-info {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.total-amount {
+  font-size: 18px;
+  color: #19191a;
+}
+
+.total-amount strong {
+  color: #dfa974;
+  font-size: 22px;
+}
+
+.help-text {
+  font-size: 13px;
+  color: #707079;
+  margin-top: 6px;
+  display: block;
+}

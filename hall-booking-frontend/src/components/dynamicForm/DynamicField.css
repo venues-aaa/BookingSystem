@@ -1,0 +1,192 @@
+/* Dynamic Field Styles */
+
+.dynamic-field {
+  margin-bottom: 24px;
+}
+
+.dynamic-field.has-error .dynamic-field-input,
+.dynamic-field.has-error .dynamic-field-textarea,
+.dynamic-field.has-error .dynamic-field-select {
+  border-color: #ef4444;
+}
+
+.dynamic-field-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.required-indicator {
+  color: #ef4444;
+  margin-left: 4px;
+}
+
+/* Input Styles */
+.dynamic-field-input,
+.dynamic-field-textarea,
+.dynamic-field-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  transition: all 0.2s ease;
+}
+
+.dynamic-field-input:focus,
+.dynamic-field-textarea:focus,
+.dynamic-field-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dynamic-field-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Radio and Checkbox Groups */
+.dynamic-field-radio-group,
+.dynamic-field-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dynamic-field-radio-label,
+.dynamic-field-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.dynamic-field-radio-label input[type="radio"],
+.dynamic-field-checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.dynamic-field-radio-label:hover,
+.dynamic-field-checkbox-label:hover {
+  color: #111827;
+}
+
+/* Time Range */
+.dynamic-field-time-range {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.time-range-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.time-range-input label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Payment Terms */
+.dynamic-field-payment-terms {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.custom-terms-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.custom-terms-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.dynamic-field-payment-terms .dynamic-field-textarea {
+  background: #ffffff;
+  min-height: 80px;
+}
+
+/* File Input */
+.dynamic-field-file {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dynamic-field-file-input {
+  padding: 8px;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dynamic-field-file-input:hover {
+  border-color: #9ca3af;
+  background: #f9fafb;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #f3f4f6;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #374151;
+}
+
+.file-size {
+  color: #6b7280;
+}
+
+/* Help Text */
+.field-help {
+  display: block;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 6px;
+}
+
+/* Error Message */
+.field-error {
+  display: block;
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 14px;
+  padding: 12px;
+  background: #fef2f2;
+  border-radius: 6px;
+  margin: 0;
+}

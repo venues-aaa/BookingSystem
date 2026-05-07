@@ -1,0 +1,723 @@
+/* Field Renderer Container with enhanced visual design */
+.field-renderer {
+  position: relative;
+  background: linear-gradient(135deg, white 0%, #fafbff 100%);
+  border: 2px solid var(--fb-neutral-200);
+  border-radius: var(--fb-radius-xl);
+  padding: var(--fb-space-4);
+  cursor: pointer;
+  transition: all var(--fb-transition-base);
+  overflow: visible;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+/* Subtle gradient overlay on hover */
+.field-renderer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, var(--fb-primary-50) 100%);
+  opacity: 0;
+  transition: opacity var(--fb-transition-base);
+  pointer-events: none;
+  border-radius: var(--fb-radius-xl);
+}
+
+.field-renderer:hover::before {
+  opacity: 1;
+}
+
+.field-renderer:hover {
+  border-color: var(--fb-primary-400);
+  box-shadow: 0 6px 24px rgba(59, 130, 246, 0.15);
+  transform: translateY(-3px);
+}
+
+/* Enhanced Selected State with left accent bar */
+.field-renderer.selected {
+  border-color: var(--fb-primary-500);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12), 0 10px 30px rgba(59, 130, 246, 0.2);
+  background: linear-gradient(135deg, #ffffff 0%, var(--fb-primary-50) 100%);
+  transform: scale(1.02);
+}
+
+/* Selection Indicator - Left Accent Bar */
+.selection-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--fb-primary-500) 0%, var(--fb-primary-600) 100%);
+  border-radius: var(--fb-radius-xl) 0 0 var(--fb-radius-xl);
+  box-shadow: 2px 0 12px rgba(59, 130, 246, 0.4);
+  animation: slideInFromLeft 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* Enhanced Drag Handle with improved visual affordance */
+.field-renderer-drag-handle {
+  position: absolute;
+  top: var(--fb-space-2);
+  left: var(--fb-space-2);
+  color: var(--fb-neutral-400);
+  cursor: grab;
+  font-size: 18px;
+  padding: var(--fb-space-2);
+  border-radius: var(--fb-radius-md);
+  transition: all var(--fb-transition-fast);
+  z-index: var(--fb-z-base);
+  background: transparent;
+}
+
+.field-renderer-drag-handle:hover {
+  color: var(--fb-primary-500);
+  background: var(--fb-primary-50);
+  transform: scale(1.15);
+}
+
+.field-renderer-drag-handle:active {
+  cursor: grabbing;
+  transform: scale(1.05);
+  background: var(--fb-primary-100);
+}
+
+/* Content Area */
+.field-renderer-content {
+  padding-left: var(--fb-space-8);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--fb-space-2);
+}
+
+/* Header with label and delete button */
+.field-renderer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--fb-space-3);
+  margin-bottom: var(--fb-space-1);
+}
+
+.field-renderer-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--fb-neutral-900);
+  margin: 0;
+  line-height: 1.4;
+  flex: 1;
+  word-break: break-word;
+  letter-spacing: -0.01em;
+}
+
+.field-required {
+  color: var(--fb-error-500);
+  margin-left: var(--fb-space-1);
+  font-weight: 800;
+  font-size: 16px;
+  animation: requiredPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes requiredPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+/* Enhanced Delete Button with smooth transitions */
+.field-renderer-delete {
+  background: transparent;
+  border: none;
+  color: var(--fb-neutral-400);
+  cursor: pointer;
+  padding: var(--fb-space-2);
+  border-radius: var(--fb-radius-md);
+  font-size: 14px;
+  transition: all var(--fb-transition-fast);
+  opacity: 0;
+  transform: scale(0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.field-renderer:hover .field-renderer-delete,
+.field-renderer:focus-within .field-renderer-delete {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.field-renderer-delete:hover {
+  background: linear-gradient(135deg, var(--fb-error-50) 0%, #fef2f2 100%);
+  color: var(--fb-error-600);
+  transform: scale(1.15);
+}
+
+.field-renderer-delete:active {
+  transform: scale(0.95);
+}
+
+.field-renderer-delete:focus-visible {
+  outline: 2px solid var(--fb-error-500);
+  outline-offset: 2px;
+  opacity: 1;
+}
+
+/* Preview Container */
+.field-renderer-preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 40px;
+}
+
+/* Help Text */
+.field-renderer-help {
+  display: block;
+  color: var(--fb-neutral-500);
+  font-size: 12px;
+  line-height: 1.5;
+  font-style: italic;
+  margin-top: var(--fb-space-1);
+}
+
+/* Enhanced Field Type Badge */
+.field-renderer-badge {
+  position: absolute;
+  top: var(--fb-space-2);
+  right: var(--fb-space-2);
+  background: linear-gradient(135deg, var(--fb-neutral-100) 0%, var(--fb-neutral-200) 100%);
+  color: var(--fb-neutral-600);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 5px var(--fb-space-2);
+  border-radius: var(--fb-radius-lg);
+  letter-spacing: 0.08em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all var(--fb-transition-fast);
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
+.field-renderer:hover .field-renderer-badge,
+.field-renderer:focus-within .field-renderer-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.field-renderer.selected .field-renderer-badge {
+  background: linear-gradient(135deg, var(--fb-primary-500) 0%, var(--fb-primary-600) 100%);
+  color: white;
+  opacity: 1;
+  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.4);
+}
+
+/* Validation Indicators - Enhanced inline badges */
+.field-validation-indicators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--fb-space-1);
+  margin-top: var(--fb-space-2);
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.validation-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px var(--fb-space-2);
+  background: linear-gradient(135deg, var(--fb-success-50) 0%, #d1fae5 100%);
+  border: 1px solid var(--fb-success-300);
+  border-radius: var(--fb-radius-md);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fb-success-700);
+  letter-spacing: 0.02em;
+  transition: all var(--fb-transition-fast);
+}
+
+.validation-badge:hover {
+  background: linear-gradient(135deg, var(--fb-success-100) 0%, var(--fb-success-50) 100%);
+  border-color: var(--fb-success-500);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+/* Booking Validation Badge */
+.booking-validation-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--fb-space-1);
+  padding: 4px var(--fb-space-2);
+  background: linear-gradient(135deg, var(--fb-warning-50) 0%, #fffbeb 100%);
+  border: 1px solid var(--fb-warning-400);
+  border-radius: var(--fb-radius-md);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fb-warning-700);
+  margin-top: var(--fb-space-2);
+  animation: fadeInUp 0.3s ease-out 0.1s both;
+}
+
+/* Field Preview Styles - Realistic form controls */
+.field-preview-input,
+.field-preview-textarea,
+.field-preview-select,
+.field-preview-time {
+  width: 100%;
+  padding: var(--fb-space-2) var(--fb-space-3);
+  border: 2px solid var(--fb-neutral-200);
+  border-radius: var(--fb-radius-lg);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--fb-neutral-600);
+  background: linear-gradient(135deg, white 0%, var(--fb-neutral-50) 100%);
+  transition: all var(--fb-transition-fast);
+  pointer-events: none;
+}
+
+.field-preview-input:hover,
+.field-preview-textarea:hover,
+.field-preview-select:hover,
+.field-preview-time:hover {
+  border-color: var(--fb-primary-300);
+  background: white;
+}
+
+.field-preview-input::placeholder,
+.field-preview-textarea::placeholder {
+  color: var(--fb-neutral-400);
+}
+
+.field-preview-input-sm {
+  width: 100%;
+  padding: 6px var(--fb-space-2);
+  border: 2px solid var(--fb-neutral-200);
+  border-radius: var(--fb-radius-md);
+  font-size: 13px;
+  color: var(--fb-neutral-600);
+  background: white;
+  margin-top: var(--fb-space-1);
+  transition: all var(--fb-transition-fast);
+}
+
+.field-preview-textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.6;
+}
+
+.field-preview-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Radio, Checkbox, Timing Options - Enhanced layouts */
+.field-preview-radio,
+.field-preview-checkbox,
+.field-preview-timing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fb-space-2);
+}
+
+.field-preview-radio-label,
+.field-preview-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--fb-space-2);
+  font-size: 14px;
+  color: var(--fb-neutral-700);
+  cursor: not-allowed;
+  padding: var(--fb-space-2);
+  border-radius: var(--fb-radius-md);
+  transition: background var(--fb-transition-fast);
+}
+
+.field-preview-radio-label:hover,
+.field-preview-checkbox-label:hover {
+  background: var(--fb-neutral-50);
+}
+
+.field-preview-radio-label input,
+.field-preview-checkbox-label input {
+  cursor: not-allowed;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--fb-primary-500);
+}
+
+/* Timing Options - Horizontal chip layout */
+.field-preview-timing {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--fb-space-2);
+}
+
+.field-preview-timing-label {
+  display: flex;
+  align-items: center;
+  gap: var(--fb-space-2);
+  background: linear-gradient(135deg, var(--fb-neutral-50) 0%, white 100%);
+  padding: var(--fb-space-2) var(--fb-space-3);
+  border-radius: var(--fb-radius-full);
+  border: 2px solid var(--fb-neutral-200);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fb-neutral-700);
+  cursor: not-allowed;
+  transition: all var(--fb-transition-fast);
+}
+
+.field-preview-timing-label:hover {
+  border-color: var(--fb-primary-400);
+  background: linear-gradient(135deg, var(--fb-primary-50) 0%, white 100%);
+}
+
+.field-preview-timing-label input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--fb-primary-500);
+}
+
+/* Time Range with separator */
+.field-preview-time-range {
+  display: flex;
+  align-items: center;
+  gap: var(--fb-space-3);
+}
+
+.field-preview-time {
+  flex: 1;
+  min-width: 0;
+}
+
+.field-preview-separator {
+  color: var(--fb-neutral-500);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Payment Terms */
+.field-preview-payment-terms {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fb-space-3);
+}
+
+.field-preview-custom-terms {
+  padding: var(--fb-space-3);
+  background: var(--fb-neutral-50);
+  border: 1px solid var(--fb-neutral-200);
+  border-radius: var(--fb-radius-lg);
+  margin-top: var(--fb-space-2);
+}
+
+.field-preview-custom-terms .field-preview-textarea {
+  background: white;
+}
+
+/* Repeating Group - Card-based layout */
+.field-preview-repeating {
+  border: 2px dashed var(--fb-neutral-300);
+  border-radius: var(--fb-radius-xl);
+  padding: var(--fb-space-4);
+  background: linear-gradient(135deg, var(--fb-neutral-50) 0%, white 100%);
+  transition: all var(--fb-transition-base);
+}
+
+.field-preview-repeating:hover {
+  border-color: var(--fb-primary-400);
+  background: linear-gradient(135deg, var(--fb-primary-50) 0%, white 100%);
+}
+
+.field-preview-repeating-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fb-space-2);
+  margin-bottom: var(--fb-space-3);
+  padding: var(--fb-space-3);
+  background: white;
+  border-radius: var(--fb-radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--fb-neutral-200);
+}
+
+/* Horizontal layout for nested fields */
+.field-preview-repeating-item.horizontal-layout {
+  flex-direction: row;
+  align-items: flex-end;
+  gap: var(--fb-space-3);
+}
+
+.field-preview-nested {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Horizontal layout - nested fields take equal width */
+.horizontal-layout .field-preview-nested {
+  flex: 1;
+  min-width: 0;
+}
+
+.field-preview-nested small {
+  color: var(--fb-neutral-600);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.field-preview-add-button {
+  width: 100%;
+  padding: var(--fb-space-2) var(--fb-space-3);
+  background: linear-gradient(135deg, var(--fb-neutral-100) 0%, var(--fb-neutral-50) 100%);
+  border: 2px dashed var(--fb-neutral-300);
+  border-radius: var(--fb-radius-lg);
+  color: var(--fb-neutral-600);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: not-allowed;
+  transition: all var(--fb-transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fb-space-2);
+}
+
+.field-preview-add-button:hover {
+  border-color: var(--fb-primary-400);
+  background: linear-gradient(135deg, var(--fb-primary-50) 0%, var(--fb-primary-100) 100%);
+  color: var(--fb-primary-700);
+}
+
+/* File Upload - Realistic button layout */
+.field-preview-file {
+  display: flex;
+  align-items: center;
+  gap: var(--fb-space-3);
+  padding: var(--fb-space-3);
+  background: linear-gradient(135deg, var(--fb-neutral-50) 0%, white 100%);
+  border: 2px dashed var(--fb-neutral-300);
+  border-radius: var(--fb-radius-lg);
+  transition: all var(--fb-transition-base);
+}
+
+.field-preview-file:hover {
+  border-color: var(--fb-primary-400);
+  background: linear-gradient(135deg, var(--fb-primary-50) 0%, white 100%);
+}
+
+.field-preview-file-button {
+  padding: var(--fb-space-2) var(--fb-space-4);
+  background: linear-gradient(135deg, var(--fb-neutral-100) 0%, var(--fb-neutral-200) 100%);
+  border: 2px solid var(--fb-neutral-300);
+  border-radius: var(--fb-radius-lg);
+  color: var(--fb-neutral-700);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: not-allowed;
+  transition: all var(--fb-transition-fast);
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.field-preview-file-button:hover {
+  background: linear-gradient(135deg, var(--fb-primary-100) 0%, var(--fb-primary-200) 100%);
+  border-color: var(--fb-primary-400);
+  color: var(--fb-primary-700);
+}
+
+.field-preview-file-text {
+  color: var(--fb-neutral-500);
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* Unknown Field Type - Error state */
+.field-preview-unknown {
+  padding: var(--fb-space-4);
+  background: linear-gradient(135deg, var(--fb-error-50) 0%, #fef2f2 100%);
+  border: 2px solid var(--fb-error-500);
+  border-radius: var(--fb-radius-lg);
+  color: var(--fb-error-700);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .field-renderer {
+    padding: var(--fb-space-3);
+    border-radius: var(--fb-radius-lg);
+  }
+
+  .field-renderer-content {
+    padding-left: var(--fb-space-6);
+  }
+
+  .field-renderer-label {
+    font-size: 14px;
+  }
+
+  .field-preview-input,
+  .field-preview-textarea,
+  .field-preview-select {
+    font-size: 13px;
+    padding: var(--fb-space-2);
+  }
+
+  .field-preview-timing {
+    flex-direction: column;
+  }
+
+  .field-preview-time-range {
+    flex-direction: column;
+    gap: var(--fb-space-2);
+  }
+
+  .field-preview-file {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .validation-badge,
+  .booking-validation-badge {
+    font-size: 10px;
+  }
+
+  /* Stack horizontal layout vertically on mobile */
+  .field-preview-repeating-item.horizontal-layout {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Accessibility: High Contrast Mode */
+@media (prefers-contrast: high) {
+  .field-renderer {
+    border-width: 3px;
+  }
+
+  .field-renderer.selected {
+    border-width: 4px;
+  }
+
+  .field-preview-input,
+  .field-preview-textarea,
+  .field-preview-select {
+    border-width: 3px;
+  }
+
+  .selection-indicator {
+    width: 6px;
+  }
+}
+
+/* Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .field-renderer,
+  .field-renderer-drag-handle,
+  .field-renderer-delete,
+  .field-renderer-badge,
+  .selection-indicator,
+  .validation-badge,
+  .booking-validation-badge,
+  .field-validation-indicators {
+    animation: none;
+    transition: none;
+  }
+
+  .field-required {
+    animation: none;
+  }
+
+  .field-renderer:hover,
+  .field-renderer.selected {
+    transform: none;
+  }
+
+  .field-preview-unknown {
+    animation: none;
+  }
+}
+
+/* Focus Visible for Keyboard Navigation */
+.field-renderer:focus-visible {
+  outline: 3px solid var(--fb-primary-500);
+  outline-offset: 3px;
+}
+
+/* Loading State */
+.field-renderer.loading {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.field-renderer.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  border: 3px solid var(--fb-neutral-200);
+  border-top-color: var(--fb-primary-500);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

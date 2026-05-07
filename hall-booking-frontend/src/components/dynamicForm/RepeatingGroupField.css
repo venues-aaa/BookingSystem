@@ -1,0 +1,140 @@
+/* Repeating Group Field Styles */
+
+.repeating-group-field {
+  margin-bottom: 32px;
+  padding: 24px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.repeating-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.repeating-group-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.btn-add-item {
+  padding: 8px 16px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add-item:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.btn-add-item:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Repeating Items */
+.repeating-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.repeating-item {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.repeating-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.repeating-item-header h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  margin: 0;
+}
+
+.btn-remove-item {
+  width: 28px;
+  height: 28px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 6px;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.btn-remove-item:hover:not(:disabled) {
+  background: #fecaca;
+}
+
+.btn-remove-item:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.repeating-item-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 8px;
+  border: 1px dashed #d1d5db;
+}
+
+.empty-state p {
+  color: #6b7280;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Validation Hints */
+.validation-hint {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.validation-hint.warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.validation-hint.info {
+  background: #dbeafe;
+  color: #1e40af;
+}
