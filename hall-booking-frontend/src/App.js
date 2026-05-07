@@ -7,14 +7,29 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import LoginForm from './components/auth/LoginForm';
 import RegisterForm from './components/auth/RegisterForm';
 import HomePage from './pages/HomePage';
-import HallsPage from './pages/HallsPage';
-import HallDetailsPage from './pages/HallDetailsPage';
 import BookingPage from './pages/BookingPage';
+import GenericBookingPage from './pages/GenericBookingPage';
+import SmartBookingPage from './pages/SmartBookingPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageUsersPage from './pages/admin/ManageUsersPage';
+import AllBookingsPage from './pages/admin/AllBookingsPage';
 import VendorDashboard from './pages/vendor/VendorDashboard';
-import ManageHallsPage from './pages/shared/ManageHallsPage';
+
+// NEW: Category Management
+import CategoriesPage from './pages/admin/CategoriesPage';
+import CreateCategoryPage from './pages/admin/CreateCategoryPage';
+import EditCategoryPage from './pages/admin/EditCategoryPage';
+import FormBuilder from './components/formBuilder/FormBuilder';
+
+// NEW: Dynamic Item Creation
+import CreateItemPage from './pages/vendor/CreateItemPage';
+import VendorCategoryItemsPage from './pages/vendor/VendorCategoryItemsPage';
+import VendorOfflineBookingsPage from './pages/vendor/VendorOfflineBookingsPage';
+
+// NEW: Public Category Browsing
+import CategoryItemsPage from './pages/CategoryItemsPage';
+import ItemDetailsPage from './pages/ItemDetailsPage';
 
 function App() {
   return (
@@ -25,17 +40,39 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
-            <Route path="/halls" element={<HallsPage />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<RegisterForm />} />
-            <Route path="/halls/:id" element={<HallDetailsPage />} />
+
+            {/* NEW: Generic Category Items Page */}
+            <Route path="/category/:categoryId/items" element={<CategoryItemsPage />} />
+
+            {/* NEW: Generic Item Details Page (works for ALL categories) */}
+            <Route path="/item/:itemId" element={<ItemDetailsPage />} />
 
             {/* Protected Routes */}
+            {/* NEW: Smart schema-driven booking page - reads vendor's item data */}
             <Route
-              path="/booking/:hallId"
+              path="/booking/:itemId"
+              element={
+                <ProtectedRoute>
+                  <SmartBookingPage />
+                </ProtectedRoute>
+              }
+            />
+            {/* OLD: Keep old booking pages for backward compatibility */}
+            <Route
+              path="/booking/hall/:hallId"
               element={
                 <ProtectedRoute>
                   <BookingPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/booking/generic/:itemId"
+              element={
+                <ProtectedRoute>
+                  <GenericBookingPage />
                 </ProtectedRoute>
               }
             />
@@ -58,18 +95,52 @@ function App() {
               }
             />
             <Route
-              path="/admin/halls"
-              element={
-                <ProtectedRoute adminOnly={true}>
-                  <ManageHallsPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path="/admin/users"
               element={
                 <ProtectedRoute adminOnly={true}>
                   <ManageUsersPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/bookings"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <AllBookingsPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* NEW: Category Management Routes */}
+            <Route
+              path="/admin/categories"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <CategoriesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/categories/create"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <CreateCategoryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/categories/:categoryId/edit"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <EditCategoryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/categories/:categoryId/design"
+              element={
+                <ProtectedRoute adminOnly={true}>
+                  <FormBuilder />
                 </ProtectedRoute>
               }
             />
@@ -84,10 +155,42 @@ function App() {
               }
             />
             <Route
-              path="/vendor/halls"
+              path="/vendor/offline-bookings"
               element={
                 <ProtectedRoute vendorOnly={true}>
-                  <ManageHallsPage />
+                  <VendorOfflineBookingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vendor/items/create"
+              element={
+                <ProtectedRoute vendorOnly={true}>
+                  <CreateItemPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vendor/items/create/:categoryId"
+              element={
+                <ProtectedRoute vendorOnly={true}>
+                  <CreateItemPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vendor/items/:categoryId"
+              element={
+                <ProtectedRoute vendorOnly={true}>
+                  <VendorCategoryItemsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vendor/items/edit/:itemId"
+              element={
+                <ProtectedRoute vendorOnly={true}>
+                  <CreateItemPage editMode={true} />
                 </ProtectedRoute>
               }
             />

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -28,5 +30,37 @@ public class BookingDetails implements Serializable{
 	private BigDecimal totalPrice;
 	private String functionType;
 	private int numberOfAttendees;
+
+	/**
+	 * For Catering items: Selected menu items with quantities
+	 * Structure: List of { itemName, quantity, pricePerPerson, subtotal }
+	 */
+	private List<Map<String, Object>> selectedMenuItems;
+
+	/**
+	 * For Catering items: Event timing (start and end time)
+	 */
+	private Map<String, String> eventTiming;
+
+	/**
+	 * For Catering items: Additional staff requested
+	 */
+	private Boolean additionalStaffRequested;
+
+	/**
+	 * For Catering items: Number of additional staff
+	 */
+	private Integer numberOfAdditionalStaff;
+
+	/**
+	 * Vendor's payment terms selected when creating the item
+	 * Stored as-is from item.dynamicData payment terms field
+	 */
+	private Map<String, Object> vendorPaymentTerms;
+
+	/**
+	 * Total booking amount (calculated based on item price and attendees)
+	 */
+	private Double totalBookingAmount;
 
 }

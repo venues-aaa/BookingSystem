@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
-    private Long id;
+    private String id;  // MongoDB uses String IDs
     private String username;
     private String email;
     private String firstName;
     private String lastName;
-    private Role role;
+    private String role;  // Changed from Role enum to String for flexibility
     private Boolean isActive;
-    private Long createdById;
+    private String createdById;
     private String createdByUsername;
     private LocalDateTime createdAt;
 }

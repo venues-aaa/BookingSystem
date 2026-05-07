@@ -117,6 +117,31 @@ public class BookingController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Admin endpoint to get ALL bookings in the system
+     * @param page
+     * @param size
+     * @param status Optional filter by status (Confirmed, Cancelled, etc.)
+     * @return All bookings with pagination
+     */
+    @GetMapping("/admin/all")
+    public ResponseEntity<Map<String, Object>> getAllBookingsForAdmin(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String status) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Booking> bookings = bookingService.retrieveUserBookedDetails(null, status, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("availability", bookings.getContent());
+        response.put("currentPage", bookings.getNumber());
+        response.put("totalPages", bookings.getTotalPages());
+        response.put("totalElements", bookings.getTotalElements());
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/bookingById/{bookingId}")
     public ResponseEntity<BookingResponse> getBookingById(@PathVariable("bookingId") String bookingId) throws Exception {
 
@@ -327,5 +352,79 @@ public class BookingController {
         List<Notification> notificationList = bookingService.getNotificationForVendor(vendorId);
 
         return ResponseEntity.ok(notificationList);
+    }
+
+    /**
+     * Get offline payment bookings pending vendor confirmation
+     * @param vendorId
+     * @return List<Booking>
+     */
+    @GetMapping("/vendor/{vendorId}/offline-pending")
+    public ResponseEntity<Map<String, Object>> getOfflineBookingsPendingConfirmation(@PathVariable("vendorId") String vendorId) {
+        List<Booking> bookings = bookingService.getOfflineBookingsPendingConfirmation(vendorId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("bookings", bookings);
+        response.put("count", bookings.size());
+
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Vendor confirms offline payment booking
+     * @param bookingId
+     * @param vendorId
+     * @return ResponseEntity
+     */
+    @PostMapping("/{bookingId}/confirm-offline")
+    public ResponseEntity<Map<String, Object>> confirmOfflineBooking(
+            @PathVariable("bookingId") String bookingId,
+            @RequestParam("vendorId") String vendorId) {
+
+        try {
+            bookingService.confirmOfflineBooking(bookingId, vendorId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Booking confirmed successfully");
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    /**
+     * Vendor cancels offline payment booking
+     * @param bookingId
+     * @param vendorId
+     * @param reason
+     * @return ResponseEntity
+     */
+    @PostMapping("/{bookingId}/cancel-offline")
+    public ResponseEntity<Map<String, Object>> cancelOfflineBooking(
+            @PathVariable("bookingId") String bookingId,
+            @RequestParam("vendorId") String vendorId,
+            @RequestParam("reason") String reason) {
+
+        try {
+            bookingService.cancelOfflineBooking(bookingId, vendorId, reason);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Booking cancelled successfully");
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }

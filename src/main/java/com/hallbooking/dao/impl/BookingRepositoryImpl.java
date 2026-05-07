@@ -191,15 +191,27 @@ public class BookingRepositoryImpl implements BookingDao {
 	public Page<Booking> retrieveUserBookedDetails(String userId, String status, Pageable pageable) {
 		Query query = new Query();
 
-		// Build criteria - always filter by userId
-		Criteria criteria = Criteria.where(DBConstants.BOOKING_USER_ID).is(userId);
+		// Build criteria - filter by userId only if provided (null means get all bookings for admin)
+		Criteria criteria = null;
+
+		if(userId != null && !userId.isEmpty()) {
+			criteria = Criteria.where(DBConstants.BOOKING_USER_ID).is(userId);
+		}
 
 		// Add status filter if provided
 		if(status != null && !status.isEmpty()) {
-			criteria = criteria.and(DBConstants.BOOKING_STATUS).is(status);
+			if(criteria != null) {
+				criteria = criteria.and(DBConstants.BOOKING_STATUS).is(status);
+			} else {
+				criteria = Criteria.where(DBConstants.BOOKING_STATUS).is(status);
+			}
 		}
 
-		query.addCriteria(criteria);
+		// Add criteria to query only if we have any filters
+		if(criteria != null) {
+			query.addCriteria(criteria);
+		}
+
 		query.with(Sort.by(Sort.Direction.DESC, DBConstants.BOOKING_FROM_DATE));
 		query.with(pageable);
 
@@ -256,5 +268,38 @@ public class BookingRepositoryImpl implements BookingDao {
 		
 		return notificationList;
 	 }
-	
+
+	/**
+	 * Get offline payment bookings pending vendor confirmation
+	 */
+	public List<Booking> getOfflineBookingsPendingConfirmation(String vendorId) {
+		// First, get all items owned by this vendor
+		Query itemQuery = new Query();
+		itemQuery.addCriteria(Criteria.where("vendorId").is(vendorId));
+		List<Item> vendorItems = mongoTemplate.find(itemQuery, Item.class);
+
+		// Extract item IDs
+		List<String> itemIds = new java.util.ArrayList<>();
+		for (Item item : vendorItems) {
+			if (item.getId() != null) {
+				itemIds.add(item.getId());
+			}
+		}
+
+		if (itemIds.isEmpty()) {
+			return new java.util.ArrayList<>();
+		}
+
+		// Query bookings for those items with offline payment pending confirmation
+		Query bookingQuery = new Query();
+		bookingQuery.addCriteria(
+			Criteria.where("itemId").in(itemIds)
+				.and("paymentOption").is("PAY_OFFLINE")
+				.and("vendorConfirmationStatus").is("PENDING")
+		);
+		bookingQuery.with(Sort.by(Sort.Direction.DESC, "createdOn"));
+
+		return mongoTemplate.find(bookingQuery, Booking.class);
+	}
+
 }

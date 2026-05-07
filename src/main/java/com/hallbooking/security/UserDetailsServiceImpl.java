@@ -1,8 +1,10 @@
 package com.hallbooking.security;
 
 import com.hallbooking.model.User;
-//import com.hallbooking.dao.impl.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,25 +19,35 @@ import java.util.List;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    //@Autowired
-   // private UserRepository userRepository;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = new User();/* userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));*/
-        user.setEmailId("admin@admin.com");
-        user.setPassword("admin");
+        // Load user from MongoDB by email
+        Query query = Query.query(Criteria.where("emailId").is(username));
+        User user = mongoTemplate.findOne(query, User.class);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found with email: " + username);
+        }
+
+        // Get role from user details
+        String role = user.getDetails() != null && user.getDetails().getRole() != null
+            ? user.getDetails().getRole()
+            : "USER";
+
         List<GrantedAuthority> authorities = Collections.singletonList(
-                new SimpleGrantedAuthority("ROLE_" + /*user.getRole().name()*/"ADMIN")
+                new SimpleGrantedAuthority("ROLE_" + role)
         );
 
         return org.springframework.security.core.userdetails.User
                 .builder()
                 .username(user.getEmailId())
-                .password(user.getPassword())
+                .password(user.getPassword())  // BCrypt hashed password from MongoDB
                 .authorities(authorities)
+                .accountLocked(!user.getIsActive())
                 .build();
     }
 }

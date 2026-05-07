@@ -2,1817 +2,18 @@
 > hall-booking-frontend@1.0.0 start
 > react-scripts start
 
-(node:15948) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:23316) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-(node:15948) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:23316) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 Starting the development server...
 
-Failed to compile.
-
-Attempted import error: 'verifyOtp' is not exported from '../../services/authService' (imported as 'verifyOtp').
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-ERROR in ./src/components/auth/RegisterForm.js 80:12-21
-export 'verifyOtp' (imported as 'verifyOtp') was not found in '../../services/authService' (possible exports: getCurrentUser, login, logout, register)
-
-webpack compiled with 1 error and 2 warnings
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/components/auth/RegisterForm.js
-  Line 56:7:    'setPhoneNumber' is not defined          no-undef
-  Line 57:7:    'setGeneratedOtp' is not defined         no-undef
-  Line 58:7:    'setShowOtpVerification' is not defined  no-undef
-  Line 72:9:    'otp' is not defined                     no-undef
-  Line 80:13:   'verifyOtp' is not defined               no-undef
-  Line 80:25:   'phoneNumber' is not defined             no-undef
-  Line 80:38:   'otp' is not defined                     no-undef
-  Line 100:7:   'setGeneratedOtp' is not defined         no-undef
-  Line 119:17:  'showOtpVerification' is not defined     no-undef
-  Line 352:53:  'phoneNumber' is not defined             no-undef
-  Line 370:34:  'otp' is not defined                     no-undef
-  Line 371:44:  'setOtp' is not defined                  no-undef
-  Line 459:25:  'setShowOtpVerification' is not defined  no-undef
-  Line 460:25:  'setOtp' is not defined                  no-undef
-
-Search for the keywords to learn more about each error.
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-ERROR in [eslint] 
-src/components/auth/RegisterForm.js
-  Line 56:7:    'setPhoneNumber' is not defined          no-undef
-  Line 57:7:    'setGeneratedOtp' is not defined         no-undef
-  Line 58:7:    'setShowOtpVerification' is not defined  no-undef
-  Line 72:9:    'otp' is not defined                     no-undef
-  Line 80:13:   'verifyOtp' is not defined               no-undef
-  Line 80:25:   'phoneNumber' is not defined             no-undef
-  Line 80:38:   'otp' is not defined                     no-undef
-  Line 100:7:   'setGeneratedOtp' is not defined         no-undef
-  Line 119:17:  'showOtpVerification' is not defined     no-undef
-  Line 352:53:  'phoneNumber' is not defined             no-undef
-  Line 370:34:  'otp' is not defined                     no-undef
-  Line 371:44:  'setOtp' is not defined                  no-undef
-  Line 459:25:  'setShowOtpVerification' is not defined  no-undef
-  Line 460:25:  'setOtp' is not defined                  no-undef
-
-Search for the keywords to learn more about each error.
-
-webpack compiled with 1 error and 2 warnings
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/components/auth/RegisterForm.js
-Syntax error: Unexpected reserved word 'await'. (68:23) (68:23)
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-ERROR in ./src/components/auth/RegisterForm.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/src/components/auth/RegisterForm.js: Unexpected reserved word 'await'. (68:23)
-
-  66 |     try {
-  67 |       const { confirmPassword, ...registerData } = formData;
-> 68 |       const response = await register(registerData);
-     |                        ^
-  69 |       setGeneratedOtp(response.otp);
-  70 |       setSuccess(`OTP resent successfully! (Dev mode: ${response.otp})`);
-  71 |     } catch (err) {
-    at constructor (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:365:19)
-    at FlowParserMixin.raise (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6599:19)
-    at FlowParserMixin.checkReservedWord (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12221:12)
-    at FlowParserMixin.parseIdentifierName (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12201:12)
-    at FlowParserMixin.parseIdentifier (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12171:23)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11406:27)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4764:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3549:18)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12411:16)
-    at FlowParserMixin.parseMaybeAssignAllowIn (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:17)
-    at FlowParserMixin.parseVar (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13374:91)
-    at FlowParserMixin.parseVarStatement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13220:10)
-    at FlowParserMixin.parseStatementContent (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12841:23)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12757:17)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2918:24)
-    at FlowParserMixin.parseStatementListItem (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12737:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13306:61)
-    at FlowParserMixin.parseBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13299:10)
-    at FlowParserMixin.parseBlock (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13287:10)
-    at FlowParserMixin.parseTryStatement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13195:23)
-    at FlowParserMixin.parseStatementContent (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12794:21)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12757:17)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2918:24)
-    at FlowParserMixin.parseStatementListItem (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12737:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13306:61)
-    at FlowParserMixin.parseBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13299:10)
-    at FlowParserMixin.parseBlock (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13287:10)
-    at FlowParserMixin.parseFunctionBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12090:24)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2892:63
-    at FlowParserMixin.forwardNoArrowParamsConversionAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3068:16)
-    at FlowParserMixin.parseFunctionBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2892:12)
-    at FlowParserMixin.parseArrowExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12065:10)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11677:12)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3591:18)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11321:23)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4764:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-
-ERROR in [eslint] 
-src/components/auth/RegisterForm.js
-  Line 68:23:  Parsing error: Unexpected reserved word 'await'. (68:23)
-
-webpack compiled with 2 errors and 2 warnings
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/components/auth/RegisterForm.js
-Syntax error: Unexpected reserved word 'await'. (68:23) (68:23)
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-ERROR in ./src/components/auth/RegisterForm.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/src/components/auth/RegisterForm.js: Unexpected reserved word 'await'. (68:23)
-
-  66 |     try {
-  67 |       const { confirmPassword, ...registerData } = formData;
-> 68 |       const response = await register(registerData);
-     |                        ^
-  69 |       setGeneratedOtp(response.otp);
-  70 |       setSuccess(`OTP resent successfully! (Dev mode: ${response.otp})`);
-  71 |     } catch (err) {
-    at constructor (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:365:19)
-    at FlowParserMixin.raise (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6599:19)
-    at FlowParserMixin.checkReservedWord (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12221:12)
-    at FlowParserMixin.parseIdentifierName (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12201:12)
-    at FlowParserMixin.parseIdentifier (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12171:23)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11406:27)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4764:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3549:18)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12411:16)
-    at FlowParserMixin.parseMaybeAssignAllowIn (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:17)
-    at FlowParserMixin.parseVar (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13374:91)
-    at FlowParserMixin.parseVarStatement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13220:10)
-    at FlowParserMixin.parseStatementContent (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12841:23)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12757:17)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2918:24)
-    at FlowParserMixin.parseStatementListItem (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12737:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13306:61)
-    at FlowParserMixin.parseBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13299:10)
-    at FlowParserMixin.parseBlock (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13287:10)
-    at FlowParserMixin.parseTryStatement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13195:23)
-    at FlowParserMixin.parseStatementContent (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12794:21)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12757:17)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2918:24)
-    at FlowParserMixin.parseStatementListItem (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12737:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13306:61)
-    at FlowParserMixin.parseBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13299:10)
-    at FlowParserMixin.parseBlock (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13287:10)
-    at FlowParserMixin.parseFunctionBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12090:24)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2892:63
-    at FlowParserMixin.forwardNoArrowParamsConversionAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3068:16)
-    at FlowParserMixin.parseFunctionBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2892:12)
-    at FlowParserMixin.parseArrowExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12065:10)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11677:12)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3591:18)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11321:23)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4764:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-
-ERROR in [eslint] 
-src/components/auth/RegisterForm.js
-  Line 68:23:  Parsing error: Unexpected reserved word 'await'. (68:23)
-
-webpack compiled with 2 errors and 2 warnings
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/components/auth/RegisterForm.js
-Syntax error: Unexpected token, expected ":" (306:15) (306:15)
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-ERROR in ./src/components/auth/RegisterForm.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/src/components/auth/RegisterForm.js: Unexpected token, expected ":" (306:15)
-
-  304 |                   </div>
-  305 |                 </>
-> 306 |               )}
-      |                ^
-  307 |             </div>
-  308 |           </div>
-  309 |         </div>
-    at constructor (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:365:19)
-    at FlowParserMixin.raise (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6599:19)
-    at FlowParserMixin.unexpected (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6619:16)
-    at FlowParserMixin.expect (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6899:12)
-    at FlowParserMixin.parseConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3015:10)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10875:17)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3549:18)
-    at FlowParserMixin.parseExpressionBase (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10774:23)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10770:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12416:12)
-    at FlowParserMixin.parseExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10770:17)
-    at FlowParserMixin.jsxParseExpressionContainer (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4632:31)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4711:36)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4749:17)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4759:19)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3498:39
-    at FlowParserMixin.tryParse (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6907:20)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3498:18)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12416:12)
-    at FlowParserMixin.parseMaybeAssignAllowIn (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:17)
-    at FlowParserMixin.parseMaybeAssignAllowInOrVoidPattern (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12483:17)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11665:28)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3591:18)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11321:23)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4764:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3549:18)
-    at FlowParserMixin.parseExpressionBase (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10774:23)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10770:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12411:16)
-    at FlowParserMixin.parseExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10770:17)
-
-ERROR in [eslint] 
-src/components/auth/RegisterForm.js
-  Line 306:15:  Parsing error: Unexpected token, expected ":" (306:15)
-
-webpack compiled with 2 errors and 2 warnings
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/components/auth/RegisterForm.js
-Syntax error: Expected corresponding JSX closing tag for <div>. (303:16) (303:16)
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-ERROR in ./src/components/auth/RegisterForm.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/src/components/auth/RegisterForm.js: Expected corresponding JSX closing tag for <div>. (303:16)
-
-  301 |                     </Link>
-  302 |                   </div>
-> 303 |                 </>
-      |                 ^
-  304 |               )}
-  305 |             </div>
-  306 |           </div>
-    at constructor (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:365:19)
-    at FlowParserMixin.raise (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6599:19)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4722:14)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4749:17)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4759:19)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3498:39
-    at FlowParserMixin.tryParse (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6907:20)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3498:18)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12416:12)
-    at FlowParserMixin.parseMaybeAssignAllowIn (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:17)
-    at FlowParserMixin.parseMaybeAssignAllowInOrVoidPattern (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12483:17)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11665:28)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3591:18)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11321:23)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4764:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3549:18)
-    at FlowParserMixin.parseExpressionBase (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10774:23)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10770:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12411:16)
-    at FlowParserMixin.parseExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10770:17)
-    at FlowParserMixin.parseReturnStatement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13132:28)
-    at FlowParserMixin.parseStatementContent (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12788:21)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12757:17)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2918:24)
-    at FlowParserMixin.parseStatementListItem (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12737:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13306:61)
-    at FlowParserMixin.parseBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13299:10)
-    at FlowParserMixin.parseBlock (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13287:10)
-    at FlowParserMixin.parseFunctionBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12090:24)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2892:63
-    at FlowParserMixin.forwardNoArrowParamsConversionAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3068:16)
-
-ERROR in [eslint] 
-src/components/auth/RegisterForm.js
-  Line 303:16:  Parsing error: Expected corresponding JSX closing tag for <div>. (303:16)
-
-webpack compiled with 2 errors and 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-src/services/bookingService.js
-  Line 10:19:  'page' is assigned a value but never used    no-unused-vars
-  Line 10:29:  'size' is assigned a value but never used    no-unused-vars
-  Line 10:41:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-src/services/bookingService.js
-  Line 10:19:  'page' is assigned a value but never used    no-unused-vars
-  Line 10:29:  'size' is assigned a value but never used    no-unused-vars
-  Line 10:41:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/MyBookingsPage.js
-  Line 10:10:  'showCancelModal' is assigned a value but never used     no-unused-vars
-  Line 10:27:  'setShowCancelModal' is assigned a value but never used  no-unused-vars
-  Line 11:10:  'selectedBooking' is assigned a value but never used     no-unused-vars
-  Line 11:27:  'setSelectedBooking' is assigned a value but never used  no-unused-vars
-  Line 12:10:  'cancelReason' is assigned a value but never used        no-unused-vars
-  Line 12:24:  'setCancelReason' is assigned a value but never used     no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/MyBookingsPage.js
-  Line 10:10:  'showCancelModal' is assigned a value but never used     no-unused-vars
-  Line 10:27:  'setShowCancelModal' is assigned a value but never used  no-unused-vars
-  Line 11:10:  'selectedBooking' is assigned a value but never used     no-unused-vars
-  Line 11:27:  'setSelectedBooking' is assigned a value but never used  no-unused-vars
-  Line 12:10:  'cancelReason' is assigned a value but never used        no-unused-vars
-  Line 12:24:  'setCancelReason' is assigned a value but never used     no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/MyBookingsPage.js
-  Line 10:10:  'showCancelModal' is assigned a value but never used    no-unused-vars
-  Line 36:9:   'handleCancelClick' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/MyBookingsPage.js
-  Line 10:10:  'showCancelModal' is assigned a value but never used    no-unused-vars
-  Line 36:9:   'handleCancelClick' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/MyBookingsPage.js
-  Line 10:10:  'showCancelModal' is assigned a value but never used      no-unused-vars
-  Line 42:9:   'handleCancelBooking' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/MyBookingsPage.js
-  Line 10:10:  'showCancelModal' is assigned a value but never used      no-unused-vars
-  Line 42:9:   'handleCancelBooking' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/MyBookingsPage.js
-  Line 10:10:  'showCancelModal' is assigned a value but never used      no-unused-vars
-  Line 42:9:   'handleCancelBooking' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/MyBookingsPage.js
-  Line 10:10:  'showCancelModal' is assigned a value but never used      no-unused-vars
-  Line 42:9:   'handleCancelBooking' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 24:10:  'availabilityChecking' is assigned a value but never used     no-unused-vars
-  Line 24:32:  'setAvailabilityChecking' is assigned a value but never used  no-unused-vars
-  Line 25:10:  'isAvailable' is assigned a value but never used              no-unused-vars
-  Line 25:23:  'setIsAvailable' is assigned a value but never used           no-unused-vars
-  Line 26:10:  'suggestedSlots' is assigned a value but never used           no-unused-vars
-  Line 26:26:  'setSuggestedSlots' is assigned a value but never used        no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 24:10:  'availabilityChecking' is assigned a value but never used     no-unused-vars
-  Line 24:32:  'setAvailabilityChecking' is assigned a value but never used  no-unused-vars
-  Line 25:10:  'isAvailable' is assigned a value but never used              no-unused-vars
-  Line 25:23:  'setIsAvailable' is assigned a value but never used           no-unused-vars
-  Line 26:10:  'suggestedSlots' is assigned a value but never used           no-unused-vars
-  Line 26:26:  'setSuggestedSlots' is assigned a value but never used        no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 24:10:  'availabilityChecking' is assigned a value but never used  no-unused-vars
-  Line 25:10:  'isAvailable' is assigned a value but never used           no-unused-vars
-  Line 26:10:  'suggestedSlots' is assigned a value but never used        no-unused-vars
-  Line 129:9:  'handleDateSlotChange' is assigned a value but never used  no-unused-vars
-  Line 144:9:  'selectSuggestedSlot' is assigned a value but never used   no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 24:10:  'availabilityChecking' is assigned a value but never used  no-unused-vars
-  Line 25:10:  'isAvailable' is assigned a value but never used           no-unused-vars
-  Line 26:10:  'suggestedSlots' is assigned a value but never used        no-unused-vars
-  Line 129:9:  'handleDateSlotChange' is assigned a value but never used  no-unused-vars
-  Line 144:9:  'selectSuggestedSlot' is assigned a value but never used   no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
 Compiled with warnings.
 
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -1821,17 +22,9 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -1839,16 +32,8 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -1857,17 +42,9 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -1875,19 +52,11 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -1896,20 +65,12 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -1917,19 +78,11 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -1938,20 +91,12 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -1959,19 +104,11 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -1980,20 +117,12 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -2001,19 +130,11 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2022,128 +143,32 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
-Compiling...
-Failed to compile.
-
-[eslint] 
-src/pages/BookingPage.js
-Syntax error: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (360:20) (360:20)
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-ERROR in ./src/pages/BookingPage.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/src/pages/BookingPage.js: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (360:20)
-
-  358 |                         <small style={{ color: '#707079' }}>5:00 PM - 10:00 PM</small>
-  359 |                       </div>
-> 360 |                     </div>
-      |                     ^
-  361 |                   </div>
-  362 |
-  363 |                   {/* Availability Status */}
-    at constructor (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:365:19)
-    at FlowParserMixin.raise (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6599:19)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4742:18)
-    at FlowParserMixin.jsxParseElement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4749:17)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4759:19)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3498:39
-    at FlowParserMixin.tryParse (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6907:20)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3498:18)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12416:12)
-    at FlowParserMixin.parseMaybeAssignAllowIn (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:17)
-    at FlowParserMixin.parseMaybeAssignAllowInOrVoidPattern (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12483:17)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11665:28)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3591:18)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11321:23)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4764:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOpBaseRightExpr (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10976:34)
-    at FlowParserMixin.parseExprOpRightExpr (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10971:21)
-    at FlowParserMixin.parseExprOp (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10937:27)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10898:17)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3549:18)
-    at FlowParserMixin.parseExpressionBase (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10774:23)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10770:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12416:12)
-    at FlowParserMixin.parseExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10770:17)
-    at FlowParserMixin.jsxParseExpressionContainer (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4632:31)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4711:36)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElementAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4698:32)
-    at FlowParserMixin.jsxParseElement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4749:17)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4759:19)
-
-ERROR in [eslint] 
-src/pages/BookingPage.js
-  Line 360:20:  Parsing error: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>? (360:20)
-
-webpack compiled with 2 errors and 2 warnings
 Compiling...
 Compiled with warnings.
 
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FormBuilder.js
+  Line 6:8:    'TemplateModal' is defined but never used                                                                        no-unused-vars
+  Line 30:10:  'showTemplateModal' is assigned a value but never used                                                           no-unused-vars
+  Line 30:29:  'setShowTemplateModal' is assigned a value but never used                                                        no-unused-vars
+  Line 31:10:  'templateModalMode' is assigned a value but never used                                                           no-unused-vars
+  Line 31:29:  'setTemplateModalMode' is assigned a value but never used                                                        no-unused-vars
+  Line 36:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2152,20 +177,20 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 6:8:    'TemplateModal' is defined but never used                                                                        no-unused-vars
+  Line 30:10:  'showTemplateModal' is assigned a value but never used                                                           no-unused-vars
+  Line 30:29:  'setShowTemplateModal' is assigned a value but never used                                                        no-unused-vars
+  Line 31:10:  'templateModalMode' is assigned a value but never used                                                           no-unused-vars
+  Line 31:29:  'setTemplateModalMode' is assigned a value but never used                                                        no-unused-vars
+  Line 36:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -2173,19 +198,20 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FormBuilder.js
+  Line 6:8:    'TemplateModal' is defined but never used                                                                        no-unused-vars
+  Line 30:10:  'showTemplateModal' is assigned a value but never used                                                           no-unused-vars
+  Line 31:10:  'templateModalMode' is assigned a value but never used                                                           no-unused-vars
+  Line 36:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 131:9:  'handleSaveAsTemplate' is assigned a value but never used                                                        no-unused-vars
+  Line 143:9:  'handleLoadTemplate' is assigned a value but never used                                                          no-unused-vars
+  Line 151:9:  'handleApplyTemplate' is assigned a value but never used                                                         no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2194,20 +220,21 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 6:8:    'TemplateModal' is defined but never used                                                                        no-unused-vars
+  Line 30:10:  'showTemplateModal' is assigned a value but never used                                                           no-unused-vars
+  Line 31:10:  'templateModalMode' is assigned a value but never used                                                           no-unused-vars
+  Line 36:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 131:9:  'handleSaveAsTemplate' is assigned a value but never used                                                        no-unused-vars
+  Line 143:9:  'handleLoadTemplate' is assigned a value but never used                                                          no-unused-vars
+  Line 151:9:  'handleApplyTemplate' is assigned a value but never used                                                         no-unused-vars
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -2215,19 +242,18 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FormBuilder.js
+  Line 6:8:    'TemplateModal' is defined but never used                                                                        no-unused-vars
+  Line 30:10:  'showTemplateModal' is assigned a value but never used                                                           no-unused-vars
+  Line 31:10:  'templateModalMode' is assigned a value but never used                                                           no-unused-vars
+  Line 36:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 151:9:  'handleApplyTemplate' is assigned a value but never used                                                         no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2236,20 +262,19 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 6:8:    'TemplateModal' is defined but never used                                                                        no-unused-vars
+  Line 30:10:  'showTemplateModal' is assigned a value but never used                                                           no-unused-vars
+  Line 31:10:  'templateModalMode' is assigned a value but never used                                                           no-unused-vars
+  Line 36:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 151:9:  'handleApplyTemplate' is assigned a value but never used                                                         no-unused-vars
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -2257,19 +282,14 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2278,20 +298,15 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -2299,19 +314,14 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2320,20 +330,15 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -2341,19 +346,14 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2362,20 +362,15 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -2383,19 +378,14 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2404,20 +394,15 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
 webpack compiled with 2 warnings
 Compiling...
 Compiled with warnings.
@@ -2425,19 +410,18 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 3:43:  'deleteCategory' is defined but never used                                                                       no-unused-vars
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2446,19 +430,18 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 3:43:  'deleteCategory' is defined but never used                                                                       no-unused-vars
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 webpack compiled with 2 warnings
 Compiling...
@@ -2467,19 +450,18 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 111:9:  'handleDelete' is assigned a value but never used                                                                no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2488,19 +470,18 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 111:9:  'handleDelete' is assigned a value but never used                                                                no-unused-vars
 
 webpack compiled with 2 warnings
 Compiling...
@@ -2509,19 +490,17 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2530,19 +509,17 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 webpack compiled with 2 warnings
 Compiling...
@@ -2551,19 +528,17 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2572,19 +547,17 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 webpack compiled with 2 warnings
 Compiling...
@@ -2593,19 +566,18 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 3:43:  'deactivateCategory' is defined but never used                                                                   no-unused-vars
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2614,19 +586,18 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 3:43:  'deactivateCategory' is defined but never used                                                                   no-unused-vars
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 webpack compiled with 2 warnings
 Compiling...
@@ -2635,19 +606,18 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 111:9:  'handleDeactivate' is assigned a value but never used                                                            no-unused-vars
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
@@ -2656,19 +626,18 @@ WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:   React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  Line 111:9:  'handleDeactivate' is assigned a value but never used                                                            no-unused-vars
 
 webpack compiled with 2 warnings
 Compiling...
@@ -2677,169 +646,35 @@ Compiled with warnings.
 Critical dependency: the request of a dependency is an expression
 
 [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 Search for the keywords to learn more about each warning.
 To ignore, add // eslint-disable-next-line to the line before.
-
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
-
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-webpack compiled with 2 warnings
-Compiling...
-Failed to compile.
 
-[eslint] 
-src/pages/BookingPage.js
-Syntax error: Identifier 'formatLocalDateTime' has already been declared. (202:8) (202:8)
 WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
 Critical dependency: the request of a dependency is an expression
 
 WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
-
-ERROR in ./src/pages/BookingPage.js
-Module build failed (from ./node_modules/babel-loader/lib/index.js):
-SyntaxError: /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/src/pages/BookingPage.js: Identifier 'formatLocalDateTime' has already been declared. (202:8)
-
-  200 |   };
-  201 |
-> 202 |   const formatLocalDateTime = (date) => {
-      |         ^
-  203 |     if (!date) return null;
-  204 |     const d = date instanceof Date ? date : new Date(date);
-  205 |     const year = d.getFullYear();
-    at constructor (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:365:19)
-    at FlowParserMixin.raise (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:6599:19)
-    at FlowScopeHandler.checkRedeclarationInScope (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:1619:19)
-    at FlowScopeHandler.declareName (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:1585:12)
-    at FlowScopeHandler.declareName (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:1686:11)
-    at FlowParserMixin.declareNameFromIdentifier (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:7567:16)
-    at FlowParserMixin.checkIdentifier (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:7563:12)
-    at FlowParserMixin.checkLVal (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:7500:12)
-    at FlowParserMixin.parseVarId (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13402:10)
-    at FlowParserMixin.parseVarId (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3474:11)
-    at FlowParserMixin.parseVar (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13373:12)
-    at FlowParserMixin.parseVarStatement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13220:10)
-    at FlowParserMixin.parseStatementContent (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12841:23)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12757:17)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2918:24)
-    at FlowParserMixin.parseStatementListItem (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12737:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13306:61)
-    at FlowParserMixin.parseBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13299:10)
-    at FlowParserMixin.parseBlock (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13287:10)
-    at FlowParserMixin.parseFunctionBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12090:24)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2892:63
-    at FlowParserMixin.forwardNoArrowParamsConversionAt (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3068:16)
-    at FlowParserMixin.parseFunctionBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2892:12)
-    at FlowParserMixin.parseArrowExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12065:10)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11677:12)
-    at FlowParserMixin.parseParenAndDistinguishExpression (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3591:18)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11321:23)
-    at FlowParserMixin.parseExprAtom (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:4764:20)
-    at FlowParserMixin.parseExprSubscripts (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11071:23)
-    at FlowParserMixin.parseUpdate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11056:21)
-    at FlowParserMixin.parseMaybeUnary (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:11036:23)
-    at FlowParserMixin.parseMaybeUnaryOrPrivate (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10889:61)
-    at FlowParserMixin.parseExprOps (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10894:23)
-    at FlowParserMixin.parseMaybeConditional (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10871:23)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10821:21)
-    at FlowParserMixin.parseMaybeAssign (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3549:18)
-    at /Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:39
-    at FlowParserMixin.allowInAnd (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12411:16)
-    at FlowParserMixin.parseMaybeAssignAllowIn (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:10790:17)
-    at FlowParserMixin.parseVar (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13374:91)
-    at FlowParserMixin.parseVarStatement (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13220:10)
-    at FlowParserMixin.parseStatementContent (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12841:23)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12757:17)
-    at FlowParserMixin.parseStatementLike (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:2918:24)
-    at FlowParserMixin.parseModuleItem (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12734:17)
-    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13306:36)
-    at FlowParserMixin.parseBlockBody (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:13299:10)
-    at FlowParserMixin.parseProgram (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12612:10)
-    at FlowParserMixin.parseTopLevel (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:12602:25)
-    at FlowParserMixin.parseTopLevel (/Users/as242503/Desktop/sephora/HallBookingSystem/hall-booking-frontend/node_modules/@babel/parser/lib/index.js:3685:28)
-
-ERROR in [eslint] 
-src/pages/BookingPage.js
-  Line 202:8:  Parsing error: Identifier 'formatLocalDateTime' has already been declared. (202:8)
-
-webpack compiled with 2 errors and 2 warnings
-Compiling...
-Compiled with warnings.
-
-Critical dependency: the request of a dependency is an expression
-
-[eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/components/formBuilder/DesignCanvas.js
+  Line 64:6:  React Hook useEffect has a missing dependency: 'addFieldToCanvas'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-Search for the keywords to learn more about each warning.
-To ignore, add // eslint-disable-next-line to the line before.
+src/components/formBuilder/FieldPalette.js
+  Line 7:8:  'PropTypes' is defined but never used  no-unused-vars
 
-WARNING in ./node_modules/react-datepicker/dist/index.es.js 150:16-44
-Critical dependency: the request of a dependency is an expression
+src/components/formBuilder/FormBuilder.js
+  Line 36:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
-WARNING in [eslint] 
-src/components/common/Navbar.js
-  Line 9:10:  'showDropdown' is assigned a value but never used     no-unused-vars
-  Line 9:24:  'setShowDropdown' is assigned a value but never used  no-unused-vars
-
-src/pages/BookingPage.js
-  Line 3:8:  'DatePicker' is defined but never used  no-unused-vars
-
-src/pages/admin/ManageHallsPage.js
-  Line 43:6:  React Hook useEffect has a missing dependency: 'fetchHalls'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-src/services/adminService.js
-  Line 7:32:  'userId' is assigned a value but never used  no-unused-vars
-  Line 7:40:  'status' is assigned a value but never used  no-unused-vars
+src/pages/admin/EditCategoryPage.js
+  Line 31:6:  React Hook useEffect has a missing dependency: 'loadCategory'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
 
 webpack compiled with 2 warnings

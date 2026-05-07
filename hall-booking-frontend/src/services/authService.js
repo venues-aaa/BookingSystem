@@ -16,13 +16,15 @@ export const register = async (userData) => {
 };
 
 export const login = async (credentials) => {
-  // Backend expects: emailId and password
-  const response = await api.post('/api/user/validate', {
-    emailId: credentials.usernameOrEmail || credentials.emailId || credentials.email,
+  // Use new JWT-based auth endpoint
+  const response = await api.post('/api/auth/login', {
+    usernameOrEmail: credentials.usernameOrEmail || credentials.emailId || credentials.email,
     password: credentials.password
   });
   console.log('Raw API response:', response);
   console.log('Response data:', response.data);
+
+  // Response format: { token: "jwt-token", user: { id, email, role, ... } }
   return response.data;
 };
 

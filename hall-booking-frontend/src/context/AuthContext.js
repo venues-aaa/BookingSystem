@@ -38,28 +38,27 @@ export const AuthProvider = ({ children }) => {
 
     console.log('Login response from backend:', response);
 
-    // Backend returns user object directly (no JWT token)
-    // Use user ID as "token" for session management
-    const userToken = response.id || response._id || response.authId || response.emailId || 'session-active';
+    // New JWT-based auth: { token: "jwt-token", user: {...} }
+    const jwtToken = response.token;
     const userData = {
-      id: response.id || response._id || response.authId || response.emailId,
-      email: response.emailId || response.email,
-      emailId: response.emailId || response.email,
-      firstName: response.details?.firstName,
-      lastName: response.details?.lastName,
-      phoneNumber: response.details?.phoneNumber || response.details?.contactNbr,
-      role: response.details?.role || 'USER',
-      isActive: response.isActive
+      id: response.user.id,
+      email: response.user.email,
+      emailId: response.user.email,
+      firstName: response.user.firstName,
+      lastName: response.user.lastName,
+      phoneNumber: response.user.phoneNumber,
+      role: response.user.role,
+      isActive: response.user.isActive
     };
 
     console.log('Processed user data:', userData);
 
-    setToken(userToken);
+    setToken(jwtToken);
     setUser(userData);
-    localStorage.setItem('token', userToken);
+    localStorage.setItem('token', jwtToken);
     localStorage.setItem('user', JSON.stringify(userData));
 
-    return { token: userToken, user: userData };
+    return { token: jwtToken, user: userData };
   };
 
   const logout = () => {

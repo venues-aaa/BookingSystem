@@ -1,7 +1,7 @@
 import api from './api';
 
 export const getHalls = async (params = {}) => {
-  const { page = 0, size = 12, type = 'Hotel', sortBy = 'createdOn', capacity, location, amenities, startDateTime, endDateTime } = params;
+  const { page = 0, size = 12, type = 'Hall', sortBy = 'createdOn', capacity, location, amenities, startDateTime, endDateTime } = params;
 
   // If search criteria provided, use filter endpoint
   if (capacity || location || amenities || startDateTime || endDateTime) {
@@ -178,9 +178,11 @@ export const createHall = async (hallData) => {
 
   // Transform flat structure to backend's nested structure
   const backendData = {
-    type: 'Hotel',
+    type: hallData.type || 'Hall',
+    categoryId: hallData.categoryId || null, // Add categoryId support
     vendorId: vendorId,
     placeId: hallData.placeId || 'default-place',
+    dynamicData: hallData.dynamicData || null, // Add dynamicData support
     details: {
       name: hallData.name,
       description: hallData.description,
@@ -269,6 +271,22 @@ export const updateHall = async (id, hallData) => {
 };
 
 export const deleteHall = async (id) => {
-  const response = await api.delete(`/item/items/${id}`);
+  const response = await api.delete(`/item/${id}`);
+  return response.data;
+};
+
+/**
+ * Generic function to fetch items for any category
+ * @param {string} categoryName - Category name (e.g., "Hall", "Categering", "Decoration")
+ * @param {number} page - Page number (0-indexed)
+ * @param {number} size - Page size
+ * @param {string} sortBy - Sort field
+ * @returns {Promise} - Response with items data
+ */
+export const fetchItems = async (categoryName, page = 0, size = 12, sortBy = 'createdOn') => {
+  const response = await api.post('/item/fetch',
+    { type: categoryName }, // Request body with category type
+    { params: { page, size, sortBy } } // Query params
+  );
   return response.data;
 };

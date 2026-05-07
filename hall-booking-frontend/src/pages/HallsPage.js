@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { getHalls } from '../services/hallService';
-import HallList from '../components/hall/HallList';
-import HallSearch from '../components/hall/HallSearch';
+import { getItemsByCategory } from '../services/itemService';
+import ItemList from '../components/hall/ItemList';
+import ItemSearch from '../components/hall/ItemSearch';
 
 const HallsPage = () => {
   const [halls, setHalls] = useState([]);
@@ -36,9 +36,10 @@ const HallsPage = () => {
   const fetchHalls = async () => {
     setLoading(true);
     try {
-      const response = await getHalls({ page, size: 12, ...filters });
-      setHalls(response.halls);
-      setTotalPages(response.totalPages);
+      // Fetch items of type 'Hall' (schema-driven)
+      const response = await getItemsByCategory('Hall', { page, size: 12, ...filters });
+      setHalls(response.data || response.halls || []);
+      setTotalPages(response.totalPages || 0);
     } catch (error) {
       console.error('Failed to fetch halls:', error);
       alert('Failed to load halls. Please try again.');
@@ -83,14 +84,14 @@ const HallsPage = () => {
           {/* Search Filters */}
           <div className="row" style={{ marginBottom: '50px' }}>
             <div className="col-lg-12">
-              <HallSearch onSearch={handleSearch} initialFilters={filters} />
+              <ItemSearch onSearch={handleSearch} initialFilters={filters} />
             </div>
           </div>
 
           {/* Halls Grid */}
           <div className="row">
             <div className="col-lg-12">
-              <HallList halls={halls} loading={loading} />
+              <ItemList halls={halls} loading={loading} />
             </div>
           </div>
 

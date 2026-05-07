@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getHalls } from '../services/hallService';
-import HallSearch from '../components/hall/HallSearch';
-import HallCard from '../components/hall/HallCard';
+import { getItemsByCategory } from '../services/itemService';
+import { getCategories } from '../services/categoryService';
+import ItemSearch from '../components/hall/ItemSearch';
+import ItemCard from '../components/hall/ItemCard';
 
 const HomePage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [premiumHalls, setPremiumHalls] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [categoryItems, setCategoryItems] = useState({});
   const [loading, setLoading] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const navigate = useNavigate();
 
   // Hero slider images
@@ -51,18 +54,32 @@ const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Fetch premium halls for homepage
+  // Fetch all categories and their items for homepage
   useEffect(() => {
-    fetchPremiumHalls();
+    loadCategoriesAndItems();
   }, []);
 
-  const fetchPremiumHalls = async (filters = {}) => {
+  const loadCategoriesAndItems = async () => {
     setLoading(true);
     try {
-      const response = await getHalls({ page: 0, size: 6, ...filters });
-      setPremiumHalls(response.halls || []);
+      // Fetch all active categories
+      const categoriesData = await getCategories();
+      setCategories(categoriesData);
+
+      // Fetch items for each category (6 items per category for homepage)
+      const itemsData = {};
+      for (const category of categoriesData) {
+        try {
+          const response = await getItemsByCategory(category.name, { page: 0, size: 6 });
+          itemsData[category.id] = response.data || [];
+        } catch (error) {
+          console.error(`Failed to fetch items for category ${category.name}:`, error);
+          itemsData[category.id] = [];
+        }
+      }
+      setCategoryItems(itemsData);
     } catch (error) {
-      console.error('Failed to fetch halls:', error);
+      console.error('Failed to load categories:', error);
     } finally {
       setLoading(false);
     }
@@ -74,14 +91,30 @@ const HomePage = () => {
       Object.entries(searchFilters).filter(([_, value]) => value !== '')
     );
 
-    if (Object.keys(cleanFilters).length > 0) {
-      // If there are filters, navigate to halls page with filters
-      const queryParams = new URLSearchParams(cleanFilters).toString();
-      navigate(`/halls?${queryParams}`);
+    // Handle category filter separately for home page
+    if (cleanFilters.categoryId) {
+      setSelectedCategoryId(cleanFilters.categoryId);
+      // Remove categoryId from other filters for navigation
+      const { categoryId, ...otherFilters } = cleanFilters;
+
+      // If there are other filters, navigate to category page with filters
+      if (Object.keys(otherFilters).length > 0) {
+        const queryParams = new URLSearchParams(otherFilters).toString();
+        navigate(`/category/${categoryId}/items?${queryParams}`);
+      }
     } else {
-      // If no filters, just refresh the premium halls
-      fetchPremiumHalls();
+      setSelectedCategoryId('');
+
+      // If there are other filters, navigate to halls page with filters
+      if (Object.keys(cleanFilters).length > 0) {
+        const queryParams = new URLSearchParams(cleanFilters).toString();
+        navigate(`/halls?${queryParams}`);
+      }
     }
+  };
+
+  const viewAllCategory = (category) => {
+    navigate(`/category/${category.id}/items`);
   };
 
   const nextSlide = () => {
@@ -238,42 +271,68 @@ const HomePage = () => {
           {/* Search Section */}
           <div className="row mt-5">
             <div className="col-lg-12">
-              <HallSearch onSearch={handleSearch} />
+              <ItemSearch onSearch={handleSearch} showCategoryFilter={true} />
             </div>
           </div>
 
-          {/* Premium Halls Section */}
-          <div className="row mt-5">
-            <div className="col-lg-12">
-              <div className="section-title" style={{ marginBottom: '40px' }}>
-                <span>Featured Venues</span>
-                <h2>Premium Halls</h2>
-              </div>
-            </div>
-          </div>
-
-          {/* Halls Grid - 2 rows x 3 columns */}
+          {/* Dynamic Categories Sections */}
           {loading ? (
-            <div className="row">
+            <div className="row mt-5">
               <div className="col-lg-12 text-center" style={{ padding: '60px 0' }}>
                 <div className="spinner-border text-gold" role="status" style={{ width: '3rem', height: '3rem' }}>
                   <span className="sr-only">Loading...</span>
                 </div>
-                <p style={{ marginTop: '20px', color: '#707079' }}>Loading premium halls...</p>
+                <p style={{ marginTop: '20px', color: '#707079' }}>Loading categories...</p>
               </div>
             </div>
-          ) : premiumHalls.length > 0 ? (
-            <div className="row">
-              {premiumHalls.map((hall) => (
-                <div className="col-lg-4 col-md-6" key={hall.id} style={{ marginBottom: '30px' }}>
-                  <HallCard hall={hall} />
+          ) : categories.length > 0 ? (
+            categories
+              .filter((category) => !selectedCategoryId || category.id === selectedCategoryId)
+              .map((category) => {
+              const items = categoryItems[category.id] || [];
+              if (items.length === 0) return null; // Skip empty categories
+
+              return (
+                <div key={category.id} style={{ marginTop: '60px' }}>
+                  {/* Category Section Header */}
+                  <div className="row">
+                    <div className="col-lg-12">
+                      <div className="section-title" style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div>
+                          <span>Featured Services</span>
+                          <h2>{category.icon} {category.displayName}</h2>
+                          {category.description && (
+                            <p style={{ fontSize: '14px', color: '#707079', marginTop: '10px' }}>
+                              {category.description}
+                            </p>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => viewAllCategory(category)}
+                          className="primary-btn"
+                          style={{ marginTop: '0' }}
+                        >
+                          View All {category.displayName}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Category Items Grid - 2 rows x 3 columns */}
+                  <div className="row">
+                    {items.slice(0, 6).map((item) => (
+                      <div className="col-lg-4 col-md-6" key={item.id} style={{ marginBottom: '30px' }}>
+                        <ItemCard item={item} category={category} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
+              );
+            })
           ) : (
-            <div className="row">
+            <div className="row mt-5">
               <div className="col-lg-12 text-center" style={{ padding: '40px 0' }}>
-                <p style={{ fontSize: '18px', color: '#707079' }}>No halls available at the moment.</p>
+                <p style={{ fontSize: '18px', color: '#707079' }}>No categories available at the moment.</p>
               </div>
             </div>
           )}

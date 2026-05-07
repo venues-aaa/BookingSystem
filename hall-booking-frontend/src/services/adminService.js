@@ -5,10 +5,9 @@ import api from './api';
 
 export const getAllBookings = async (params = {}) => {
   const { page = 0, size = 10, userId, status } = params;
-  // Backend doesn't have /admin/bookings
-  // Use /bookings/history as workaround
-  const response = await api.get('/bookings/history', {
-    params: { page, size }
+  // Use new admin endpoint to get ALL bookings
+  const response = await api.get('/bookings/admin/all', {
+    params: { page, size, status }
   });
   return response.data;
 };

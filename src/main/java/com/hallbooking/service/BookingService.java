@@ -23,7 +23,13 @@ public class BookingService {
     private com.hallbooking.dao.impl.BookingRepositoryImpl bookingRepositoryImpl;
 
     @Autowired
-    private ItemProcessor itemProcessor;
+    private ItemService itemService;
+
+    @Autowired
+    private BookingValidationService bookingValidationService;
+
+    @Autowired
+    private com.hallbooking.dao.impl.UserRepositoryImpl userRepository;
 
     @Transactional
     public Booking createBooking(Booking bookingObj,
@@ -38,30 +44,94 @@ public class BookingService {
             return responseMsg;
         }*/
 
-       // Item itemObj = bookingRepositoryImpl.findItemById(bookingObj.getItemId());
+        // Get item details for validation
+        // Item item = itemProcessor.retrieveItemDetails(bookingObj.getItemId());
 
+        // Validate time slot
         validateTimeSlot(bookingObj.getBookingFromDate(), bookingObj.getBookingToDate());
 
+        // Validate booking against item's dynamic form rules (e.g., capacity check)
+        // BookingDetails details = bookingObj.getDetails();
+        // Integer numberOfAttendees = (details != null && details.getNumberOfAttendees() > 0)
+        //     ? details.getNumberOfAttendees()
+        //     : null;
+
+        // Perform dynamic validation
+        // bookingValidationService.validateBooking(item, numberOfAttendees);
+
+        // Check availability (BLOCKED or CONFIRMED bookings both block the slot)
         boolean confirmFlag = bookingRepositoryImpl.confirmItemAvailability(bookingObj);
 
         if (!confirmFlag) {
-            throw new RuntimeException("Hall is already booked for this time slot");
+            throw new RuntimeException("This item is already booked for the selected time slot");
         }
 
-        /*Booking booking = new Booking();
-        booking.setUser(user);
-        booking.setHall(hall);
-        booking.setStartDateTime(request.getStartDateTime());
-        booking.setEndDateTime(request.getEndDateTime());
-        booking.setStatus(BookingStatus.CONFIRMED);
-        booking.setPurpose(request.getPurpose());
-        booking.setNumberOfAttendees(request.getNumberOfAttendees());*/
-        // Commenting price calculation for the time being. Considering day booking only
-        /*if (hall.getPricePerHour() != null) {
-            long hours = Duration.between(request.getStartDateTime(), request.getEndDateTime()).toHours();
-            if (hours < 1) hours = 1;
-            booking.setTotalPrice(hall.getPricePerHour().multiply(BigDecimal.valueOf(hours)));
-        }*/
+        // Process payment workflow
+        processPaymentWorkflow(bookingObj);
+
+        // Fetch item details to populate itemName
+        if (bookingObj.getItemId() != null && bookingObj.getItemName() == null) {
+            try {
+                Item item = itemService.getItemById(bookingObj.getItemId());
+                if (item != null) {
+                    // Extract item name from various possible fields
+                    String itemName = null;
+
+                    // Try dynamicData first (new items)
+                    if (item.getDynamicData() != null) {
+                        itemName = (String) item.getDynamicData().get("name");
+                        if (itemName == null) {
+                            itemName = (String) item.getDynamicData().get("restaurant_name");
+                        }
+                    }
+
+                    // Try details (legacy halls)
+                    if (itemName == null && item.getDetails() != null) {
+                        itemName = item.getDetails().getName();
+                    }
+
+                    if (itemName != null) {
+                        bookingObj.setItemName(itemName);
+                    }
+                }
+            } catch (Exception e) {
+                // Log but don't fail the booking if item fetch fails
+                System.err.println("Failed to fetch item name for itemId: " + bookingObj.getItemId() + " - " + e.getMessage());
+            }
+        }
+
+        // Fetch user details to populate userName and userEmail
+        if (bookingObj.getUserId() != null && bookingObj.getUserName() == null) {
+            try {
+                User user = userRepository.retrieveUser(bookingObj.getUserId());
+                if (user != null) {
+                    // Build full name from firstName and lastName
+                    String fullName = null;
+                    if (user.getDetails() != null) {
+                        String firstName = user.getDetails().getFirstName();
+                        String lastName = user.getDetails().getLastName();
+                        if (firstName != null && lastName != null) {
+                            fullName = firstName + " " + lastName;
+                        } else if (firstName != null) {
+                            fullName = firstName;
+                        } else if (lastName != null) {
+                            fullName = lastName;
+                        }
+                    }
+
+                    if (fullName != null) {
+                        bookingObj.setUserName(fullName);
+                    }
+
+                    if (user.getEmailId() != null) {
+                        bookingObj.setUserEmail(user.getEmailId());
+                    }
+                }
+            } catch (Exception e) {
+                // Log but don't fail the booking if user fetch fails
+                System.err.println("Failed to fetch user details for userId: " + bookingObj.getUserId() + " - " + e.getMessage());
+            }
+        }
 
         return bookingRepositoryImpl.createBooking(bookingObj);
     }
@@ -215,15 +285,15 @@ public class BookingService {
         Map<String, Object> result = new HashMap<>();
 
         // Validate that the hall supports this slot type
-        Item item = itemProcessor.getItemById(itemId);
-        if (item != null && item.getDetails() != null && item.getDetails().getAvailableSlotTypes() != null) {
-            if (!item.getDetails().getAvailableSlotTypes().isSlotTypeAvailable(slotType)) {
-                result.put("available", false);
-                result.put("error", "This hall does not offer " + slotType + " bookings");
-                result.put("supportedSlotTypes", getSupportedSlotTypes(item));
-                return result;
-            }
-        }
+        // Item item = itemProcessor.getItemById(itemId);
+        // if (item != null && item.getDetails() != null && item.getDetails().getAvailableSlotTypes() != null) {
+        //     if (!item.getDetails().getAvailableSlotTypes().isSlotTypeAvailable(slotType)) {
+        //         result.put("available", false);
+        //         result.put("error", "This hall does not offer " + slotType + " bookings");
+        //         result.put("supportedSlotTypes", getSupportedSlotTypes(item));
+        //         return result;
+        //     }
+        // }
 
         // Parse the booking date
         LocalDate bookingDate = LocalDate.parse(bookingDateStr);
@@ -317,6 +387,224 @@ public class BookingService {
         bookingObj.setBookingToDate(endDateTime);
 
         return confirmItemAvailability(bookingObj);
+    }
+
+    /**
+     * Process payment workflow based on customer's selected payment option
+     */
+    private void processPaymentWorkflow(Booking booking) throws Exception {
+        String paymentOption = booking.getPaymentOption();
+        if (paymentOption == null) {
+            // Default to full payment if not specified
+            paymentOption = "CONFIRM_FULL_PAYMENT";
+            booking.setPaymentOption(paymentOption);
+        }
+
+        // Fetch item to get vendor's payment terms and pricing
+        Item item = itemService.getItemById(booking.getItemId());
+        if (item == null) {
+            throw new RuntimeException("Item not found");
+        }
+
+        // Store vendor's payment terms in booking details
+        if (booking.getDetails() == null) {
+            booking.setDetails(new BookingDetails());
+        }
+
+        // Extract vendor's payment terms from item's dynamic data
+        // Payment terms field has a dynamic ID (e.g., field_1777734787674_1zergd00j)
+        // We need to search for it by checking if the value is a Map with "selectedOption" key
+        Map<String, Object> vendorPaymentTerms = null;
+        if (item.getDynamicData() != null) {
+            // Try exact field name first
+            Object paymentTermsObj = item.getDynamicData().get("payment_terms");
+            if (paymentTermsObj instanceof Map) {
+                vendorPaymentTerms = (Map<String, Object>) paymentTermsObj;
+            }
+
+            // If not found, search for payment terms field by checking structure
+            if (vendorPaymentTerms == null) {
+                for (Map.Entry<String, Object> entry : item.getDynamicData().entrySet()) {
+                    if (entry.getValue() instanceof Map) {
+                        Map<String, Object> fieldValue = (Map<String, Object>) entry.getValue();
+                        // Payment terms field has "selectedOption" key
+                        if (fieldValue.containsKey("selectedOption")) {
+                            vendorPaymentTerms = fieldValue;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        booking.getDetails().setVendorPaymentTerms(vendorPaymentTerms);
+
+        // Calculate total booking amount (this could be enhanced based on your pricing logic)
+        Double totalAmount = calculateBookingAmount(item, booking);
+        booking.getDetails().setTotalBookingAmount(totalAmount);
+
+        // Process based on payment option
+        switch (paymentOption) {
+            case "BLOCK_DATE_PARTIAL":
+                // Customer pays partial amount to block the date
+                Integer percentage = extractPartialPaymentPercentage(vendorPaymentTerms);
+                if (percentage == null) {
+                    percentage = 30; // Default to 30% if vendor didn't specify
+                }
+
+                Double partialAmount = (totalAmount * percentage) / 100.0;
+                booking.setPartialPaymentAmount(partialAmount);
+                booking.setPartialPaymentPercentage(percentage);
+                booking.setPaymentStatus("PARTIAL_PAID");
+                booking.setStatus("BLOCKED"); // Date is blocked, not confirmed
+                booking.setVendorConfirmationRequired(false);
+                break;
+
+            case "CONFIRM_FULL_PAYMENT":
+                // Customer pays full amount to confirm booking
+                booking.setPaymentStatus("FULLY_PAID");
+                booking.setStatus("CONFIRMED");
+                booking.setVendorConfirmationRequired(false);
+                break;
+
+            case "PAY_OFFLINE":
+                // Customer will pay offline, vendor must confirm
+                booking.setPaymentStatus("OFFLINE_PENDING");
+                booking.setStatus("PENDING");
+                booking.setVendorConfirmationRequired(true);
+                booking.setVendorConfirmationStatus("PENDING");
+                break;
+
+            default:
+                throw new IllegalArgumentException("Invalid payment option: " + paymentOption);
+        }
+    }
+
+    /**
+     * Extract partial payment percentage from vendor's payment terms
+     */
+    private Integer extractPartialPaymentPercentage(Map<String, Object> vendorPaymentTerms) {
+        if (vendorPaymentTerms == null) {
+            return null;
+        }
+
+        String selectedOption = (String) vendorPaymentTerms.get("selectedOption");
+        if (selectedOption == null) {
+            return null;
+        }
+
+        // Parse percentage from options like "30% Advance + 70% on Event"
+        if (selectedOption.contains("%")) {
+            String[] parts = selectedOption.split("%");
+            if (parts.length > 0) {
+                try {
+                    return Integer.parseInt(parts[0].trim());
+                } catch (NumberFormatException e) {
+                    // If parsing fails, return null
+                    return null;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Calculate total booking amount based on item pricing and attendees
+     */
+    private Double calculateBookingAmount(Item item, Booking booking) {
+        // Try to get price from item
+        Double basePrice = 0.0;
+
+        // Check price object
+        if (item.getPrice() != null) {
+            basePrice = item.getPrice().getBaseRate();
+        } else if (item.getDynamicData() != null) {
+            // Try various price field patterns
+            Object priceObj = item.getDynamicData().get("price");
+            if (priceObj == null) {
+                priceObj = item.getDynamicData().get("price_per_person");
+            }
+            if (priceObj == null) {
+                priceObj = item.getDynamicData().get("field_hall_price");
+            }
+
+            if (priceObj instanceof Number) {
+                basePrice = ((Number) priceObj).doubleValue();
+            }
+        }
+
+        // Multiply by number of attendees if applicable
+        Integer attendees = 1;
+        if (booking.getDetails() != null && booking.getDetails().getNumberOfAttendees() > 0) {
+            attendees = booking.getDetails().getNumberOfAttendees();
+        }
+
+        return basePrice * attendees;
+    }
+
+    /**
+     * Vendor confirms offline payment booking
+     */
+    public void confirmOfflineBooking(String bookingId, String vendorId) throws Exception {
+        Booking booking = bookingRepositoryImpl.getBookingById(bookingId);
+        if (booking == null) {
+            throw new RuntimeException("Booking not found");
+        }
+
+        // Verify vendor owns this item
+        Item item = itemService.getItemById(booking.getItemId());
+        if (item == null || !item.getVendorId().equals(vendorId)) {
+            throw new RuntimeException("Unauthorized: You do not own this item");
+        }
+
+        // Verify it's an offline payment booking
+        if (!"PAY_OFFLINE".equals(booking.getPaymentOption())) {
+            throw new RuntimeException("This booking is not an offline payment booking");
+        }
+
+        // Confirm the booking
+        booking.setVendorConfirmationStatus("CONFIRMED");
+        booking.setStatus("CONFIRMED");
+        booking.setPaymentStatus("OFFLINE_CONFIRMED");
+        booking.setLastUpdateDate(new Date());
+
+        bookingRepositoryImpl.updateBookingDetails(booking);
+    }
+
+    /**
+     * Vendor cancels offline payment booking
+     */
+    public void cancelOfflineBooking(String bookingId, String vendorId, String reason) throws Exception {
+        Booking booking = bookingRepositoryImpl.getBookingById(bookingId);
+        if (booking == null) {
+            throw new RuntimeException("Booking not found");
+        }
+
+        // Verify vendor owns this item
+        Item item = itemService.getItemById(booking.getItemId());
+        if (item == null || !item.getVendorId().equals(vendorId)) {
+            throw new RuntimeException("Unauthorized: You do not own this item");
+        }
+
+        // Verify it's an offline payment booking
+        if (!"PAY_OFFLINE".equals(booking.getPaymentOption())) {
+            throw new RuntimeException("This booking is not an offline payment booking");
+        }
+
+        // Cancel the booking
+        booking.setVendorConfirmationStatus("CANCELLED");
+        booking.setStatus("CANCELLED");
+        booking.setVendorCancellationReason(reason);
+        booking.setLastUpdateDate(new Date());
+
+        bookingRepositoryImpl.updateBookingDetails(booking);
+    }
+
+    /**
+     * Get offline payment bookings pending vendor confirmation
+     */
+    public List<Booking> getOfflineBookingsPendingConfirmation(String vendorId) {
+        return bookingRepositoryImpl.getOfflineBookingsPendingConfirmation(vendorId);
     }
 
 }

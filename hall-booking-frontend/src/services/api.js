@@ -10,26 +10,17 @@ const api = axios.create({
   },
 });
 
-// Request interceptor - JWT disabled, using session-based auth
+// Request interceptor - Add JWT token to requests
 api.interceptors.request.use(
   (config) => {
-    // Backend doesn't use JWT tokens currently
-    // Session management is handled by user ID in localStorage
-    const user = localStorage.getItem('user');
-    if (user) {
-      try {
-        const userData = JSON.parse(user);
-        // Add user ID to request params for endpoints that need it
-        if (userData.id && !config.params) {
-          config.params = {};
-        }
-        if (userData.id && config.params) {
-          config.params.userId = userData.id;
-        }
-      } catch (e) {
-        console.error('Error parsing user data:', e);
-      }
+    // Get JWT token from localStorage
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      // Add Authorization header with Bearer token
+      config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => {

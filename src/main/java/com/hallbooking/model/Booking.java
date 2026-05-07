@@ -20,11 +20,23 @@ public class Booking implements Serializable{
 	private String itemId;
 	private String itemName;
 	private String userId;
+	private String userName;  // User's full name (firstName + lastName)
+	private String userEmail; // User's email address
 	private String vendorId;
 	private LocalDateTime bookingFromDate;
 	private LocalDateTime bookingToDate;
 	private String status;
 	private BookingDetails details;
+
+	// Payment workflow fields
+	private String paymentOption; // BLOCK_DATE_PARTIAL, CONFIRM_FULL_PAYMENT, PAY_OFFLINE
+	private String paymentStatus; // PENDING, PARTIAL_PAID, FULLY_PAID, OFFLINE_PENDING, OFFLINE_CONFIRMED
+	private Double partialPaymentAmount; // Amount paid for block date
+	private Integer partialPaymentPercentage; // Percentage from vendor's payment terms
+	private Boolean vendorConfirmationRequired; // True for PAY_OFFLINE option
+	private String vendorConfirmationStatus; // PENDING, CONFIRMED, CANCELLED for offline payments
+	private String vendorCancellationReason; // Reason if vendor cancels offline booking
+
 	private Date createdOn;
 	private String createdBy;
 	private String lastUpdateUserId;

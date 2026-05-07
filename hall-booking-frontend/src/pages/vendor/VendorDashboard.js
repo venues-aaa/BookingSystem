@@ -1,34 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getVendorHalls } from '../../services/vendorService';
+import { getCategories } from '../../services/categoryService';
+import { getVendorItems } from '../../services/itemService';
 import '../admin/Admin.css';
 
 const VendorDashboard = () => {
-  const [stats, setStats] = useState({
-    totalHalls: 0,
-    activeHalls: 0,
-  });
+  const [categories, setCategories] = useState([]);
+  const [itemStats, setItemStats] = useState({}); // Stats per category
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats();
+    loadDashboardData();
   }, []);
 
-  const fetchStats = async () => {
-    setLoading(true);
+  const loadDashboardData = async () => {
     try {
-      const hallsData = await getVendorHalls({ page: 0, size: 1000 });
-      const halls = hallsData.halls || [];
+      setLoading(true);
 
-      setStats({
-        totalHalls: halls.length,
-        activeHalls: halls.filter(h => h.status === 'Active').length,
-      });
+      // Get user from localStorage
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (!user.id) {
+        console.error('User not found');
+        setLoading(false);
+        return;
+      }
+
+      // Load all active categories
+      const categoriesData = await getCategories();
+      setCategories(categoriesData);
+
+      // Load vendor's items for each category
+      const stats = {};
+      for (const category of categoriesData) {
+        try {
+          const itemsData = await getVendorItems(user.id, category.id);
+          const items = itemsData.data || itemsData.items || itemsData.halls || [];
+
+          stats[category.id] = {
+            total: items.length,
+            active: items.filter(item => item.status === 'Active').length,
+            categoryName: category.displayName,
+            categoryIcon: category.icon || '📦'
+          };
+        } catch (error) {
+          console.error(`Failed to load items for category ${category.name}:`, error);
+          stats[category.id] = {
+            total: 0,
+            active: 0,
+            categoryName: category.displayName,
+            categoryIcon: category.icon || '📦'
+          };
+        }
+      }
+
+      setItemStats(stats);
+      setLoading(false);
     } catch (error) {
-      console.error('Failed to fetch stats:', error);
-    } finally {
+      console.error('Failed to load dashboard:', error);
       setLoading(false);
     }
+  };
+
+  const getTotalItems = () => {
+    return Object.values(itemStats).reduce((sum, stat) => sum + stat.total, 0);
+  };
+
+  const getActiveItems = () => {
+    return Object.values(itemStats).reduce((sum, stat) => sum + stat.active, 0);
   };
 
   return (
@@ -57,15 +95,16 @@ const VendorDashboard = () => {
           </div>
         ) : (
           <>
+            {/* Overall Stats */}
             <div className="row mb-5">
               <div className="col-md-6 mb-4">
                 <div className="admin-card">
                   <div className="admin-card-icon" style={{ background: '#dfa974' }}>
-                    <i className="fas fa-door-open"></i>
+                    <i className="fas fa-boxes"></i>
                   </div>
                   <div className="admin-card-content">
-                    <h3>{stats.totalHalls}</h3>
-                    <p>Total Halls</p>
+                    <h3>{getTotalItems()}</h3>
+                    <p>Total Items</p>
                   </div>
                 </div>
               </div>
@@ -75,25 +114,79 @@ const VendorDashboard = () => {
                     <i className="fas fa-check-circle"></i>
                   </div>
                   <div className="admin-card-content">
-                    <h3>{stats.activeHalls}</h3>
-                    <p>Active Halls</p>
+                    <h3>{getActiveItems()}</h3>
+                    <p>Active Items</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Quick Actions */}
+            {/* Category-wise Stats */}
+            <div className="row mb-4">
+              <div className="col-lg-12">
+                <h3 style={{ fontFamily: "'Lora', serif", marginBottom: '30px', fontSize: '32px' }}>
+                  My Categories
+                </h3>
+              </div>
+            </div>
+
+            {/* Dynamic category cards */}
+            <div className="row mb-5">
+              {categories.map(category => (
+                <div key={category.id} className="col-md-6 mb-3">
+                  <Link
+                    to={`/vendor/items/${category.id}`}
+                    className="admin-quick-action"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                      <span style={{ fontSize: '24px' }}>{category.icon || '📦'}</span>
+                      <div>
+                        <div style={{ fontWeight: 'bold', fontSize: '18px' }}>{category.displayName}</div>
+                        <div style={{ fontSize: '14px', color: '#666' }}>
+                          {itemStats[category.id]?.total || 0} items
+                          {' • '}
+                          {itemStats[category.id]?.active || 0} active
+                        </div>
+                      </div>
+                    </div>
+                    <i className="fas fa-arrow-right"></i>
+                  </Link>
+                </div>
+              ))}
+            </div>
+
+            {/* Create New Item */}
             <div className="row">
               <div className="col-lg-12">
-                <h3 style={{ fontFamily: "'Lora', serif", marginBottom: '30px', fontSize: '32px' }}>Quick Actions</h3>
+                <h3 style={{ fontFamily: "'Lora', serif", marginBottom: '30px', fontSize: '32px' }}>
+                  Create New Item
+                </h3>
               </div>
-              <div className="col-md-6 mb-3">
-                <Link to="/vendor/halls" className="admin-quick-action">
-                  <i className="fas fa-door-open"></i>
-                  <span>Manage My Halls</span>
-                  <i className="fas fa-arrow-right"></i>
-                </Link>
-              </div>
+              {categories.map(category => (
+                <div key={category.id} className="col-md-4 mb-3">
+                  <Link
+                    to={`/vendor/items/create/${category.id}`}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '10px',
+                      padding: '15px',
+                      background: '#dfa974',
+                      color: 'white',
+                      textDecoration: 'none',
+                      borderRadius: '5px',
+                      transition: 'all 0.3s'
+                    }}
+                    onMouseEnter={(e) => e.target.style.background = '#c89860'}
+                    onMouseLeave={(e) => e.target.style.background = '#dfa974'}
+                  >
+                    <span style={{ fontSize: '20px' }}>{category.icon || '📦'}</span>
+                    <span>New {category.displayName}</span>
+                  </Link>
+                </div>
+              ))}
             </div>
           </>
         )}
