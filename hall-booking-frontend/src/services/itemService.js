@@ -42,21 +42,28 @@ export const getItemById = async (itemId) => {
  * @param {Object} category - Category object with name
  * @returns {Promise<Object>} Created item
  */
-export const createItem = async (categoryId, dynamicData, category) => {
+export const createItem = async (categoryId, formData, category) => {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  // Extract system fields from formData (not part of dynamicData)
+  const { maxConcurrentBookings, discountedBundledItems, ...dynamicData } = formData;
 
   const itemData = {
     categoryId,
     type: category.name, // Category name, not hardcoded
     vendorId: user.id || 'default-vendor',
     placeId: 'default-place',
-    dynamicData, // Schema-driven data
+    dynamicData, // Schema-driven data (without system fields)
+    maxConcurrentBookings: maxConcurrentBookings || 1, // System field for concurrent booking limit
+    discountedBundledItems: discountedBundledItems || [], // System field for bundle offers with discount
     status: 'Active'
   };
 
   console.log('=== Creating Item ===');
   console.log('Category ID:', categoryId);
   console.log('Category Name:', category.name);
+  console.log('Max Concurrent Bookings:', maxConcurrentBookings);
+  console.log('Discounted Bundled Items:', discountedBundledItems);
   console.log('Dynamic Data:', JSON.stringify(dynamicData, null, 2));
   console.log('Full Item Data:', JSON.stringify(itemData, null, 2));
   console.log('===================');
@@ -73,8 +80,11 @@ export const createItem = async (categoryId, dynamicData, category) => {
  * @param {Object} category - Category object (for type)
  * @returns {Promise<Object>} Updated item
  */
-export const updateItem = async (itemId, categoryId, dynamicData, category) => {
+export const updateItem = async (itemId, categoryId, formData, category) => {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  // Extract system fields from formData (not part of dynamicData)
+  const { maxConcurrentBookings, discountedBundledItems, ...dynamicData } = formData;
 
   // CRITICAL: Include all required fields to prevent data loss
   // MongoDB's save() replaces the entire document, so we must send all fields
@@ -84,6 +94,8 @@ export const updateItem = async (itemId, categoryId, dynamicData, category) => {
     vendorId: user.id || 'default-vendor', // Must preserve vendorId
     placeId: 'default-place', // Must preserve placeId
     dynamicData,
+    maxConcurrentBookings: maxConcurrentBookings || 1, // System field for concurrent booking limit
+    discountedBundledItems: discountedBundledItems || [], // System field for bundle offers with discount
     status: 'Active'
   };
 
@@ -92,6 +104,8 @@ export const updateItem = async (itemId, categoryId, dynamicData, category) => {
   console.log('Category ID:', categoryId);
   console.log('Category Name (type):', category.name);
   console.log('Vendor ID:', user.id);
+  console.log('Max Concurrent Bookings:', maxConcurrentBookings);
+  console.log('Discounted Bundled Items:', discountedBundledItems);
   console.log('Dynamic Data:', JSON.stringify(dynamicData, null, 2));
   console.log('===================');
 
@@ -151,14 +165,29 @@ export const searchItems = async (searchParams) => {
 
 /**
  * Get schema-driven display name for an item
- * Checks dynamicData for common field patterns, then falls back to first text field
+ * Priority order:
+ * 1. Use primaryNameFieldId from category if provided
+ * 2. Check common naming patterns (schema-driven)
+ * 3. Search for any field with "name" in the key
+ * 4. Use first text field value
+ * 5. Fall back to "Unnamed Item"
+ *
  * @param {Object} item - Item object
+ * @param {Object} category - Optional category object with primaryNameFieldId
  * @returns {string} Display name
  */
-export const getItemDisplayName = (item) => {
+export const getItemDisplayName = (item, category = null) => {
   if (!item) return 'Unknown Item';
 
   const dynamicData = item.dynamicData || {};
+
+  // Priority 0: Use category's primary name field if specified
+  if (category?.primaryNameFieldId && dynamicData[category.primaryNameFieldId]) {
+    const value = dynamicData[category.primaryNameFieldId];
+    if (typeof value === 'string' && value.trim()) {
+      return value.trim();
+    }
+  }
 
   // Priority 1: Check common naming patterns (schema-driven)
   const commonName = dynamicData.name ||

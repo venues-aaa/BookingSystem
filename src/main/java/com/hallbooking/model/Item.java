@@ -104,6 +104,36 @@ public class Item implements Serializable{
  	private String status;
 
 	/**
+	 * Maximum number of concurrent bookings allowed for the same time slot.
+	 * - 0: Exclusive booking (default) - only one booking at a time
+	 * - 1+: Allow multiple bookings up to this limit
+	 *
+	 * Example use cases:
+	 * - Hall: 1 (exclusive - only one booking at a time)
+	 * - Photography: 1 (one photographer per time slot)
+	 * - Catering: 5 (can serve 5 events simultaneously)
+	 * - Decoration: 3 (team can handle 3 events at once)
+	 */
+	private Integer maxConcurrentBookings = 1;
+
+	/**
+	 * Discounted bundled items - Items offered with discount when this item is booked.
+	 * Example: Book "Premium Catering" → Get "Grand Hall" at 50% off
+	 *
+	 * Structure: List of BundledItem objects containing itemId and discountPercentage
+	 * - discountPercentage: 0-100 (0 = no discount, 50 = half price, 100 = free)
+	 */
+	private List<BundledItem> discountedBundledItems;
+
+	/**
+	 * Required prerequisite items - Items that MUST be booked before this item can be booked.
+	 * Example: "Decoration Service" requires "Hall" to be booked first
+	 *
+	 * Structure: List of item IDs that must exist in the same booking session
+	 */
+	private List<String> requiredPrerequisites;
+
+	/**
 	 * When this item was created
 	 */
  	private Date createdOn;

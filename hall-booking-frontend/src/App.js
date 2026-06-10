@@ -9,8 +9,9 @@ import RegisterForm from './components/auth/RegisterForm';
 import HomePage from './pages/HomePage';
 import BookingPage from './pages/BookingPage';
 import GenericBookingPage from './pages/GenericBookingPage';
-import SmartBookingPage from './pages/SmartBookingPage';
 import MyBookingsPage from './pages/MyBookingsPage';
+import BookingSuccessPage from './pages/BookingSuccessPage';
+import BookingDetailsPage from './pages/BookingDetailsPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ManageUsersPage from './pages/admin/ManageUsersPage';
 import AllBookingsPage from './pages/admin/AllBookingsPage';
@@ -26,6 +27,7 @@ import FormBuilder from './components/formBuilder/FormBuilder';
 import CreateItemPage from './pages/vendor/CreateItemPage';
 import VendorCategoryItemsPage from './pages/vendor/VendorCategoryItemsPage';
 import VendorOfflineBookingsPage from './pages/vendor/VendorOfflineBookingsPage';
+import VendorBlockedDates from './pages/vendor/VendorBlockedDates';
 
 // NEW: Public Category Browsing
 import CategoryItemsPage from './pages/CategoryItemsPage';
@@ -50,12 +52,12 @@ function App() {
             <Route path="/item/:itemId" element={<ItemDetailsPage />} />
 
             {/* Protected Routes */}
-            {/* NEW: Smart schema-driven booking page - reads vendor's item data */}
+            {/* Universal booking page for all categories */}
             <Route
               path="/booking/:itemId"
               element={
                 <ProtectedRoute>
-                  <SmartBookingPage />
+                  <GenericBookingPage />
                 </ProtectedRoute>
               }
             />
@@ -69,18 +71,26 @@ function App() {
               }
             />
             <Route
-              path="/booking/generic/:itemId"
-              element={
-                <ProtectedRoute>
-                  <GenericBookingPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path="/my-bookings"
               element={
                 <ProtectedRoute>
                   <MyBookingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/booking-success"
+              element={
+                <ProtectedRoute>
+                  <BookingSuccessPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/booking/:bookingId/details"
+              element={
+                <ProtectedRoute>
+                  <BookingDetailsPage />
                 </ProtectedRoute>
               }
             />
@@ -159,6 +169,14 @@ function App() {
               element={
                 <ProtectedRoute vendorOnly={true}>
                   <VendorOfflineBookingsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vendor/blocked-dates"
+              element={
+                <ProtectedRoute vendorOnly={true}>
+                  <VendorBlockedDates />
                 </ProtectedRoute>
               }
             />

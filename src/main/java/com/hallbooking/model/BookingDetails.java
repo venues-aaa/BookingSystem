@@ -63,4 +63,10 @@ public class BookingDetails implements Serializable{
 	 */
 	private Double totalBookingAmount;
 
+	/**
+	 * Additional flexible data for booking details
+	 * Used to store custom fields from dynamic booking forms
+	 */
+	private Map<String, Object> additionalDetails;
+
 }

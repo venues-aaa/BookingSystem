@@ -1,7 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getCategories } from '../../services/categoryService';
 
 const Footer = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const loadCategories = async () => {
+    try {
+      const data = await getCategories();
+      setCategories(data);
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+    }
+  };
+
   return (
     <footer className="footer">
       <div className="container">
@@ -10,11 +26,11 @@ const Footer = () => {
           <div className="col-lg-4 col-md-6">
             <div className="footer__widget">
               <div className="footer__logo">
-                <h1>BookNest</h1>
+                <h1>DQBooking</h1>
               </div>
               <p>
                 Experience luxury and elegance in our carefully curated selection of
-                premium event halls. Make your special occasions truly unforgettable.
+                premium venues and services. Make your special occasions truly unforgettable.
               </p>
               <div className="footer__social">
                 <a href="#!"><i className="fab fa-facebook-f"></i></a>
@@ -31,24 +47,36 @@ const Footer = () => {
               <h5>Quick Links</h5>
               <ul>
                 <li><Link to="/">Home</Link></li>
-                <li><Link to="/">Browse Halls</Link></li>
                 <li><Link to="/my-bookings">My Bookings</Link></li>
                 <li><a href="#!">About Us</a></li>
                 <li><a href="#!">Contact</a></li>
+                <li><a href="#!">FAQ</a></li>
               </ul>
             </div>
           </div>
 
-          {/* Services */}
+          {/* Categories - Dynamic Services */}
           <div className="col-lg-3 col-md-6">
             <div className="footer__widget">
-              <h5>Services</h5>
+              <h5>Our Services</h5>
               <ul>
-                <li><a href="#!">Wedding Venues</a></li>
-                <li><a href="#!">Corporate Events</a></li>
-                <li><a href="#!">Conference Halls</a></li>
-                <li><a href="#!">Banquet Halls</a></li>
-                <li><a href="#!">Party Halls</a></li>
+                {categories.length > 0 ? (
+                  categories.slice(0, 6).map((category) => (
+                    <li key={category.id}>
+                      <Link to={`/category/${category.id}/items`}>
+                        {category.displayName || category.name}
+                      </Link>
+                    </li>
+                  ))
+                ) : (
+                  <>
+                    <li><Link to="/">Explore Categories</Link></li>
+                    <li><a href="#!">Browse All Services</a></li>
+                  </>
+                )}
+                {categories.length > 6 && (
+                  <li><Link to="/">View All Services</Link></li>
+                )}
               </ul>
             </div>
           </div>
@@ -80,8 +108,8 @@ const Footer = () => {
           <div className="col-lg-12">
             <div className="footer__copyright">
               <div className="footer__copyright__text">
-                Copyright &copy; {new Date().getFullYear()} BookNest Hall Booking.
-                All rights reserved | Designed with <i className="fa fa-heart" style={{ color: '#dfa974' }}></i> by <a href="#!">BookNest Team</a>
+                Copyright &copy; {new Date().getFullYear()} DQBooking.
+                All rights reserved | Designed with <i className="fa fa-heart" style={{ color: '#dfa974' }}></i> by <a href="#!">DQ Team</a>
               </div>
             </div>
           </div>

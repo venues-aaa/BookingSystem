@@ -41,7 +41,7 @@ const LoginForm = () => {
           <div className="col-lg-5 col-md-7">
             <div className="auth-form animate__animated animate__fadeIn">
               <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-                <h1 style={{ fontSize: '48px', color: '#dfa974', fontFamily: 'Lora, serif' }}>BookNest</h1>
+                <h1 style={{ fontSize: '48px', color: '#dfa974', fontFamily: 'Lora, serif' }}>DQBooking</h1>
               </div>
 
               <h2>Welcome Back</h2>

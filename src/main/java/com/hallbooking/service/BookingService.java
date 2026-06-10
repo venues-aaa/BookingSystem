@@ -31,6 +31,12 @@ public class BookingService {
     @Autowired
     private com.hallbooking.dao.impl.UserRepositoryImpl userRepository;
 
+    @Autowired
+    private BlockedDateService blockedDateService;
+
+    @Autowired
+    private CouponService couponService;
+
     @Transactional
     public Booking createBooking(Booking bookingObj,
                                  String username) throws Exception {
@@ -49,6 +55,32 @@ public class BookingService {
 
         // Validate time slot
         validateTimeSlot(bookingObj.getBookingFromDate(), bookingObj.getBookingToDate());
+
+        // Get item details
+        Item item = itemService.getItemById(bookingObj.getItemId());
+        if (item == null) {
+            throw new RuntimeException("Item not found");
+        }
+
+        // Check if dates are blocked by vendor
+        boolean datesAvailable = blockedDateService.areDatesAvailable(
+            bookingObj.getItemId(),
+            bookingObj.getBookingFromDate(),
+            bookingObj.getBookingToDate()
+        );
+
+        if (!datesAvailable) {
+            // Get the blocking information to show to user
+            List<com.hallbooking.dto.response.BlockedDateResponse> blockedDates =
+                blockedDateService.getOverlappingBlockedDates(
+                    bookingObj.getItemId(),
+                    bookingObj.getBookingFromDate(),
+                    bookingObj.getBookingToDate()
+                );
+
+            String reason = blockedDates.isEmpty() ? "" : " Reason: " + blockedDates.get(0).getReason();
+            throw new RuntimeException("This item is not available for the selected dates." + reason);
+        }
 
         // Validate booking against item's dynamic form rules (e.g., capacity check)
         // BookingDetails details = bookingObj.getDetails();
@@ -72,7 +104,8 @@ public class BookingService {
         // Fetch item details to populate itemName
         if (bookingObj.getItemId() != null && bookingObj.getItemName() == null) {
             try {
-                Item item = itemService.getItemById(bookingObj.getItemId());
+                // Reuse the item variable we already fetched above
+                // Item item already declared at line 58
                 if (item != null) {
                     // Extract item name from various possible fields
                     String itemName = null;
@@ -133,7 +166,25 @@ public class BookingService {
             }
         }
 
-        return bookingRepositoryImpl.createBooking(bookingObj);
+        Booking createdBooking = bookingRepositoryImpl.createBooking(bookingObj);
+
+        // Generate bundle coupons if this item has bundle offers
+        if (createdBooking != null && createdBooking.getId() != null) {
+            try {
+                couponService.generateBundleCoupons(
+                    createdBooking.getId(),
+                    createdBooking.getUserId(),
+                    createdBooking.getItemId(),
+                    createdBooking.getBookingFromDate()
+                );
+            } catch (Exception e) {
+                // Log but don't fail the booking if coupon generation fails
+                System.err.println("Failed to generate bundle coupons for booking " + createdBooking.getId() + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+
+        return createdBooking;
     }
 
     public void cancelBooking(String bookingId, User user, String cancelReason) {
@@ -149,6 +200,16 @@ public class BookingService {
         LocalDateTime bookingEndDate = existingBooking.getBookingToDate();
         if (bookingEndDate != null && bookingEndDate.isBefore(LocalDateTime.now())) {
             throw new RuntimeException("Cannot cancel a booking for a past event");
+        }
+
+        // Check if any bundle coupons from this booking have been used
+        List<String> usedInBookingIds = couponService.checkUsedCoupons(bookingId);
+        if (!usedInBookingIds.isEmpty()) {
+            String bookingList = String.join(", ", usedInBookingIds);
+            throw new RuntimeException(
+                "Cannot cancel this booking because bundle coupons have already been used in other bookings (" +
+                bookingList + "). Please cancel those bookings first, then retry cancelling this booking."
+            );
         }
 
         Booking bookingObj = new Booking();
@@ -170,6 +231,22 @@ public class BookingService {
         }*/
 
         bookingRepositoryImpl.cancelBooking(bookingObj);
+
+        // Release any coupon that was used in this booking (mark as unused so it can be used again)
+        try {
+            couponService.releaseCouponUsedInBooking(bookingId);
+        } catch (Exception e) {
+            // Log but don't fail the cancellation
+            System.err.println("Failed to release coupon for cancelled booking " + bookingId + ": " + e.getMessage());
+        }
+
+        // Invalidate all coupons generated from this booking
+        try {
+            couponService.invalidateCouponsByParentBooking(bookingId);
+        } catch (Exception e) {
+            // Log but don't fail the cancellation
+            System.err.println("Failed to invalidate coupons for cancelled booking " + bookingId + ": " + e.getMessage());
+        }
     }
 
     public Booking getBookingById(String bookingId) throws Exception {

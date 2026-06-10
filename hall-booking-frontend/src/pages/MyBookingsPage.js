@@ -638,6 +638,34 @@ const MyBookingsPage = () => {
                           </div>
                         ) : (
                           <>
+                            {/* View Details Button - Always show */}
+                            <button
+                              onClick={() => window.location.href = `/booking/${booking.id}/details`}
+                              style={{
+                                background: '#667eea',
+                                color: 'white',
+                                border: 'none',
+                                padding: '10px 20px',
+                                fontSize: '14px',
+                                fontWeight: '600',
+                                textTransform: 'uppercase',
+                                letterSpacing: '1px',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s',
+                                width: '100%',
+                                marginBottom: '10px'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.target.style.background = '#5568d3';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.target.style.background = '#667eea';
+                              }}
+                            >
+                              <i className="fa fa-eye" style={{ marginRight: '8px' }}></i>
+                              View Details
+                            </button>
+
                             {/* CONFIRMED or BLOCKED - Show Cancel Button */}
                             {(booking.status === 'CONFIRMED' || booking.status === 'BLOCKED') && (
                               <button

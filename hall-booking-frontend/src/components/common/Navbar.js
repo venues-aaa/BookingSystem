@@ -231,7 +231,7 @@ const Navbar = () => {
                     margin: 0,
                     letterSpacing: '-1px'
                   }}>
-                    BookNest
+                    DQBooking
                   </h1>
                 </Link>
               </div>
@@ -324,6 +324,11 @@ const Navbar = () => {
                             <li style={{ borderTop: '1px solid #e5e7eb', marginTop: '8px', paddingTop: '8px' }}>
                               <Link to="/vendor/items/create">
                                 <i className="fa fa-plus"></i> Create New Item
+                              </Link>
+                            </li>
+                            <li>
+                              <Link to="/vendor/blocked-dates">
+                                <i className="fa fa-ban"></i> Blocked Dates
                               </Link>
                             </li>
                             <li>

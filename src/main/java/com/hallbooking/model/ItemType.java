@@ -66,6 +66,17 @@ public class ItemType implements Serializable {
 	private FormSchema bookingFormSchema;
 
 	/**
+	 * Primary name field ID - Specifies which field in formSchema should be used as the item's display name
+	 * Example: "name", "restaurant_name", "field_hall_name", "service_name"
+	 *
+	 * This eliminates the need for code to guess which field contains the item name.
+	 * Admin sets this when creating/editing the category.
+	 *
+	 * If null, system falls back to intelligent field detection (checks common name patterns)
+	 */
+	private String primaryNameFieldId;
+
+	/**
 	 * Whether this category is active
 	 * Inactive categories are not shown to vendors/users
 	 */

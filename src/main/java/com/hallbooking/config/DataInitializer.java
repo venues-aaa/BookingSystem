@@ -40,7 +40,28 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         initializeUsers();
+        cleanupDuplicateCategories();
         initializeCateringCategory();
+        initializeHomeRentCategory();
+        addBookingFormSchemaToAllCategories();
+    }
+
+    /**
+     * Cleanup duplicate categories created by typo
+     * Removes "Categering" if it exists (typo of "Catering")
+     */
+    private void cleanupDuplicateCategories() {
+        // Remove "Categering" duplicate if it exists
+        Query duplicateQuery = new Query();
+        duplicateQuery.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("name").is("Categering"));
+        long duplicateCount = mongoTemplate.count(duplicateQuery, ItemType.class);
+
+        if (duplicateCount > 0) {
+            System.out.println("=== Cleaning up duplicate 'Categering' category... ===");
+            mongoTemplate.remove(duplicateQuery, ItemType.class);
+            System.out.println("✅ Duplicate category removed successfully!");
+            System.out.println("=======================================================");
+        }
     }
 
     /**
@@ -135,14 +156,14 @@ public class DataInitializer implements CommandLineRunner {
     private void initializeCateringCategory() {
         // Check if Catering category already exists
         Query query = new Query();
-        query.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("name").is("Categering"));
+        query.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("name").is("Catering"));
         long categoryCount = mongoTemplate.count(query, ItemType.class);
 
         if (categoryCount == 0) {
             System.out.println("=== Creating Catering category with proper form schema... ===");
 
             ItemType catering = new ItemType();
-            catering.setName("Categering");
+            catering.setName("Catering");
             catering.setDisplayName("Catering Service");
             catering.setDescription("Professional catering services for events and functions");
             catering.setIcon("restaurant");
@@ -387,5 +408,563 @@ public class DataInitializer implements CommandLineRunner {
         } else {
             System.out.println("Catering category already exists. Skipping category initialization.");
         }
+    }
+
+    /**
+     * Initialize Home Rent category (Airbnb-style)
+     *
+     * This category allows vendors (homeowners) to list properties for rent
+     * and users to book them for single or multiple days.
+     */
+    private void initializeHomeRentCategory() {
+        // Check if HomeRent category already exists
+        Query query = new Query();
+        query.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("name").is("HomeRent"));
+        long categoryCount = mongoTemplate.count(query, ItemType.class);
+
+        if (categoryCount == 0) {
+            System.out.println("=== Creating Home Rent category (Airbnb-style)... ===");
+
+            ItemType homeRent = new ItemType();
+            homeRent.setName("HomeRent");
+            homeRent.setDisplayName("Home Rentals");
+            homeRent.setDescription("List your property for short-term or long-term rentals");
+            homeRent.setIcon("🏠");
+            homeRent.setIsActive(true);
+            homeRent.setCreatedOn(new Date());
+            homeRent.setCreatedBy("system");
+            homeRent.setLastModifiedOn(new Date());
+            homeRent.setLastModifiedBy("system");
+
+            // Create form schema
+            FormSchema formSchema = new FormSchema();
+            formSchema.setVersion(1);
+            formSchema.setLayout(new LayoutConfig(12, 60));
+
+            List<FormField> fields = new ArrayList<>();
+
+            // Property Name
+            FormField propertyName = new FormField();
+            propertyName.setId("property_name");
+            propertyName.setType("text");
+            propertyName.setLabel("Property Name");
+            propertyName.setPlaceholder("e.g., Cozy 2BHK Apartment in Downtown");
+            propertyName.setRequired(true);
+            ValidationRules nameValidation = new ValidationRules();
+            nameValidation.setMinLength(5);
+            nameValidation.setMaxLength(100);
+            propertyName.setValidation(nameValidation);
+            propertyName.setPosition(new GridPosition(0, 0, 12, 1));
+            fields.add(propertyName);
+
+            // Property Type
+            FormField propertyType = new FormField();
+            propertyType.setId("property_type");
+            propertyType.setType("select");
+            propertyType.setLabel("Property Type");
+            propertyType.setRequired(true);
+            propertyType.setOptions(Arrays.asList(
+                "Entire House",
+                "Apartment",
+                "Villa",
+                "Studio",
+                "Private Room",
+                "Shared Room",
+                "Penthouse",
+                "Cottage",
+                "Farmhouse"
+            ));
+            propertyType.setPosition(new GridPosition(0, 1, 4, 1));
+            fields.add(propertyType);
+
+            // Bedrooms
+            FormField bedrooms = new FormField();
+            bedrooms.setId("bedrooms");
+            bedrooms.setType("number");
+            bedrooms.setLabel("Number of Bedrooms");
+            bedrooms.setPlaceholder("e.g., 2");
+            bedrooms.setRequired(true);
+            ValidationRules bedroomsValidation = new ValidationRules();
+            bedroomsValidation.setMin(0);
+            bedroomsValidation.setMax(20);
+            bedrooms.setValidation(bedroomsValidation);
+            bedrooms.setPosition(new GridPosition(4, 1, 2, 1));
+            fields.add(bedrooms);
+
+            // Bathrooms
+            FormField bathrooms = new FormField();
+            bathrooms.setId("bathrooms");
+            bathrooms.setType("number");
+            bathrooms.setLabel("Number of Bathrooms");
+            bathrooms.setPlaceholder("e.g., 2");
+            bathrooms.setRequired(true);
+            ValidationRules bathroomsValidation = new ValidationRules();
+            bathroomsValidation.setMin(1);
+            bathroomsValidation.setMax(10);
+            bathrooms.setValidation(bathroomsValidation);
+            bathrooms.setPosition(new GridPosition(6, 1, 2, 1));
+            fields.add(bathrooms);
+
+            // Maximum Guests
+            FormField maxGuests = new FormField();
+            maxGuests.setId("max_guests");
+            maxGuests.setType("number");
+            maxGuests.setLabel("Maximum Guests");
+            maxGuests.setPlaceholder("e.g., 4");
+            maxGuests.setRequired(true);
+            ValidationRules guestsValidation = new ValidationRules();
+            guestsValidation.setMin(1);
+            guestsValidation.setMax(50);
+            maxGuests.setValidation(guestsValidation);
+            maxGuests.setPosition(new GridPosition(8, 1, 2, 1));
+            maxGuests.setHelpText("Maximum number of guests allowed");
+            fields.add(maxGuests);
+
+            // Square Footage
+            FormField sqft = new FormField();
+            sqft.setId("square_footage");
+            sqft.setType("number");
+            sqft.setLabel("Square Footage (sq ft)");
+            sqft.setPlaceholder("e.g., 1200");
+            sqft.setRequired(false);
+            ValidationRules sqftValidation = new ValidationRules();
+            sqftValidation.setMin(100);
+            sqftValidation.setMax(50000);
+            sqft.setValidation(sqftValidation);
+            sqft.setPosition(new GridPosition(10, 1, 2, 1));
+            fields.add(sqft);
+
+            // Description
+            FormField description = new FormField();
+            description.setId("description");
+            description.setType("textarea");
+            description.setLabel("Property Description");
+            description.setPlaceholder("Describe your property, its unique features, nearby attractions, etc.");
+            description.setRequired(true);
+            ValidationRules descValidation = new ValidationRules();
+            descValidation.setMinLength(50);
+            descValidation.setMaxLength(2000);
+            description.setValidation(descValidation);
+            description.setPosition(new GridPosition(0, 2, 12, 2));
+            fields.add(description);
+
+            // Address
+            FormField address = new FormField();
+            address.setId("address");
+            address.setType("textarea");
+            address.setLabel("Full Address");
+            address.setPlaceholder("Enter complete address with landmarks");
+            address.setRequired(true);
+            ValidationRules addressValidation = new ValidationRules();
+            addressValidation.setMinLength(10);
+            addressValidation.setMaxLength(500);
+            address.setValidation(addressValidation);
+            address.setPosition(new GridPosition(0, 4, 8, 1));
+            fields.add(address);
+
+            // City
+            FormField city = new FormField();
+            city.setId("city");
+            city.setType("text");
+            city.setLabel("City");
+            city.setPlaceholder("e.g., Bangalore");
+            city.setRequired(true);
+            ValidationRules cityValidation = new ValidationRules();
+            cityValidation.setMinLength(2);
+            cityValidation.setMaxLength(50);
+            city.setValidation(cityValidation);
+            city.setPosition(new GridPosition(8, 4, 2, 1));
+            fields.add(city);
+
+            // Pincode
+            FormField pincode = new FormField();
+            pincode.setId("pincode");
+            pincode.setType("text");
+            pincode.setLabel("Pincode");
+            pincode.setPlaceholder("e.g., 560001");
+            pincode.setRequired(true);
+            ValidationRules pincodeValidation = new ValidationRules();
+            pincodeValidation.setPattern("^[0-9]{6}$");
+            pincodeValidation.setCustomMessage("Please enter a valid 6-digit pincode");
+            pincode.setValidation(pincodeValidation);
+            pincode.setPosition(new GridPosition(10, 4, 2, 1));
+            fields.add(pincode);
+
+            // Amenities
+            FormField amenities = new FormField();
+            amenities.setId("amenities");
+            amenities.setType("checkbox");
+            amenities.setLabel("Amenities");
+            amenities.setRequired(false);
+            amenities.setOptions(Arrays.asList(
+                "WiFi",
+                "Air Conditioning",
+                "Kitchen",
+                "Washing Machine",
+                "TV",
+                "Parking",
+                "Swimming Pool",
+                "Gym",
+                "Balcony",
+                "Garden",
+                "Pet Friendly",
+                "Wheelchair Accessible",
+                "Elevator",
+                "Power Backup",
+                "Security Guard",
+                "CCTV"
+            ));
+            amenities.setPosition(new GridPosition(0, 5, 6, 3));
+            fields.add(amenities);
+
+            // House Rules
+            FormField houseRules = new FormField();
+            houseRules.setId("house_rules");
+            houseRules.setType("checkbox");
+            houseRules.setLabel("House Rules");
+            houseRules.setRequired(false);
+            houseRules.setOptions(Arrays.asList(
+                "No Smoking",
+                "No Pets",
+                "No Parties/Events",
+                "Children Allowed",
+                "Quiet Hours (10 PM - 8 AM)",
+                "Guests Must Sign Agreement"
+            ));
+            houseRules.setPosition(new GridPosition(6, 5, 6, 2));
+            fields.add(houseRules);
+
+            // Price Per Day
+            FormField pricePerDay = new FormField();
+            pricePerDay.setId("price_per_day");
+            pricePerDay.setType("number");
+            pricePerDay.setLabel("Price Per Day (₹)");
+            pricePerDay.setPlaceholder("e.g., 2500");
+            pricePerDay.setRequired(true);
+            ValidationRules priceValidation = new ValidationRules();
+            priceValidation.setMin(100);
+            priceValidation.setMax(100000);
+            pricePerDay.setValidation(priceValidation);
+            pricePerDay.setPosition(new GridPosition(0, 8, 3, 1));
+            fields.add(pricePerDay);
+
+            // Weekly Discount
+            FormField weeklyDiscount = new FormField();
+            weeklyDiscount.setId("weekly_discount");
+            weeklyDiscount.setType("number");
+            weeklyDiscount.setLabel("Weekly Discount (%)");
+            weeklyDiscount.setPlaceholder("e.g., 10");
+            weeklyDiscount.setRequired(false);
+            ValidationRules weeklyValidation = new ValidationRules();
+            weeklyValidation.setMin(0);
+            weeklyValidation.setMax(50);
+            weeklyDiscount.setValidation(weeklyValidation);
+            weeklyDiscount.setPosition(new GridPosition(3, 8, 3, 1));
+            weeklyDiscount.setHelpText("Discount for 7+ days booking");
+            fields.add(weeklyDiscount);
+
+            // Monthly Discount
+            FormField monthlyDiscount = new FormField();
+            monthlyDiscount.setId("monthly_discount");
+            monthlyDiscount.setType("number");
+            monthlyDiscount.setLabel("Monthly Discount (%)");
+            monthlyDiscount.setPlaceholder("e.g., 20");
+            monthlyDiscount.setRequired(false);
+            ValidationRules monthlyValidation = new ValidationRules();
+            monthlyValidation.setMin(0);
+            monthlyValidation.setMax(50);
+            monthlyDiscount.setValidation(monthlyValidation);
+            monthlyDiscount.setPosition(new GridPosition(6, 8, 3, 1));
+            monthlyDiscount.setHelpText("Discount for 30+ days booking");
+            fields.add(monthlyDiscount);
+
+            // Cleaning Fee
+            FormField cleaningFee = new FormField();
+            cleaningFee.setId("cleaning_fee");
+            cleaningFee.setType("number");
+            cleaningFee.setLabel("Cleaning Fee (₹)");
+            cleaningFee.setPlaceholder("e.g., 500");
+            cleaningFee.setRequired(false);
+            ValidationRules cleaningValidation = new ValidationRules();
+            cleaningValidation.setMin(0);
+            cleaningValidation.setMax(10000);
+            cleaningFee.setValidation(cleaningValidation);
+            cleaningFee.setPosition(new GridPosition(9, 8, 3, 1));
+            cleaningFee.setHelpText("One-time cleaning fee");
+            fields.add(cleaningFee);
+
+            // Minimum Stay
+            FormField minStay = new FormField();
+            minStay.setId("minimum_stay");
+            minStay.setType("number");
+            minStay.setLabel("Minimum Stay (Days)");
+            minStay.setPlaceholder("e.g., 1");
+            minStay.setRequired(true);
+            ValidationRules minStayValidation = new ValidationRules();
+            minStayValidation.setMin(1);
+            minStayValidation.setMax(365);
+            minStay.setValidation(minStayValidation);
+            minStay.setPosition(new GridPosition(0, 9, 3, 1));
+            fields.add(minStay);
+
+            // Maximum Stay
+            FormField maxStay = new FormField();
+            maxStay.setId("maximum_stay");
+            maxStay.setType("number");
+            maxStay.setLabel("Maximum Stay (Days)");
+            maxStay.setPlaceholder("e.g., 90");
+            maxStay.setRequired(false);
+            ValidationRules maxStayValidation = new ValidationRules();
+            maxStayValidation.setMin(1);
+            maxStayValidation.setMax(365);
+            maxStay.setValidation(maxStayValidation);
+            maxStay.setPosition(new GridPosition(3, 9, 3, 1));
+            maxStay.setHelpText("Leave empty for no limit");
+            fields.add(maxStay);
+
+            // Check-in Time
+            FormField checkinTime = new FormField();
+            checkinTime.setId("checkin_time");
+            checkinTime.setType("text");
+            checkinTime.setLabel("Check-in Time");
+            checkinTime.setPlaceholder("e.g., 2:00 PM");
+            checkinTime.setRequired(true);
+            ValidationRules checkinValidation = new ValidationRules();
+            checkinValidation.setMinLength(3);
+            checkinValidation.setMaxLength(20);
+            checkinTime.setValidation(checkinValidation);
+            checkinTime.setPosition(new GridPosition(6, 9, 3, 1));
+            fields.add(checkinTime);
+
+            // Check-out Time
+            FormField checkoutTime = new FormField();
+            checkoutTime.setId("checkout_time");
+            checkoutTime.setType("text");
+            checkoutTime.setLabel("Check-out Time");
+            checkoutTime.setPlaceholder("e.g., 11:00 AM");
+            checkoutTime.setRequired(true);
+            ValidationRules checkoutValidation = new ValidationRules();
+            checkoutValidation.setMinLength(3);
+            checkoutValidation.setMaxLength(20);
+            checkoutTime.setValidation(checkoutValidation);
+            checkoutTime.setPosition(new GridPosition(9, 9, 3, 1));
+            fields.add(checkoutTime);
+
+            // Cancellation Policy
+            FormField cancellationPolicy = new FormField();
+            cancellationPolicy.setId("cancellation_policy");
+            cancellationPolicy.setType("select");
+            cancellationPolicy.setLabel("Cancellation Policy");
+            cancellationPolicy.setRequired(true);
+            cancellationPolicy.setOptions(Arrays.asList(
+                "Flexible (Full refund 24 hours before check-in)",
+                "Moderate (Full refund 5 days before check-in)",
+                "Strict (50% refund 7 days before check-in)",
+                "Super Strict (No refund)"
+            ));
+            cancellationPolicy.setPosition(new GridPosition(6, 7, 6, 1));
+            fields.add(cancellationPolicy);
+
+            // Property Images
+            FormField images = new FormField();
+            images.setId("property_images");
+            images.setType("text");
+            images.setLabel("Property Image URLs (comma-separated)");
+            images.setPlaceholder("https://example.com/img1.jpg, https://example.com/img2.jpg");
+            images.setRequired(false);
+            ValidationRules imagesValidation = new ValidationRules();
+            imagesValidation.setMaxLength(2000);
+            images.setValidation(imagesValidation);
+            images.setPosition(new GridPosition(0, 10, 12, 1));
+            images.setHelpText("Enter multiple image URLs separated by commas");
+            fields.add(images);
+
+            // Contact Number
+            FormField contactNumber = new FormField();
+            contactNumber.setId("contact_number");
+            contactNumber.setType("text");
+            contactNumber.setLabel("Contact Number");
+            contactNumber.setPlaceholder("Enter contact number");
+            contactNumber.setRequired(true);
+            ValidationRules phoneValidation = new ValidationRules();
+            phoneValidation.setPattern("^[0-9]{10}$");
+            phoneValidation.setCustomMessage("Please enter a valid 10-digit phone number");
+            contactNumber.setValidation(phoneValidation);
+            contactNumber.setPosition(new GridPosition(0, 11, 4, 1));
+            fields.add(contactNumber);
+
+            // Alternate Contact
+            FormField alternateContact = new FormField();
+            alternateContact.setId("alternate_contact");
+            alternateContact.setType("text");
+            alternateContact.setLabel("Alternate Contact (Optional)");
+            alternateContact.setPlaceholder("Enter alternate contact");
+            alternateContact.setRequired(false);
+            ValidationRules altPhoneValidation = new ValidationRules();
+            altPhoneValidation.setPattern("^[0-9]{10}$");
+            altPhoneValidation.setCustomMessage("Please enter a valid 10-digit phone number");
+            alternateContact.setValidation(altPhoneValidation);
+            alternateContact.setPosition(new GridPosition(4, 11, 4, 1));
+            fields.add(alternateContact);
+
+            // Email
+            FormField email = new FormField();
+            email.setId("email");
+            email.setType("text");
+            email.setLabel("Email Address");
+            email.setPlaceholder("owner@example.com");
+            email.setRequired(true);
+            ValidationRules emailValidation = new ValidationRules();
+            emailValidation.setPattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+            emailValidation.setCustomMessage("Please enter a valid email address");
+            email.setValidation(emailValidation);
+            email.setPosition(new GridPosition(8, 11, 4, 1));
+            fields.add(email);
+
+            formSchema.setFields(fields);
+            homeRent.setFormSchema(formSchema);
+
+            // Create Booking Form Schema (Airbnb-style)
+            FormSchema bookingFormSchema = new FormSchema();
+            bookingFormSchema.setVersion(1);
+            bookingFormSchema.setLayout(new LayoutConfig(12, 60));
+
+            List<FormField> bookingFields = new ArrayList<>();
+
+            // Check-in Date
+            FormField checkinDate = new FormField();
+            checkinDate.setId("checkin_date");
+            checkinDate.setType("text");
+            checkinDate.setLabel("Check-in Date");
+            checkinDate.setPlaceholder("Select check-in date");
+            checkinDate.setRequired(true);
+            checkinDate.setHelpText("Earliest check-in: {item.checkin_time}");
+            checkinDate.setPosition(new GridPosition(0, 0, 6, 1));
+            bookingFields.add(checkinDate);
+
+            // Check-out Date
+            FormField checkoutDate = new FormField();
+            checkoutDate.setId("checkout_date");
+            checkoutDate.setType("text");
+            checkoutDate.setLabel("Check-out Date");
+            checkoutDate.setPlaceholder("Select check-out date");
+            checkoutDate.setRequired(true);
+            checkoutDate.setHelpText("Latest check-out: {item.checkout_time}");
+            checkoutDate.setPosition(new GridPosition(6, 0, 6, 1));
+            bookingFields.add(checkoutDate);
+
+            // Number of Guests
+            FormField numGuests = new FormField();
+            numGuests.setId("number_of_guests");
+            numGuests.setType("number");
+            numGuests.setLabel("Number of Guests");
+            numGuests.setPlaceholder("How many guests?");
+            numGuests.setRequired(true);
+            ValidationRules guestsVal = new ValidationRules();
+            guestsVal.setMin(1);
+            guestsVal.setMax(50);
+            numGuests.setValidation(guestsVal);
+            numGuests.setHelpText("Maximum: {item.max_guests} guests");
+            numGuests.setPosition(new GridPosition(0, 1, 6, 1));
+            bookingFields.add(numGuests);
+
+            // Special Requests
+            FormField specialRequests = new FormField();
+            specialRequests.setId("special_requests");
+            specialRequests.setType("textarea");
+            specialRequests.setLabel("Special Requests (Optional)");
+            specialRequests.setPlaceholder("Early check-in, airport pickup, extra amenities, etc.");
+            specialRequests.setRequired(false);
+            ValidationRules requestsVal = new ValidationRules();
+            requestsVal.setMaxLength(500);
+            specialRequests.setValidation(requestsVal);
+            specialRequests.setPosition(new GridPosition(0, 2, 12, 2));
+            bookingFields.add(specialRequests);
+
+            // Agreement Checkbox
+            FormField agreement = new FormField();
+            agreement.setId("house_rules_agreement");
+            agreement.setType("checkbox");
+            agreement.setLabel("I agree to the house rules and cancellation policy");
+            agreement.setRequired(true);
+            agreement.setOptions(Arrays.asList("I agree"));
+            agreement.setPosition(new GridPosition(0, 4, 12, 1));
+            bookingFields.add(agreement);
+
+            bookingFormSchema.setFields(bookingFields);
+            homeRent.setBookingFormSchema(bookingFormSchema);
+
+            mongoTemplate.save(homeRent);
+
+            System.out.println("✅ Home Rent category created successfully!");
+            System.out.println("   - Total Fields: " + fields.size());
+            System.out.println("   - Property listing features: Type, Bedrooms, Bathrooms, Amenities");
+            System.out.println("   - Pricing: Daily rate, Weekly/Monthly discounts, Cleaning fee");
+            System.out.println("   - Booking: Min/Max stay, Check-in/out times, Cancellation policy");
+            System.out.println("   - Booking Form: Check-in/out dates, Guests, Special requests");
+            System.out.println("=======================================================");
+        } else {
+            System.out.println("Home Rent category already exists. Skipping category initialization.");
+        }
+    }
+
+    /**
+     * Add universal booking form schema to ALL categories
+     * Enables date range booking (single or multiple days) for all item types
+     */
+    private void addBookingFormSchemaToAllCategories() {
+        System.out.println("=== Adding universal booking form schema to all categories... ===");
+
+        // Get all categories
+        List<ItemType> allCategories = mongoTemplate.findAll(ItemType.class);
+
+        for (ItemType category : allCategories) {
+            // Skip if category already has bookingFormSchema
+            if (category.getBookingFormSchema() != null &&
+                category.getBookingFormSchema().getFields() != null &&
+                !category.getBookingFormSchema().getFields().isEmpty()) {
+                System.out.println("   - " + category.getDisplayName() + ": Already has booking form schema, skipping");
+                continue;
+            }
+
+            System.out.println("   - Adding booking form schema to: " + category.getDisplayName());
+
+            // Create universal booking form schema
+            FormSchema bookingFormSchema = new FormSchema();
+            bookingFormSchema.setVersion(1);
+            bookingFormSchema.setLayout(new LayoutConfig(12, 60));
+
+            List<FormField> bookingFields = new ArrayList<>();
+
+            // NOTE: Date fields (duration type, event_date, start_date, end_date),
+            // number of guests, and event type are handled directly in the frontend UI
+            // (GenericBookingPage.js) with conditional rendering and price calculation.
+            // We only store additional fields here that need schema-driven rendering.
+
+            // Special Requests - rendered by DynamicForm component
+            FormField specialRequests = new FormField();
+            specialRequests.setId("special_requests");
+            specialRequests.setType("textarea");
+            specialRequests.setLabel("Special Requests / Requirements");
+            specialRequests.setPlaceholder("Any special requirements, dietary restrictions, accessibility needs, etc.");
+            specialRequests.setRequired(false);
+            ValidationRules requestsVal = new ValidationRules();
+            requestsVal.setMaxLength(1000);
+            specialRequests.setValidation(requestsVal);
+            specialRequests.setPosition(new GridPosition(0, 0, 12, 2));
+            bookingFields.add(specialRequests);
+
+            bookingFormSchema.setFields(bookingFields);
+            category.setBookingFormSchema(bookingFormSchema);
+            category.setLastModifiedOn(new Date());
+            category.setLastModifiedBy("system");
+
+            // Save updated category
+            mongoTemplate.save(category);
+            System.out.println("     ✅ Booking form schema added successfully!");
+        }
+
+        System.out.println("=======================================================");
+        System.out.println("✅ All categories now support date range booking!");
     }
 }

@@ -1,5 +1,6 @@
 package com.hallbooking.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,21 @@ public class Booking implements Serializable{
 	private String userName;  // User's full name (firstName + lastName)
 	private String userEmail; // User's email address
 	private String vendorId;
+
+	/**
+	 * Booking start date/time
+	 * @JsonFormat ensures consistent ISO string serialization for frontend
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime bookingFromDate;
+
+	/**
+	 * Booking end date/time
+	 * @JsonFormat ensures consistent ISO string serialization for frontend
+	 */
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime bookingToDate;
+
 	private String status;
 	private BookingDetails details;
 
@@ -36,6 +50,10 @@ public class Booking implements Serializable{
 	private Boolean vendorConfirmationRequired; // True for PAY_OFFLINE option
 	private String vendorConfirmationStatus; // PENDING, CONFIRMED, CANCELLED for offline payments
 	private String vendorCancellationReason; // Reason if vendor cancels offline booking
+
+	// Coupon discount fields (applied via coupon validation)
+	private Double discountApplied; // Percentage discount from coupon (e.g., 50 for 50% off)
+	private String discountReason; // Human-readable reason (e.g., "Coupon: BUNDLE-ABC123")
 
 	private Date createdOn;
 	private String createdBy;

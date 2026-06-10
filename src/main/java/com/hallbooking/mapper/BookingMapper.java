@@ -17,11 +17,19 @@ public class BookingMapper {
         // Direct mappings
         booking.setItemId(request.getItemId());
         booking.setUserId(request.getUserId());
-        booking.setStatus("Confirmed"); // Set default status
+        booking.setStatus(request.getStatus() != null ? request.getStatus() : "Confirmed"); // Use provided status or default
 
         // Date conversions
+        System.out.println("=== BOOKING MAPPER DEBUG ===");
+        System.out.println("Request startDateTime: " + request.getStartDateTime());
+        System.out.println("Request endDateTime: " + request.getEndDateTime());
+
         booking.setBookingFromDate(request.getStartDateTime());
         booking.setBookingToDate(request.getEndDateTime());
+
+        System.out.println("Booking bookingFromDate set to: " + booking.getBookingFromDate());
+        System.out.println("Booking bookingToDate set to: " + booking.getBookingToDate());
+        System.out.println("===========================");
 
         // Metadata (optional defaults)
         booking.setCreatedOn(new Date());
@@ -32,6 +40,12 @@ public class BookingMapper {
         if (details == null) {
             details = new BookingDetails(); // Ensure details is never null
         }
+
+        // If request contains additional details map, merge it with the details object
+        if (request.getDetails() != null) {
+            details.setAdditionalDetails(request.getDetails());
+        }
+
         booking.setDetails(details);
 
         return booking;

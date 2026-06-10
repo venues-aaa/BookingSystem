@@ -228,7 +228,12 @@ const CreateItemPage = ({ editMode = false }) => {
 
             <DynamicItemForm
               category={selectedCategory}
-              initialData={editMode ? existingItem?.dynamicData : null}
+              initialData={editMode ? {
+                ...existingItem?.dynamicData,
+                discountedBundledItems: existingItem?.discountedBundledItems,
+                maxConcurrentBookings: existingItem?.maxConcurrentBookings,
+                id: existingItem?.id
+              } : null}
               onSubmit={handleSubmit}
               onCancel={handleCancel}
             />

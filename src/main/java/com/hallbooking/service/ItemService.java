@@ -260,6 +260,17 @@ public class ItemService {
             item.setDetails(existingItem.getDetails());
         }
 
+        // Preserve bundle-related fields if not provided
+        if (item.getDiscountedBundledItems() == null) {
+            item.setDiscountedBundledItems(existingItem.getDiscountedBundledItems());
+        }
+        if (item.getRequiredPrerequisites() == null) {
+            item.setRequiredPrerequisites(existingItem.getRequiredPrerequisites());
+        }
+        if (item.getMaxConcurrentBookings() == null) {
+            item.setMaxConcurrentBookings(existingItem.getMaxConcurrentBookings());
+        }
+
         // Update audit fields
         item.setLastUpdatedOn(new Date());
         item.setLastUpdatedBy(item.getLastUpdatedBy()); // Preserve if provided

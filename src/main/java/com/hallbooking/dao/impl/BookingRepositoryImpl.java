@@ -54,19 +54,19 @@ public class BookingRepositoryImpl implements BookingDao {
 
 	public Booking getBookingById(String bookingId) throws Exception {
 		Query query = new Query();
-		Criteria w = Criteria.where(
-				DBConstants.BOOKING_ID).in(bookingId);
+		Criteria w = Criteria.where(DBConstants.BOOKING_ID).is(bookingId);
 
 		query.addCriteria(w);
 
-		Booking bookingObj = (Booking) mongoTemplate.find(query, Booking.class);
+		Booking bookingObj = mongoTemplate.findOne(query, Booking.class);
 		if(null == bookingObj) {
-			throw new Exception("Item not found");
+			throw new Exception("Booking not found");
 		}
 		return bookingObj;
 	}
 	/**
 	 * Method to confirm availability based on itemId and date
+	 * Now supports concurrent bookings - checks maxConcurrentBookings from Item
 	 */
 	//DFDate - Db FromDate, DTDate - Db ToDate, RFDate- Requested FromDate, RTD- Requested ToDate
 	//(DFDate >= RFDate && DTDate <= RTDate) OR (DFDate <= RFDate && DTDate >= RFDate) OR (DFDate <= RTDate && DTDate >= RTDate)
@@ -76,41 +76,74 @@ public class BookingRepositoryImpl implements BookingDao {
 		System.out.println("Requested From: " + bookingObj.getBookingFromDate());
 		System.out.println("Requested To: " + bookingObj.getBookingToDate());
 
+		// Fetch the item to check maxConcurrentBookings
+		Query itemQuery = new Query(Criteria.where("id").is(bookingObj.getItemId()));
+		Item item = mongoTemplate.findOne(itemQuery, Item.class);
+
+		Integer maxConcurrent = (item != null && item.getMaxConcurrentBookings() != null)
+			? item.getMaxConcurrentBookings()
+			: 1;
+
+		System.out.println("Max Concurrent Bookings Allowed: " + maxConcurrent);
+
 		Query query = new Query();
-		Criteria w = Criteria.where(
-				DBConstants.BOOKING_ITEM_ID).in(bookingObj.getItemId()).andOperator((Criteria.where(
-						DBConstants.BOOKING_STATUS).in("Blocked", "Confirmed")/*.orOperator(Criteria.where(
-				DBConstants.BOOKING_STATUS).in("Confirmed")*/));
 
-		Criteria x = Criteria.where(DBConstants.BOOKING_FROM_DATE).gte(bookingObj.getBookingFromDate())
-				.and(DBConstants.BOOKING_TO_DATE).lte(bookingObj.getBookingToDate());
+		// Item must match
+		Criteria itemCriteria = Criteria.where(DBConstants.BOOKING_ITEM_ID).is(bookingObj.getItemId());
 
-		Criteria y = new Criteria().andOperator(Criteria.where(DBConstants.BOOKING_FROM_DATE).lte(bookingObj.getBookingFromDate()),
-		        Criteria.where(DBConstants.BOOKING_TO_DATE).gte(bookingObj.getBookingFromDate()));
+		// Status must be CONFIRMED or BLOCKED (both block the slot)
+		Criteria statusCriteria = Criteria.where(DBConstants.BOOKING_STATUS).in("CONFIRMED", "BLOCKED");
 
-		Criteria z = new Criteria().andOperator(Criteria.where(DBConstants.BOOKING_FROM_DATE).lte(bookingObj.getBookingToDate()),
-		        Criteria.where(DBConstants.BOOKING_TO_DATE).gte(bookingObj.getBookingToDate()));
+		// Overlap conditions - same logic as blocked dates
+		// 1. Existing booking falls completely within requested range
+		Criteria overlap1 = new Criteria().andOperator(
+			Criteria.where(DBConstants.BOOKING_FROM_DATE).gte(bookingObj.getBookingFromDate()),
+			Criteria.where(DBConstants.BOOKING_TO_DATE).lte(bookingObj.getBookingToDate())
+		);
 
-		Criteria a = w.orOperator(x,y,z);
+		// 2. Existing booking starts before requested range but ends within it
+		Criteria overlap2 = new Criteria().andOperator(
+			Criteria.where(DBConstants.BOOKING_FROM_DATE).lte(bookingObj.getBookingFromDate()),
+			Criteria.where(DBConstants.BOOKING_TO_DATE).gte(bookingObj.getBookingFromDate())
+		);
+
+		// 3. Existing booking starts within requested range but ends after it
+		Criteria overlap3 = new Criteria().andOperator(
+			Criteria.where(DBConstants.BOOKING_FROM_DATE).lte(bookingObj.getBookingToDate()),
+			Criteria.where(DBConstants.BOOKING_TO_DATE).gte(bookingObj.getBookingToDate())
+		);
+
+		// Combine: must match itemId AND status AND at least one overlap condition
+		Criteria overlapCriteria = new Criteria().orOperator(overlap1, overlap2, overlap3);
+		Criteria a = new Criteria().andOperator(itemCriteria, statusCriteria, overlapCriteria);
 		query.addCriteria(a);
 
 		System.out.println("Query: " + query.toString());
 
 		List<Booking> bookingObjList = mongoTemplate.find(query, Booking.class);
+		int overlappingCount = (bookingObjList != null) ? bookingObjList.size() : 0;
 
-		System.out.println("Found overlapping bookings: " + (bookingObjList != null ? bookingObjList.size() : 0));
+		System.out.println("Found overlapping bookings: " + overlappingCount);
 		if(bookingObjList != null && !bookingObjList.isEmpty()) {
 			for(Booking b : bookingObjList) {
 				System.out.println("  - Booking ID: " + b.getId() + ", From: " + b.getBookingFromDate() + ", To: " + b.getBookingToDate() + ", Status: " + b.getStatus());
 			}
-			System.out.println("Result: NOT AVAILABLE (found conflicts)");
-			System.out.println("================================");
-			return false;
 		}
 
-		System.out.println("Result: AVAILABLE (no conflicts)");
-		System.out.println("================================");
-		return true;
+		// Check against concurrent booking limit
+		if (maxConcurrent == 1) {
+			// Exclusive booking - only 1 allowed, so no overlaps allowed
+			boolean isAvailable = overlappingCount == 0;
+			System.out.println("Exclusive Booking Mode (max: 1) - Result: " + (isAvailable ? "AVAILABLE" : "NOT AVAILABLE"));
+			System.out.println("================================");
+			return isAvailable;
+		} else {
+			// Multiple concurrent bookings allowed - check if limit is reached
+			boolean isAvailable = overlappingCount < maxConcurrent;
+			System.out.println("Concurrent Booking Mode (limit: " + maxConcurrent + ") - Current: " + overlappingCount + " - Result: " + (isAvailable ? "AVAILABLE" : "NOT AVAILABLE (limit reached)"));
+			System.out.println("================================");
+			return isAvailable;
+		}
 	}
 	
 	/**

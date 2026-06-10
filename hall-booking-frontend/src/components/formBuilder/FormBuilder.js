@@ -25,6 +25,7 @@ export default function FormBuilder() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const [primaryNameFieldId, setPrimaryNameFieldId] = useState(null);
 
   // Template modal state
   const [showTemplateModal, setShowTemplateModal] = useState(false);
@@ -42,6 +43,7 @@ export default function FormBuilder() {
       const data = await getCategoryById(categoryId);
       setCategory(data);
       setFields(data.formSchema?.fields || []);
+      setPrimaryNameFieldId(data.primaryNameFieldId || null);
       setLoading(false);
     } catch (error) {
       console.error('Failed to load category:', error);
@@ -92,11 +94,24 @@ export default function FormBuilder() {
       return;
     }
 
+    // Check if primary name field is set
+    if (!primaryNameFieldId) {
+      const confirmSave = window.confirm(
+        'Warning: No primary name field selected.\n\n' +
+        'Items in this category may display as "Unnamed Item".\n\n' +
+        'Do you want to save anyway?'
+      );
+      if (!confirmSave) {
+        return;
+      }
+    }
+
     try {
       setSaving(true);
 
       const updatedCategory = {
         ...category,
+        primaryNameFieldId: primaryNameFieldId,
         formSchema: {
           fields: fields,
           layout: {
@@ -214,6 +229,38 @@ export default function FormBuilder() {
         <div className="header-left">
           <h2>Design Form: {category?.displayName}</h2>
           <span className="header-badge">{fields.length} field{fields.length !== 1 ? 's' : ''}</span>
+
+          {/* Primary Name Field Selector */}
+          {fields.length > 0 && (
+            <div style={{ marginLeft: '20px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+              <label style={{ fontSize: '13px', color: '#666', fontWeight: '500' }}>
+                📝 Primary Name Field:
+              </label>
+              <select
+                value={primaryNameFieldId || ''}
+                onChange={(e) => setPrimaryNameFieldId(e.target.value || null)}
+                style={{
+                  padding: '6px 12px',
+                  border: primaryNameFieldId ? '1px solid #4caf50' : '2px solid #ff9800',
+                  borderRadius: '4px',
+                  fontSize: '13px',
+                  background: primaryNameFieldId ? '#f1f8f4' : '#fff8e1',
+                  cursor: 'pointer'
+                }}
+                title="Select which field should be used as the item's display name"
+              >
+                <option value="">⚠️ Not set (will show 'Unnamed Item')</option>
+                {fields
+                  .filter(f => f.type === 'text' || f.type === 'textarea')
+                  .map(field => (
+                    <option key={field.id} value={field.id}>
+                      {field.label || field.id}
+                      {field.id === primaryNameFieldId && ' ✓'}
+                    </option>
+                  ))}
+              </select>
+            </div>
+          )}
         </div>
         <div className="header-actions">
           <button

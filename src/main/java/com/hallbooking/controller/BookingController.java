@@ -6,10 +6,12 @@ import com.hallbooking.dto.request.CreateBookingRequest;
 import com.hallbooking.dto.response.BookingResponse;
 import com.hallbooking.mapper.BookingMapper;
 import com.hallbooking.model.Booking;
+import com.hallbooking.model.Coupon;
 import com.hallbooking.model.Notification;
 import com.hallbooking.model.ResponseModel;
 import com.hallbooking.model.User;
 import com.hallbooking.service.BookingService;
+import com.hallbooking.service.CouponService;
 import com.itextpdf.text.DocumentException;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
@@ -45,6 +47,9 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
+    @Autowired
+    private CouponService couponService;
+
     @GetMapping("/")
     public ResponseEntity<String> heartbeat() {
         System.out.println("Inside heartbeat - BookingService");
@@ -67,7 +72,63 @@ public class BookingController {
 
         Booking bookingObj = new Booking();
         BookingMapper.toBooking(request, bookingObj);
+
+        // If coupon code is provided, validate and apply it
+        if (request.getCouponCode() != null && !request.getCouponCode().trim().isEmpty()) {
+            try {
+                // Extract booking date for same-day validation
+                // Normalize to YYYY-MM-DD format (ISO-8601 date)
+                String bookingDate = null;
+                if (request.getStartDateTime() != null) {
+                    bookingDate = request.getStartDateTime().toLocalDate().toString();
+                }
+
+                System.out.println("=== COUPON VALIDATION IN BOOKING CREATION ===");
+                System.out.println("Coupon code: " + request.getCouponCode());
+                System.out.println("Request startDateTime: " + request.getStartDateTime());
+                System.out.println("Extracted bookingDate: " + bookingDate);
+                System.out.println("User ID: " + bookingObj.getUserId());
+                System.out.println("Item ID: " + bookingObj.getItemId());
+                System.out.println("===========================================");
+
+                Coupon coupon = couponService.validateAndGetCoupon(
+                    request.getCouponCode(),
+                    bookingObj.getUserId(),
+                    bookingObj.getItemId(),
+                    bookingDate
+                );
+
+                // Apply coupon discount (with null check)
+                Integer discountPercentage = coupon.getDiscountPercentage();
+                if (discountPercentage == null) {
+                    System.err.println("Coupon " + coupon.getCode() + " has null discount percentage");
+                    throw new RuntimeException("Invalid coupon: discount percentage not set");
+                }
+
+                bookingObj.setDiscountApplied(Double.valueOf(discountPercentage));
+                bookingObj.setDiscountReason("Coupon: " + coupon.getCode() + " (" + coupon.getDescription() + ")");
+
+                // Mark coupon as used after booking is created
+                // (will be done in a separate step after booking creation)
+
+            } catch (RuntimeException e) {
+                // Return error if coupon validation fails
+                throw new RuntimeException("Coupon validation failed: " + e.getMessage());
+            }
+        }
+
         Booking booking = bookingService.createBooking(bookingObj, /*userDetails.getUsername()*/"aaa");
+
+        // Mark coupon as used if it was applied
+        if (request.getCouponCode() != null && !request.getCouponCode().trim().isEmpty()) {
+            try {
+                couponService.markCouponAsUsed(request.getCouponCode(), booking.getId());
+            } catch (Exception e) {
+                // Log but don't fail the booking
+                System.err.println("Failed to mark coupon as used: " + e.getMessage());
+            }
+        }
+
         BookingResponse bookingResponse = new BookingResponse();
         BeanUtils.copyProperties(booking, bookingResponse);
 
@@ -427,4 +488,5 @@ public class BookingController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
 }

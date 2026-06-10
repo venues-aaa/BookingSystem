@@ -256,6 +256,22 @@ const ItemDetailsPage = () => {
                 <h3 style={{ fontFamily: "'Lora', serif", fontSize: '28px', marginBottom: '20px' }}>Additional Details</h3>
                 <div style={{ padding: '20px', background: '#f9f9f9', borderRadius: '5px' }}>
                   {Object.entries(dynamicData).map(([key, value]) => {
+                    // Skip system fields (not part of the category schema)
+                    const systemFields = ['discountedBundledItems', 'maxConcurrentBookings', 'requiredPrerequisites'];
+                    if (systemFields.includes(key)) {
+                      return null;
+                    }
+
+                    // Skip malformed values (containing timestamps or random IDs)
+                    // Pattern: "1777041410375 O8tm8eeym:Fullday" - timestamp + ID + value
+                    if (typeof value === 'string') {
+                      // Check for malformed data: starts with large number followed by alphanumeric
+                      if (/^\d{13}\s+[A-Za-z0-9]+:/.test(value)) {
+                        console.warn('Skipping malformed field data:', key, value);
+                        return null;
+                      }
+                    }
+
                     // Skip if this field was already displayed elsewhere
                     if (isFieldAlreadyDisplayed(key, value)) {
                       return null;
@@ -273,6 +289,13 @@ const ItemDetailsPage = () => {
                       if (schemaField && schemaField.label) {
                         fieldLabel = schemaField.label;
                       } else {
+                        // Skip fields with auto-generated IDs (pattern: field_TIMESTAMP_RANDOMID)
+                        // These are internal fields without proper labels
+                        if (/^field_\d{13}_[a-z0-9]+$/i.test(key)) {
+                          console.warn('Skipping auto-generated field without schema definition:', key);
+                          return null;
+                        }
+
                         // Fallback: Format field name (convert snake_case to Title Case)
                         fieldLabel = key
                           .replace(/_/g, ' ')

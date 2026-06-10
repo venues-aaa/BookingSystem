@@ -3,7 +3,17 @@ import api from './api';
 export const createBooking = async (bookingData) => {
   // Backend uses /bookings/create
   const response = await api.post('/bookings/create', bookingData);
-  return response.data;
+  console.log('Create booking response:', response.data);
+
+  // Return the booking object (response.data is BookingResponse)
+  const booking = response.data;
+
+  // Ensure we have an id field (might be 'id' or 'bookingId')
+  if (!booking.id && booking.bookingId) {
+    booking.id = booking.bookingId;
+  }
+
+  return booking;
 };
 
 export const getMyBookings = async (params = {}) => {

@@ -258,9 +258,9 @@ const HomePage = () => {
             <div className="col-lg-12">
               <div className="section-title">
                 <span>Luxury Experience</span>
-                <h2>Welcome to BookNest Hall Booking</h2>
+                <h2>Welcome to DQBooking</h2>
                 <p>
-                  We offer the finest selection of elegant halls for weddings, corporate events,
+                  We offer the finest selection of elegant venues and services for weddings, corporate events,
                   conferences, and celebrations. Each venue is carefully curated to ensure
                   your event is nothing short of extraordinary.
                 </p>
