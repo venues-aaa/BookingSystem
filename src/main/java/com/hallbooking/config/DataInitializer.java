@@ -41,7 +41,9 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         initializeUsers();
         cleanupDuplicateCategories();
+        initializeHallCategory();
         initializeCateringCategory();
+        initializeFloralDesignCategory();
         initializeHomeRentCategory();
         addBookingFormSchemaToAllCategories();
     }
@@ -143,6 +145,264 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("=======================================================");
         } else {
             System.out.println("Users already exist in database. Skipping user initialization.");
+        }
+    }
+
+    /**
+     * Initialize Hall (Event Hall) category
+     * For event halls, banquet halls, wedding venues, conference rooms
+     */
+    private void initializeHallCategory() {
+        Query query = new Query();
+        query.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("name").is("Hall"));
+        long categoryCount = mongoTemplate.count(query, ItemType.class);
+
+        if (categoryCount == 0) {
+            System.out.println("=== Creating Hall (Event Hall) category... ===");
+
+            ItemType hall = new ItemType();
+            hall.setName("Hall");
+            hall.setDisplayName("Event Hall");
+            hall.setDescription("Book event halls for weddings, conferences, and celebrations");
+            hall.setIcon("🏨");
+            hall.setIsActive(true);
+            hall.setCreatedOn(new Date());
+            hall.setCreatedBy("system");
+            hall.setLastModifiedOn(new Date());
+            hall.setLastModifiedBy("system");
+
+            // Create form schema
+            FormSchema formSchema = new FormSchema();
+            formSchema.setVersion(1);
+            formSchema.setLayout(new LayoutConfig(12, 60));
+
+            List<FormField> fields = new ArrayList<>();
+
+            // Hall Name
+            FormField hallName = new FormField();
+            hallName.setId("field_hall_name");
+            hallName.setType("text");
+            hallName.setLabel("Hall Name");
+            hallName.setPlaceholder("Enter hall name...");
+            hallName.setRequired(true);
+            ValidationRules nameValidation = new ValidationRules();
+            nameValidation.setMinLength(3);
+            nameValidation.setMaxLength(100);
+            hallName.setValidation(nameValidation);
+            hallName.setPosition(new GridPosition(0, 0, 12, 1));
+            fields.add(hallName);
+
+            // Description
+            FormField description = new FormField();
+            description.setId("field_hall_description");
+            description.setType("textarea");
+            description.setLabel("Description");
+            description.setPlaceholder("Describe your hall...");
+            description.setRequired(true);
+            ValidationRules descValidation = new ValidationRules();
+            descValidation.setMinLength(10);
+            descValidation.setMaxLength(1000);
+            description.setValidation(descValidation);
+            description.setPosition(new GridPosition(0, 1, 12, 2));
+            fields.add(description);
+
+            // Maximum Capacity
+            FormField capacity = new FormField();
+            capacity.setId("field_hall_capacity");
+            capacity.setType("number");
+            capacity.setLabel("Maximum Capacity");
+            capacity.setPlaceholder("Number of guests");
+            capacity.setRequired(true);
+            ValidationRules capacityValidation = new ValidationRules();
+            capacityValidation.setMin(10);
+            capacityValidation.setMax(10000);
+            capacity.setValidation(capacityValidation);
+            capacity.setHelpText("Maximum number of guests");
+            capacity.setPosition(new GridPosition(0, 3, 6, 1));
+            fields.add(capacity);
+
+            // Price Per Hour
+            FormField price = new FormField();
+            price.setId("field_hall_price");
+            price.setType("number");
+            price.setLabel("Price Per Hour");
+            price.setPlaceholder("Price in rupees");
+            price.setRequired(true);
+            ValidationRules priceValidation = new ValidationRules();
+            priceValidation.setMin(100);
+            priceValidation.setMax(1000000);
+            price.setValidation(priceValidation);
+            price.setHelpText("Hourly rental rate");
+            price.setPosition(new GridPosition(6, 3, 6, 1));
+            fields.add(price);
+
+            // Location
+            FormField location = new FormField();
+            location.setId("field_hall_location");
+            location.setType("text");
+            location.setLabel("Location");
+            location.setPlaceholder("Enter location...");
+            location.setRequired(true);
+            ValidationRules locationValidation = new ValidationRules();
+            locationValidation.setMinLength(3);
+            locationValidation.setMaxLength(200);
+            location.setValidation(locationValidation);
+            location.setPosition(new GridPosition(0, 4, 12, 1));
+            fields.add(location);
+
+            // Full Address
+            FormField address = new FormField();
+            address.setId("field_hall_address");
+            address.setType("textarea");
+            address.setLabel("Full Address");
+            address.setPlaceholder("Enter complete address...");
+            address.setRequired(true);
+            ValidationRules addressValidation = new ValidationRules();
+            addressValidation.setMinLength(10);
+            addressValidation.setMaxLength(500);
+            address.setValidation(addressValidation);
+            address.setPosition(new GridPosition(0, 5, 12, 1));
+            fields.add(address);
+
+            // Amenities
+            FormField amenities = new FormField();
+            amenities.setId("field_hall_amenities");
+            amenities.setType("text");
+            amenities.setLabel("Amenities");
+            amenities.setPlaceholder("AC, Parking, Wifi, Catering");
+            amenities.setRequired(false);
+            ValidationRules amenitiesValidation = new ValidationRules();
+            amenitiesValidation.setMaxLength(500);
+            amenities.setValidation(amenitiesValidation);
+            amenities.setHelpText("Comma-separated list");
+            amenities.setPosition(new GridPosition(0, 6, 12, 1));
+            fields.add(amenities);
+
+            // Available Booking Slots
+            FormField availableSlots = new FormField();
+            availableSlots.setId("field_hall_available_slots");
+            availableSlots.setType("checkbox");
+            availableSlots.setLabel("Available Booking Slots");
+            availableSlots.setRequired(true);
+            availableSlots.setOptions(Arrays.asList("Full Day", "Morning", "Evening"));
+            availableSlots.setHelpText("Select available time slots");
+            availableSlots.setPosition(new GridPosition(0, 7, 12, 1));
+            fields.add(availableSlots);
+
+            // Image URL
+            FormField imageUrl = new FormField();
+            imageUrl.setId("field_hall_image");
+            imageUrl.setType("text");
+            imageUrl.setLabel("Image URL");
+            imageUrl.setPlaceholder("https://example.com/image.jpg");
+            imageUrl.setRequired(false);
+            ValidationRules imageValidation = new ValidationRules();
+            imageValidation.setMaxLength(500);
+            imageUrl.setValidation(imageValidation);
+            imageUrl.setPosition(new GridPosition(0, 8, 12, 1));
+            fields.add(imageUrl);
+
+            // Payment Terms
+            FormField paymentTerms = new FormField();
+            paymentTerms.setId("field_payment_terms");
+            paymentTerms.setType("paymentTerms");
+            paymentTerms.setLabel("Payment Terms");
+            paymentTerms.setRequired(true);
+            paymentTerms.setOptions(Arrays.asList("Full Payment", "50% Advance + 50% on Event",
+                "30% Advance + 70% on Event", "Custom Terms"));
+            paymentTerms.setPosition(new GridPosition(0, 9, 6, 1));
+            fields.add(paymentTerms);
+
+            formSchema.setFields(fields);
+            hall.setFormSchema(formSchema);
+
+            // Create booking form schema
+            FormSchema bookingFormSchema = new FormSchema();
+            bookingFormSchema.setVersion(1);
+            bookingFormSchema.setLayout(new LayoutConfig(12, 60));
+
+            List<FormField> bookingFields = new ArrayList<>();
+
+            // Number of Guests
+            FormField numGuests = new FormField();
+            numGuests.setId("number_of_guests");
+            numGuests.setType("number");
+            numGuests.setLabel("Number of Guests");
+            numGuests.setPlaceholder("Expected number of attendees");
+            numGuests.setRequired(true);
+            ValidationRules guestsValidation = new ValidationRules();
+            guestsValidation.setMin(1);
+            guestsValidation.setMax(10000);
+            numGuests.setValidation(guestsValidation);
+            numGuests.setPosition(new GridPosition(0, 0, 6, 1));
+            bookingFields.add(numGuests);
+
+            // Event Type
+            FormField eventType = new FormField();
+            eventType.setId("event_type");
+            eventType.setType("select");
+            eventType.setLabel("Event Type");
+            eventType.setRequired(true);
+            eventType.setOptions(Arrays.asList("Wedding", "Birthday Party", "Corporate Event",
+                "Conference", "Family Gathering", "Anniversary", "Product Launch", "Workshop", "Other"));
+            eventType.setPosition(new GridPosition(6, 0, 6, 1));
+            bookingFields.add(eventType);
+
+            // Timing Slot
+            FormField timingSlot = new FormField();
+            timingSlot.setId("timing_slot");
+            timingSlot.setType("select");
+            timingSlot.setLabel("Preferred Timing");
+            timingSlot.setRequired(true);
+            timingSlot.setOptions(Arrays.asList("Morning (8 AM - 12 PM)", "Afternoon (12 PM - 4 PM)",
+                "Evening (4 PM - 8 PM)", "Night (8 PM - 12 AM)", "Full Day"));
+            timingSlot.setPosition(new GridPosition(0, 1, 6, 1));
+            bookingFields.add(timingSlot);
+
+            // Catering Required
+            FormField cateringRequired = new FormField();
+            cateringRequired.setId("catering_required");
+            cateringRequired.setType("radio");
+            cateringRequired.setLabel("Catering Required?");
+            cateringRequired.setRequired(true);
+            cateringRequired.setOptions(Arrays.asList("Yes", "No"));
+            cateringRequired.setPosition(new GridPosition(6, 1, 6, 1));
+            bookingFields.add(cateringRequired);
+
+            // Decoration Required
+            FormField decorationRequired = new FormField();
+            decorationRequired.setId("decoration_required");
+            decorationRequired.setType("radio");
+            decorationRequired.setLabel("Decoration Required?");
+            decorationRequired.setRequired(true);
+            decorationRequired.setOptions(Arrays.asList("Yes", "No"));
+            decorationRequired.setPosition(new GridPosition(0, 2, 6, 1));
+            bookingFields.add(decorationRequired);
+
+            // Special Requests
+            FormField specialRequests = new FormField();
+            specialRequests.setId("special_requests");
+            specialRequests.setType("textarea");
+            specialRequests.setLabel("Special Requirements");
+            specialRequests.setPlaceholder("Parking arrangements, accessibility needs, equipment requirements, etc.");
+            specialRequests.setRequired(false);
+            ValidationRules requestsValidation = new ValidationRules();
+            requestsValidation.setMaxLength(1000);
+            specialRequests.setValidation(requestsValidation);
+            specialRequests.setPosition(new GridPosition(0, 3, 12, 2));
+            bookingFields.add(specialRequests);
+
+            bookingFormSchema.setFields(bookingFields);
+            hall.setBookingFormSchema(bookingFormSchema);
+
+            mongoTemplate.save(hall);
+
+            System.out.println("✅ Hall (Event Hall) category created successfully!");
+            System.out.println("   - Total Form Fields: " + fields.size());
+            System.out.println("   - Total Booking Form Fields: " + bookingFields.size());
+            System.out.println("=======================================================");
+        } else {
+            System.out.println("Hall category already exists. Skipping.");
         }
     }
 
@@ -407,6 +667,174 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("=======================================================");
         } else {
             System.out.println("Catering category already exists. Skipping category initialization.");
+        }
+    }
+
+    /**
+     * Initialize Floral Design category
+     * For floral designers and decorators
+     */
+    private void initializeFloralDesignCategory() {
+        Query query = new Query();
+        query.addCriteria(org.springframework.data.mongodb.core.query.Criteria.where("name").is("FloralDesign"));
+        long categoryCount = mongoTemplate.count(query, ItemType.class);
+
+        if (categoryCount == 0) {
+            System.out.println("=== Creating Floral Design category... ===");
+
+            ItemType floralDesign = new ItemType();
+            floralDesign.setName("FloralDesign");
+            floralDesign.setDisplayName("Floral Design");
+            floralDesign.setDescription("Professional floral design and decoration services for events");
+            floralDesign.setIcon("🌺");
+            floralDesign.setIsActive(true);
+            floralDesign.setCreatedOn(new Date());
+            floralDesign.setCreatedBy("system");
+            floralDesign.setLastModifiedOn(new Date());
+            floralDesign.setLastModifiedBy("system");
+
+            // Create form schema
+            FormSchema formSchema = new FormSchema();
+            formSchema.setVersion(1);
+            formSchema.setLayout(new LayoutConfig(12, 60));
+
+            List<FormField> fields = new ArrayList<>();
+
+            // Company Name
+            FormField companyName = new FormField();
+            companyName.setId("field_company_name");
+            companyName.setType("text");
+            companyName.setLabel("Name of Company");
+            companyName.setPlaceholder("Enter text...");
+            companyName.setRequired(true);
+            ValidationRules nameValidation = new ValidationRules();
+            nameValidation.setMinLength(3);
+            nameValidation.setMaxLength(100);
+            companyName.setValidation(nameValidation);
+            companyName.setPosition(new GridPosition(0, 0, 6, 1));
+            fields.add(companyName);
+
+            // Amount per square feet
+            FormField amountPerSqFt = new FormField();
+            amountPerSqFt.setId("field_amount_per_sqft");
+            amountPerSqFt.setType("number");
+            amountPerSqFt.setLabel("Amount per square feet");
+            amountPerSqFt.setPlaceholder("0");
+            amountPerSqFt.setRequired(true);
+            ValidationRules amountValidation = new ValidationRules();
+            amountValidation.setMin(0);
+            amountValidation.setMax(100000);
+            amountPerSqFt.setValidation(amountValidation);
+            amountPerSqFt.setPosition(new GridPosition(0, 1, 6, 1));
+            fields.add(amountPerSqFt);
+
+            // Event Timing
+            FormField eventTiming = new FormField();
+            eventTiming.setId("field_event_timing");
+            eventTiming.setType("timeRange");
+            eventTiming.setLabel("Event Timing");
+            eventTiming.setRequired(true);
+            ValidationRules timingValidation = new ValidationRules();
+            timingValidation.setMinDuration(60);
+            eventTiming.setValidation(timingValidation);
+            eventTiming.setPosition(new GridPosition(0, 3, 6, 1));
+            fields.add(eventTiming);
+
+            formSchema.setFields(fields);
+            floralDesign.setFormSchema(formSchema);
+
+            // Create booking form schema
+            FormSchema bookingFormSchema = new FormSchema();
+            bookingFormSchema.setVersion(1);
+            bookingFormSchema.setLayout(new LayoutConfig(12, 60));
+
+            List<FormField> bookingFields = new ArrayList<>();
+
+            // Coverage Area
+            FormField coverageArea = new FormField();
+            coverageArea.setId("coverage_area");
+            coverageArea.setType("select");
+            coverageArea.setLabel("Coverage Area");
+            coverageArea.setRequired(true);
+            coverageArea.setOptions(Arrays.asList("Small (1 table)", "Medium (2-3 tables)",
+                "Large (4-6 tables)", "Extra Large (7+ tables)", "Full Venue"));
+            coverageArea.setPosition(new GridPosition(0, 0, 6, 1));
+            bookingFields.add(coverageArea);
+
+            // Preferred Flowers
+            FormField flowerType = new FormField();
+            flowerType.setId("flower_type");
+            flowerType.setType("checkbox");
+            flowerType.setLabel("Preferred Flowers");
+            flowerType.setRequired(false);
+            flowerType.setOptions(Arrays.asList("Roses", "Lilies", "Orchids", "Tulips",
+                "Carnations", "Sunflowers", "Seasonal Mix"));
+            flowerType.setPosition(new GridPosition(6, 0, 6, 2));
+            bookingFields.add(flowerType);
+
+            // Color Scheme
+            FormField colorScheme = new FormField();
+            colorScheme.setId("color_scheme");
+            colorScheme.setType("checkbox");
+            colorScheme.setLabel("Color Scheme");
+            colorScheme.setRequired(true);
+            colorScheme.setOptions(Arrays.asList("Red", "Pink", "White", "Yellow",
+                "Purple", "Orange", "Mixed Colors"));
+            colorScheme.setPosition(new GridPosition(0, 1, 6, 2));
+            bookingFields.add(colorScheme);
+
+            // Arrangement Style
+            FormField arrangementStyle = new FormField();
+            arrangementStyle.setId("arrangement_style");
+            arrangementStyle.setType("select");
+            arrangementStyle.setLabel("Arrangement Style");
+            arrangementStyle.setRequired(true);
+            arrangementStyle.setOptions(Arrays.asList("Traditional", "Modern", "Rustic",
+                "Minimalist", "Luxurious", "Themed"));
+            arrangementStyle.setPosition(new GridPosition(0, 3, 6, 1));
+            bookingFields.add(arrangementStyle);
+
+            // Budget
+            FormField budget = new FormField();
+            budget.setId("budget");
+            budget.setType("number");
+            budget.setLabel("Budget (₹)");
+            budget.setPlaceholder("Enter your budget");
+            budget.setRequired(true);
+            ValidationRules budgetValidation = new ValidationRules();
+            budgetValidation.setMin(500);
+            budgetValidation.setMax(1000000);
+            budget.setValidation(budgetValidation);
+            budget.setPosition(new GridPosition(6, 3, 6, 1));
+            bookingFields.add(budget);
+
+            // Special Requests
+            FormField specialRequests = new FormField();
+            specialRequests.setId("special_requests");
+            specialRequests.setType("textarea");
+            specialRequests.setLabel("Special Requirements");
+            specialRequests.setPlaceholder("Any specific requirements, themes, or preferences...");
+            specialRequests.setRequired(false);
+            ValidationRules requestsValidation = new ValidationRules();
+            requestsValidation.setMaxLength(1000);
+            specialRequests.setValidation(requestsValidation);
+            specialRequests.setPosition(new GridPosition(0, 4, 12, 2));
+            bookingFields.add(specialRequests);
+
+            bookingFormSchema.setFields(bookingFields);
+            floralDesign.setBookingFormSchema(bookingFormSchema);
+
+            // Set primary name field
+            floralDesign.setPrimaryNameFieldId("field_company_name");
+
+            mongoTemplate.save(floralDesign);
+
+            System.out.println("✅ Floral Design category created successfully!");
+            System.out.println("   - Total Form Fields: " + fields.size());
+            System.out.println("   - Total Booking Form Fields: " + bookingFields.size());
+            System.out.println("=======================================================");
+        } else {
+            System.out.println("Floral Design category already exists. Skipping.");
         }
     }
 
