@@ -16,5 +16,6 @@ public class Pricing implements Serializable{
 	private double discount;
 	private double subTotal;
 	private double otherDiscount;
+	private String currency;
 
 }

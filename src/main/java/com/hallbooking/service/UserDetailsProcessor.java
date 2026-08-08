@@ -7,12 +7,16 @@ import com.hallbooking.model.Vendor;
 import com.hallbooking.utility.RandomPasswordGenerator;
 import org.passay.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component  // Disabled temporarily - requires MongoDB
 public class UserDetailsProcessor {
@@ -234,5 +238,72 @@ public class UserDetailsProcessor {
 	public void deleteAllUsers() {
 		userDetailsDao.deleteAllUsers();
 	}
+
+    public boolean updateUserProfile(User user) {
+        User existingUser = userDetailsDao.retrieveUser(user.getId());
+		if(existingUser == null){
+			new RuntimeException("User not found");
+		}
+		UserDetails details = existingUser.getDetails();
+
+        // Update non-sensitive fields immediately
+        details.setFirstName(user.getDetails().getFirstName());
+        details.setLastName(user.getDetails().getLastName());
+        details.setAddress(user.getDetails().getAddress());
+		existingUser.setDetails(details);
+
+        boolean emailChanged = !existingUser.getEmailId().equals(user.getEmailId());
+        if (emailChanged) {
+			boolean emailVerified = existingUser.getVerifiedEmailId().equals(user.getEmailId());
+			if(!emailVerified)
+				new RuntimeException("New Email not verified");
+			else 
+				existingUser.setEmailId(user.getEmailId());
+        }
+
+		boolean phoneChanged = !existingUser.getPhone().equals(user.getPhone());
+		if (phoneChanged) {
+			boolean phoneVerified = existingUser.getVerifiedPhone().equals(user.getPhone());
+			if(!phoneVerified)
+				new RuntimeException("New Phone Number not verified");
+			else 
+				existingUser.setPhone(user.getPhone());
+        }
+		return userDetailsDao.updateUser(user);
+    }
+
+	public boolean generateAndSendOtp(String accountId, String destination) {
+        return userDetailsDao.generateAndSendOtp(accountId, destination);
+    }
+
+    public boolean verifyEmailOtpAndUpdate(String accountId, String inputOtp, String email) {
+        boolean isValid = userDetailsDao.validateOtp(accountId, inputOtp);
+        if (isValid) {
+            User user = userDetailsDao.retrieveUser(accountId);
+			if(user == null){
+				new RuntimeException("User not found");
+			} else {
+				user.setVerifiedEmailId(email);
+				userDetailsDao.updateUser(user);
+				return true;
+			}
+        }
+        return false;
+    }
+
+	public boolean verifyPhoneOtpAndUpdate(String accountId, String inputOtp, String phone) {
+        boolean isValid = userDetailsDao.validateOtp(accountId, inputOtp);
+        if (isValid) {
+            User user = userDetailsDao.retrieveUser(accountId);
+			if(user == null){
+				new RuntimeException("User not found");
+			} else {
+				user.setVerifiedPhone(phone);
+				userDetailsDao.updateUser(user);
+				return true;
+			}
+        }
+        return false;
+    }
 
 }

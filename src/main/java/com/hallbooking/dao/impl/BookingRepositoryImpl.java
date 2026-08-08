@@ -18,6 +18,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -221,27 +222,39 @@ public class BookingRepositoryImpl implements BookingDao {
 	}
 	
 	@Override
-	public Page<Booking> retrieveUserBookedDetails(String userId, String status, Pageable pageable) {
+	public Page<Booking> retrieveUserBookedDetails(String userEmail, String status, Pageable pageable) {
 		Query query = new Query();
 
-		// Build criteria - filter by userId only if provided (null means get all bookings for admin)
+		// Build criteria - filter by userEmail only if provided (null means get all bookings for admin)
 		Criteria criteria = null;
 
-		if(userId != null && !userId.isEmpty()) {
-			criteria = Criteria.where(DBConstants.BOOKING_USER_ID).is(userId);
+		if (userEmail != null && !userEmail.isEmpty()) {
+			criteria = Criteria.where(DBConstants.BOOKING_USER_EMAIL).is(userEmail);
 		}
 
-		// Add status filter if provided
-		if(status != null && !status.isEmpty()) {
-			if(criteria != null) {
-				criteria = criteria.and(DBConstants.BOOKING_STATUS).is(status);
+		// Add status or special filters if provided
+		if (status != null && !status.isEmpty()) {
+			String normalizedStatus = status.trim();
+			if ("past".equalsIgnoreCase(normalizedStatus)) {
+				Criteria pastCriteria = Criteria.where(DBConstants.BOOKING_TO_DATE).lt(LocalDateTime.now());
+				criteria = (criteria != null) ? criteria.andOperator(pastCriteria) : pastCriteria;
+			} else if ("cancelled".equalsIgnoreCase(normalizedStatus)) {
+				Criteria cancelledCriteria = Criteria.where(DBConstants.BOOKING_STATUS).is("CANCELLED");
+				criteria = (criteria != null) ? criteria.andOperator(cancelledCriteria) : cancelledCriteria;
+			} else if ("upcoming".equalsIgnoreCase(normalizedStatus)) {
+				Criteria upcomingCriteria = new Criteria().andOperator(
+					Criteria.where(DBConstants.BOOKING_STATUS).nin("CANCELLED"),
+					Criteria.where(DBConstants.BOOKING_TO_DATE).gte(LocalDateTime.now())
+				);
+				criteria = (criteria != null) ? criteria.andOperator(upcomingCriteria) : upcomingCriteria;
 			} else {
-				criteria = Criteria.where(DBConstants.BOOKING_STATUS).is(status);
+				Criteria statusCriteria = Criteria.where(DBConstants.BOOKING_STATUS).is(normalizedStatus);
+				criteria = (criteria != null) ? criteria.andOperator(statusCriteria) : statusCriteria;
 			}
 		}
 
 		// Add criteria to query only if we have any filters
-		if(criteria != null) {
+		if (criteria != null) {
 			query.addCriteria(criteria);
 		}
 
@@ -256,7 +269,19 @@ public class BookingRepositoryImpl implements BookingDao {
 		return PageableExecutionUtils.getPage(bookingList, pageable, () -> count);
 	}
 	 
-	 @Override
+	@Override
+	public boolean hasUserBookedItem(String userId, String itemId){
+		Query query = new Query();
+		query = Query.query(
+				Criteria.where(DBConstants.BOOKING_USER_ID).is(userId)
+				.and(DBConstants.BOOKING_ITEM_ID).is(itemId));
+				
+		List<Booking> bookingList = mongoTemplate.find(query, Booking.class);
+		
+		return (bookingList != null && !bookingList.isEmpty());
+	} 
+	
+	@Override
 	 public Booking retrieveBookedDetailsBasedOn(String bookedId) {
 		 Query query = new Query();
 		 query = Query.query(

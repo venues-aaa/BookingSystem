@@ -14,6 +14,7 @@ import com.hallbooking.service.BookingService;
 import com.hallbooking.service.CouponService;
 import com.itextpdf.text.DocumentException;
 import jakarta.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -60,6 +61,7 @@ public class BookingController {
 
     /**
      * Method to create Booking and send the response back with booking id
+     * 
      * @param request
      * @param
      * @return
@@ -67,8 +69,11 @@ public class BookingController {
      */
     @PostMapping("/create")
     public ResponseEntity<BookingResponse> createBooking(
-            @Valid @RequestBody CreateBookingRequest request/*,
-            @AuthenticationPrincipal UserDetails userDetails*/) throws Exception {
+            @Valid @RequestBody CreateBookingRequest request/*
+                                                             * ,
+                                                             * 
+                                                             * @AuthenticationPrincipal UserDetails userDetails
+                                                             */) throws Exception {
 
         Booking bookingObj = new Booking();
         BookingMapper.toBooking(request, bookingObj);
@@ -92,11 +97,10 @@ public class BookingController {
                 System.out.println("===========================================");
 
                 Coupon coupon = couponService.validateAndGetCoupon(
-                    request.getCouponCode(),
-                    bookingObj.getUserId(),
-                    bookingObj.getItemId(),
-                    bookingDate
-                );
+                        request.getCouponCode(),
+                        bookingObj.getUserId(),
+                        bookingObj.getItemId(),
+                        bookingDate);
 
                 // Apply coupon discount (with null check)
                 Integer discountPercentage = coupon.getDiscountPercentage();
@@ -117,7 +121,7 @@ public class BookingController {
             }
         }
 
-        Booking booking = bookingService.createBooking(bookingObj, /*userDetails.getUsername()*/"aaa");
+        Booking booking = bookingService.createBooking(bookingObj, /* userDetails.getUsername() */"aaa");
 
         // Mark coupon as used if it was applied
         if (request.getCouponCode() != null && !request.getCouponCode().trim().isEmpty()) {
@@ -135,39 +139,51 @@ public class BookingController {
         return ResponseEntity.status(HttpStatus.CREATED).body(bookingResponse);
     }
 
-    /*@GetMapping("/my-bookings")
-    public ResponseEntity<Map<String, Object>> getMyBookings(
-            @AuthenticationPrincipal UserDetails userDetails,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String status) {
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Booking> bookings;
-
-        if (status != null) {
-            bookings = bookingService.retrieveUserBookedDetails(userDetails.getUsername(), status, pageable);
-        } else {
-            bookings = bookingService.retrieveUserBookedDetails(userDetails.getUsername(), null, pageable);
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("bookings", bookings.getContent());
-        response.put("currentPage", bookings.getNumber());
-        response.put("totalPages", bookings.getTotalPages());
-        response.put("totalElements", bookings.getTotalElements());
-
-        return ResponseEntity.ok(response);
-    }*/
+    /*
+     * @GetMapping("/my-bookings")
+     * public ResponseEntity<Map<String, Object>> getMyBookings(
+     * 
+     * @AuthenticationPrincipal UserDetails userDetails,
+     * 
+     * @RequestParam(defaultValue = "0") int page,
+     * 
+     * @RequestParam(defaultValue = "10") int size,
+     * 
+     * @RequestParam(required = false) String status) {
+     * 
+     * Pageable pageable = PageRequest.of(page, size,
+     * Sort.by("createdAt").descending());
+     * Page<Booking> bookings;
+     * 
+     * if (status != null) {
+     * bookings =
+     * bookingService.retrieveUserBookedDetails(userDetails.getUsername(), status,
+     * pageable);
+     * } else {
+     * bookings =
+     * bookingService.retrieveUserBookedDetails(userDetails.getUsername(), null,
+     * pageable);
+     * }
+     * 
+     * Map<String, Object> response = new HashMap<>();
+     * response.put("bookings", bookings.getContent());
+     * response.put("currentPage", bookings.getNumber());
+     * response.put("totalPages", bookings.getTotalPages());
+     * response.put("totalElements", bookings.getTotalElements());
+     * 
+     * return ResponseEntity.ok(response);
+     * }
+     */
 
     @GetMapping("/history")
     public ResponseEntity<Map<String, Object>> getBookingHistory(
             @AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(defaultValue = "") String status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<Booking> bookings = bookingService.retrieveUserBookedDetails(userDetails.getUsername(), null, pageable);
+        Page<Booking> bookings = bookingService.retrieveUserBookedDetails(userDetails.getUsername(), status, pageable);
 
         Map<String, Object> response = new HashMap<>();
         response.put("bookings", bookings.getContent());
@@ -180,6 +196,7 @@ public class BookingController {
 
     /**
      * Admin endpoint to get ALL bookings in the system
+     * 
      * @param page
      * @param size
      * @param status Optional filter by status (Confirmed, Cancelled, etc.)
@@ -204,7 +221,8 @@ public class BookingController {
     }
 
     @GetMapping("/bookingById/{bookingId}")
-    public ResponseEntity<BookingResponse> getBookingById(@PathVariable("bookingId") String bookingId) throws Exception {
+    public ResponseEntity<BookingResponse> getBookingById(@PathVariable("bookingId") String bookingId)
+            throws Exception {
 
         BookingResponse bookingResponse = new BookingResponse();
         Booking booking = bookingService.getBookingById(bookingId);
@@ -230,6 +248,7 @@ public class BookingController {
     /**
      * Method to retrieve Item availability details based on ItemId, type and date.
      * For listing in the Item List Page
+     * 
      * @param bookingObj
      * @return List<Booking>
      */
@@ -239,15 +258,18 @@ public class BookingController {
         List<Booking> availabilityDetailsList = bookingService.fetchAvailabilityBasedOn(bookingObj);
         Map<String, Object> response = new HashMap<>();
         response.put("availability", availabilityDetailsList);
-      /*  response.put("currentPage", bookings.getNumber());
-        response.put("totalPages", bookings.getTotalPages());
-        response.put("totalElements", bookings.getTotalElements());*/
+        /*
+         * response.put("currentPage", bookings.getNumber());
+         * response.put("totalPages", bookings.getTotalPages());
+         * response.put("totalElements", bookings.getTotalElements());
+         */
 
         return ResponseEntity.ok(response);
     }
 
     /**
      * Method to confirm availability of an item based on itemId and date
+     * 
      * @param bookingObj
      * @return Booking
      * @throws Exception
@@ -261,6 +283,7 @@ public class BookingController {
 
     /**
      * Method to check availability and suggest alternative slots
+     * 
      * @param request
      * @return availability status and suggested slots
      * @throws Exception
@@ -279,6 +302,7 @@ public class BookingController {
 
     /**
      * Method to insert the availability details for a month
+     * 
      * @param bookingObj
      * @return
      * @throws JsonProcessingException
@@ -286,18 +310,20 @@ public class BookingController {
      * @throws DocumentException
      * @throws FileNotFoundException
      */
-    //Check----
+    // Check----
     @PostMapping("/block/")
-    public ResponseEntity<?> blockBooking(@RequestBody Booking bookingObj) throws JsonProcessingException, ParseException, FileNotFoundException, DocumentException {
+    public ResponseEntity<?> blockBooking(@RequestBody Booking bookingObj)
+            throws JsonProcessingException, ParseException, FileNotFoundException, DocumentException {
 
-      //  String response = bookingService.blockBooking(bookingObj);
+        // String response = bookingService.blockBooking(bookingObj);
         ResponseModel responseModel = new ResponseModel();
-    //    responseModel.setResponseMsg(response);
+        // responseModel.setResponseMsg(response);
         return ResponseEntity.ok(responseModel);
     }
 
-   /**
+    /**
      * Method to update availability based on cancel/refund
+     * 
      * @param bookingObj
      * @return
      * @throws JsonProcessingException
@@ -312,6 +338,7 @@ public class BookingController {
 
     /**
      * Method to retrieve booked details for a user
+     * 
      * @param userId
      * @return List<Booking>
      */
@@ -334,8 +361,19 @@ public class BookingController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/user/hasBookedItem")
+    public ResponseEntity<Map<String, Object>> retrieveUserBookedItemDetails(
+            @RequestBody Booking bookingObj) {
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("hasBooked", bookingService.hasUserBookedItem(bookingObj.getUserId(), bookingObj.getItemId()));
+
+        return ResponseEntity.ok(response);
+    }
+
     /**
      * Method to retrieve booked details based on vendorId
+     * 
      * @param vendorId
      * @return List<Booking>
      */
@@ -345,37 +383,49 @@ public class BookingController {
         List<Booking> bookedDetails = bookingService.retrieveVendorBookedDetails(vendorId);
         Map<String, Object> response = new HashMap<>();
         response.put("availability", bookedDetails);
-      /*  response.put("currentPage", bookings.getNumber());
-        response.put("totalPages", bookings.getTotalPages());
-        response.put("totalElements", bookings.getTotalElements());*/
+        /*
+         * response.put("currentPage", bookings.getNumber());
+         * response.put("totalPages", bookings.getTotalPages());
+         * response.put("totalElements", bookings.getTotalElements());
+         */
         return ResponseEntity.ok(response);
     }
 
     /**
      * Method to retrieve booked details based on vendorId
+     * 
      * @param userId
      * @return List<Booking>
      */
-    /*@GetMapping("user/{userId}")
-    public ResponseEntity<Map<String, Object>> retrieveUserBookedDetails(@PathVariable("userId") String userId) {
-
-        List<Booking> bookedDetails = bookingProcessor.retrieveUserBookedDetails(userId);
-
-        return ResponseEntity.ok(bookedDetails);
-    }*/
+    /*
+     * @GetMapping("user/{userId}")
+     * public ResponseEntity<Map<String, Object>>
+     * retrieveUserBookedDetails(@PathVariable("userId") String userId) {
+     * 
+     * List<Booking> bookedDetails =
+     * bookingProcessor.retrieveUserBookedDetails(userId);
+     * 
+     * return ResponseEntity.ok(bookedDetails);
+     * }
+     */
 
     /**
      * Method to retrieve booked details based on vendorId
+     * 
      * @param bookedId
      * @return List<Booking>
      */
-    /*@GetMapping("/bookedDetails/{bookedId}")
-    public ResponseEntity<Map<String, Object>> retrieveBookedDetailsBasedOn(@PathVariable("bookedId") String bookedId) {
-
-        Booking bookedDetails = bookingService.retrieveBookedDetailsBasedOn(bookedId);
-
-        return ResponseEntity.ok(bookedDetails);
-    }*/
+    /*
+     * @GetMapping("/bookedDetails/{bookedId}")
+     * public ResponseEntity<Map<String, Object>>
+     * retrieveBookedDetailsBasedOn(@PathVariable("bookedId") String bookedId) {
+     * 
+     * Booking bookedDetails =
+     * bookingService.retrieveBookedDetailsBasedOn(bookedId);
+     * 
+     * return ResponseEntity.ok(bookedDetails);
+     * }
+     */
 
     @GetMapping("/genrateInvoice/{bookedId}")
     public ResponseEntity<?> generateInvoice(@PathVariable("bookedId") String bookedId) {
@@ -394,7 +444,6 @@ public class BookingController {
                 .body(resource);
     }
 
-
     @GetMapping("/notificationCount/{vendorId}")
     public ResponseEntity<Integer> getNotificationCountForVendor(@PathVariable String vendorId) {
         int notificationCount = bookingService.getNotificationCountForVendor(vendorId);
@@ -404,6 +453,7 @@ public class BookingController {
 
     /**
      * Method to retrieve booked details based on vendorId
+     * 
      * @param vendorId
      * @return List<Booking>
      */
@@ -417,11 +467,13 @@ public class BookingController {
 
     /**
      * Get offline payment bookings pending vendor confirmation
+     * 
      * @param vendorId
      * @return List<Booking>
      */
     @GetMapping("/vendor/{vendorId}/offline-pending")
-    public ResponseEntity<Map<String, Object>> getOfflineBookingsPendingConfirmation(@PathVariable("vendorId") String vendorId) {
+    public ResponseEntity<Map<String, Object>> getOfflineBookingsPendingConfirmation(
+            @PathVariable("vendorId") String vendorId) {
         List<Booking> bookings = bookingService.getOfflineBookingsPendingConfirmation(vendorId);
 
         Map<String, Object> response = new HashMap<>();
@@ -433,6 +485,7 @@ public class BookingController {
 
     /**
      * Vendor confirms offline payment booking
+     * 
      * @param bookingId
      * @param vendorId
      * @return ResponseEntity
@@ -461,6 +514,7 @@ public class BookingController {
 
     /**
      * Vendor cancels offline payment booking
+     * 
      * @param bookingId
      * @param vendorId
      * @param reason

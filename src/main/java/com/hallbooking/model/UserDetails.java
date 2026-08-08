@@ -14,7 +14,6 @@ public class UserDetails implements Serializable{
 	private String firstName;
 	private String lastName;
 	private String address;
-	private String[] contactNbr;
 	private String role;
 
 	public UserDetails(String firstName, String lastName) {

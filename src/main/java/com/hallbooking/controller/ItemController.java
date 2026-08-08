@@ -98,12 +98,13 @@ public class ItemController {
             @RequestBody Item item,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "createdOn") String sortBy) {
+            @RequestParam(defaultValue = "createdOn") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
 
         try {
             logger.info("Fetching items of type: {} (page: {}, size: {})", item.getType(), page, size);
 
-            Page<Item> itemsPage = itemService.fetchItems(item, page, size, sortBy);
+            Page<Item> itemsPage = itemService.fetchItems(item, page, size, sortBy,sortOrder);
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -162,6 +163,39 @@ public class ItemController {
     }
 
     /**
+     * Search items by type/place and availability for the requested date range.
+     */
+    @PostMapping("/search")
+    public ResponseEntity<Map<String, Object>> searchItems(
+            @RequestBody ItemSearchCriteria searchCriteria,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdOn") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortOrder) {
+        try {
+            logger.info("Searching available items with criteria: {}", searchCriteria);
+
+            Page<Item> itemsPage = itemService.searchAvailableItems(searchCriteria, page, size, sortBy, sortOrder);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("data", itemsPage.getContent());
+            response.put("currentPage", itemsPage.getNumber());
+            response.put("totalPages", itemsPage.getTotalPages());
+            response.put("totalElements", itemsPage.getTotalElements());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error searching items", e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Failed to search items: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    /**
      * Get single item details by ID
      *
      * GET /item/{itemId}
@@ -199,7 +233,7 @@ public class ItemController {
     }
 
     /**
-     * Update an existing item
+     * Replace an existing item
      *
      * PUT /item/{itemId}
      *
@@ -208,6 +242,49 @@ public class ItemController {
      * @return Updated item
      */
     @PutMapping("/{itemId}")
+    public ResponseEntity<Map<String, Object>> replaceItem(
+            @PathVariable String itemId,
+            @RequestBody Item item) {
+
+        try {
+            logger.info("Updating item: {}", itemId);
+
+            item.setId(itemId);
+            Item updatedItem = itemService.updateItem(item);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Item updated successfully");
+            response.put("data", updatedItem);
+
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            logger.error("Validation error updating item: {}", e.getMessage());
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+
+        } catch (Exception e) {
+            logger.error("Error updating item", e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Failed to update item: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    /**
+     * Replace an existing item
+     *
+     * PATCH /item/{itemId}
+     * 
+     * @param itemId
+     * @param item
+     * @return
+     */
+    @PatchMapping("/{itemId}")
     public ResponseEntity<Map<String, Object>> updateItem(
             @PathVariable String itemId,
             @RequestBody Item item) {
@@ -351,6 +428,68 @@ public class ItemController {
             Map<String, Object> errorResponse = new HashMap<>();
             errorResponse.put("success", false);
             errorResponse.put("message", "Failed to fetch vendor items: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    /**
+     * Get the top places grouped by item count.
+     *
+     * GET /item/top-places?limit=4
+     *
+     * @param limit Maximum number of places to return
+     * @return List of top places with item counts
+     */
+    @GetMapping("/top-places")
+    public ResponseEntity<Map<String, Object>> getTopPlaces(
+            @RequestParam(defaultValue = "4") int limit) {
+        try {
+            logger.info("Fetching top {} places by item count", limit);
+
+            List<Map<String, Object>> places = itemService.getTopPlacesByItemCount(limit);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("data", places);
+            response.put("total", places.size());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error fetching top places", e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Failed to fetch top places: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+    /**
+     * Get all available location names from items.
+     *
+     * GET /item/places
+     *
+     * @return List of unique available locations
+     */
+    @GetMapping("/places")
+    public ResponseEntity<Map<String, Object>> getAllPlaces() {
+        try {
+            logger.info("Fetching all available places from items");
+
+            List<String> places = itemService.getAllAvailablePlaces();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("data", places);
+            response.put("total", places.size());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Error fetching available places", e);
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Failed to fetch available places: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }

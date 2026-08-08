@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -70,11 +73,81 @@ public class UserController {
 		userDetailsProcessor.createUser(user);
 	}
 	
-	@PutMapping("/update")
+	@PatchMapping("/update")
 	@ResponseBody
-    public void updateUserDetails(@RequestBody User user) {
-		
+    public ResponseEntity<Map<String, Object>> updateUserDetails(@RequestBody User user) {
+		Map<String, Object> response = new HashMap<>();
+		try{
+			boolean isUpdated = userDetailsProcessor.updateUserProfile(user);
+			if (isUpdated) {
+				response.put("success", true);
+				return ResponseEntity.ok(response);
+			} else {
+				new RuntimeException("Error updating profile");
+				response.put("success", false);
+				return ResponseEntity.ok(response);
+			}
+		} catch (Exception e) {
+			logger.error("Error updating profile items", e);
+			response.put("success", false);
+			response.put("message", "Failed to update profile: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
 	}
+
+	@PostMapping("/verify-otp")
+    public ResponseEntity<Map<String, Object>> verifyOtpAndUpdateContact(@RequestBody Map<String, String> request) {
+		Map<String, Object> response = new HashMap<>();
+		String accountId = request.get("accountId");
+    	String otp = request.get("otp");
+		String email = request.get("email");
+		String phone = request.get("phone");
+		if(StringUtils.isBlank(accountId) || StringUtils.isBlank(accountId) || 
+			(StringUtils.isBlank(accountId) && StringUtils.isBlank(accountId)) ) {
+				response.put("success", false);
+				response.put("message", "Mandatory metadata missing");
+			return ResponseEntity.badRequest().body(response);
+		}
+        boolean isVerified = false;
+		if(StringUtils.isNotBlank(email))
+			isVerified = userDetailsProcessor.verifyEmailOtpAndUpdate(accountId, otp, email);
+		else
+			isVerified = userDetailsProcessor.verifyPhoneOtpAndUpdate(accountId, otp, phone);
+        if (isVerified) {
+			response.put("success", true);
+			response.put("message", "OTP verified successfully.");
+			return ResponseEntity.ok(response);
+        } else {
+			response.put("success", false);
+			response.put("message", "Invalid or Expired OTP");
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+	@PostMapping("/send-otp")
+    public ResponseEntity<Map<String, Object>> sendOtp(@RequestBody Map<String, String> request) {
+        String accountId = request.get("accountId");
+        String destination = request.get("destination");
+		Map<String, Object> response = new HashMap<>();
+
+        if (StringUtils.isBlank(accountId) || StringUtils.isBlank(destination)) {
+			response.put("success", false);
+			response.put("message", "Mandatory metadata missing");
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        boolean sent = userDetailsProcessor.generateAndSendOtp(accountId, destination);
+
+        if (sent) {
+            response.put("success", true);
+			response.put("message", "OTP Send successfully.");
+			return ResponseEntity.ok(response);
+        } else {
+			response.put("success", false);
+			response.put("message", "Could not send OTP");
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
 	
 	@PutMapping("/update/status")
 	@ResponseBody

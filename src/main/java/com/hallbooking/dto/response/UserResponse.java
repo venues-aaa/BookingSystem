@@ -16,6 +16,8 @@ public class UserResponse {
     private String email;
     private String firstName;
     private String lastName;
+    private String phone;
+    private String address;
     private String role;  // Changed from Role enum to String for flexibility
     private Boolean isActive;
     private String createdById;

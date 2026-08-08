@@ -102,17 +102,21 @@ public class BookingService {
         processPaymentWorkflow(bookingObj);
 
         // Fetch item details to populate itemName
-        if (bookingObj.getItemId() != null && bookingObj.getItemName() == null) {
+        if (bookingObj.getItemId() != null && (bookingObj.getItemName() == null || bookingObj.getDetails() == null || bookingObj.getDetails().getType() == null  || bookingObj.getDetails().getPlace() == null)) {
             try {
                 // Reuse the item variable we already fetched above
                 // Item item already declared at line 58
                 if (item != null) {
                     // Extract item name from various possible fields
                     String itemName = null;
+                    String itemLocation = null;
+                    String itemType = null;
 
                     // Try dynamicData first (new items)
                     if (item.getDynamicData() != null) {
                         itemName = (String) item.getDynamicData().get("name");
+                        itemLocation = (String) item.getDynamicData().get("place");
+                        itemType = (String) item.getDynamicData().get("type");
                         if (itemName == null) {
                             itemName = (String) item.getDynamicData().get("restaurant_name");
                         }
@@ -122,9 +126,23 @@ public class BookingService {
                     if (itemName == null && item.getDetails() != null) {
                         itemName = item.getDetails().getName();
                     }
+                    if (itemLocation == null && item.getDetails() != null) {
+                        itemLocation = item.getDetails().getPlace();
+                    }
 
                     if (itemName != null) {
                         bookingObj.setItemName(itemName);
+                    }
+                    if (itemLocation != null) {
+                        BookingDetails details = null;
+                        if(bookingObj.getDetails() == null){
+                            details = new BookingDetails();
+                        } else {
+                            details = bookingObj.getDetails();
+                        }
+                        details.setPlace(itemLocation);
+                        details.setType(itemType);
+                        bookingObj.setDetails(details);
                     }
                 }
             } catch (Exception e) {
@@ -261,8 +279,12 @@ public class BookingService {
                 .map(this::mapToBookingResponse);
     }*/
 
-    public Page<Booking> retrieveUserBookedDetails(String userId, String status, Pageable pageable) {
-        return bookingRepositoryImpl.retrieveUserBookedDetails(userId, status, pageable);
+    public Page<Booking> retrieveUserBookedDetails(String userEmail, String status, Pageable pageable) {
+        return bookingRepositoryImpl.retrieveUserBookedDetails(userEmail, status, pageable);
+    }
+
+    public boolean hasUserBookedItem(String userId, String itemId) {
+        return bookingRepositoryImpl.hasUserBookedItem(userId, itemId);
     }
 
     public List<Booking> retrieveVendorBookedDetails(String vendorId) {

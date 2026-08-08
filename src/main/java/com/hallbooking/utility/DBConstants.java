@@ -55,6 +55,7 @@ public class DBConstants {
 	public static String BOOKING_TO_DATE = "bookingToDate";
 	public static String BOOKING_VENDOR_ID = "vendorId";
 	public static String BOOKING_USER_ID = "userId";
+	public static String BOOKING_USER_EMAIL = "userEmail";
 	public static String BOOKING_ID = "id";
 	public static String BOOKING_STATUS = "status";
 	public static String BOOKING_LASTUPDATED_USER = "lastUpdateUserId";

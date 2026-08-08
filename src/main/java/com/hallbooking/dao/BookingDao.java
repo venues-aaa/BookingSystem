@@ -26,5 +26,7 @@ public interface BookingDao {
 	List<Booking> retrieveVendorBookedDetails(String vendorId);
 
 	List<Notification> getNotificationForVendor(String vendorId);
+
+	boolean hasUserBookedItem(String userId, String itemId);
 	
 }

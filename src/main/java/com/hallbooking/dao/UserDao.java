@@ -12,6 +12,8 @@ public interface UserDao {
 	public List<User> retrieveAllUsers();
 	
 	public String createUser(User user);
+
+	public boolean updateUser(User user);
 	
 	public User retrieveUser(String userId);
 	
@@ -34,6 +36,10 @@ public interface UserDao {
 	public void updateVendorAuthId(Vendor vendor);
 	
 	public Boolean validateVendorAuthId(Vendor vendor);
+
+	public boolean generateAndSendOtp(String accountId, String destination);
+
+	public boolean validateOtp(String accountId, String inputOtp);
 	
 	//---------
 	

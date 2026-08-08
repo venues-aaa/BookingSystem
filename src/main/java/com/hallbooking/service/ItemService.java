@@ -1,22 +1,34 @@
 package com.hallbooking.service;
 
+import com.hallbooking.model.Booking;
 import com.hallbooking.model.Item;
 import com.hallbooking.model.ItemSearchCriteria;
 import com.hallbooking.model.ItemType;
 import com.hallbooking.model.ValidationResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.bson.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.GroupOperation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ItemService - Generic service for all item types
@@ -111,7 +123,7 @@ public class ItemService {
      * @param sortBy Sort field name
      * @return Paginated list of items
      */
-    public Page<Item> fetchItems(Item item, int page, int size, String sortBy) {
+    public Page<Item> fetchItems(Item item, int page, int size, String sortBy,String sortOrder) {
         Query query = new Query();
 
         // Filter by type if provided
@@ -129,11 +141,16 @@ public class ItemService {
             query.addCriteria(Criteria.where("status").is(item.getStatus()));
         }
 
+        if(item.getPromotions() != null && item.getPromotions().isFeatured()) {
+            query.addCriteria(Criteria.where("promotions.featured").is(true));
+        }
+
         // Count total matching documents
         long total = mongoTemplate.count(query, Item.class);
 
         // Apply pagination and sorting
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, sortBy));
+        Sort.Direction direction = "desc".equalsIgnoreCase(sortOrder) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         query.with(pageable);
 
         // Execute query
@@ -156,22 +173,183 @@ public class ItemService {
     }
 
     /**
+     * Search items by type/place and availability for the requested date range.
+     */
+    public Page<Item> searchAvailableItems(ItemSearchCriteria criteria, int page, int size, String sortBy, String sortOrder) {
+        if (criteria == null) {
+            return PageableExecutionUtils.getPage(new ArrayList<>(), PageRequest.of(0, 10), () -> 0);
+        }
+
+        int safePage = Math.max(page, 0);
+        int safeSize = size > 0 ? size : 10;
+        Pageable pageable = PageRequest.of(safePage, safeSize);
+
+        LocalDateTime startDate = criteria.getStartDate();
+        LocalDateTime endDate = criteria.getEndDate();
+        if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
+            return PageableExecutionUtils.getPage(new ArrayList<>(), pageable, () -> 0);
+        }
+
+        Query query = buildSearchQuery(criteria);
+
+        Sort.Direction direction = "desc".equalsIgnoreCase(sortOrder) ? Sort.Direction.DESC : Sort.Direction.ASC;
+        query.with(Sort.by(direction, sortBy));
+
+        List<Item> matchingItems = mongoTemplate.find(query, Item.class);
+
+        if (startDate == null || endDate == null) {
+            return PageableExecutionUtils.getPage(matchingItems, pageable, () -> matchingItems.size());
+        }
+
+        List<Item> availableItems = new ArrayList<>();
+        for (Item item : matchingItems) {
+            if (item.getId() != null && isItemAvailable(item.getId(), startDate, endDate)) {
+                availableItems.add(item);
+            }
+        }
+
+        int fromIndex = Math.max(0, safePage * safeSize);
+        int toIndex = Math.min(fromIndex + safeSize, availableItems.size());
+        if (fromIndex >= availableItems.size()) {
+            return PageableExecutionUtils.getPage(new ArrayList<>(), pageable, () -> availableItems.size());
+        }
+
+        return PageableExecutionUtils.getPage(availableItems.subList(fromIndex, toIndex), pageable, () -> availableItems.size());
+    }
+
+    /**
      * Build MongoDB query from search criteria
      */
     private Query buildSearchQuery(ItemSearchCriteria criteria) {
         Query query = new Query();
+        List<Criteria> andCriteriaList = new ArrayList<>();
 
         if (criteria.getType() != null && !criteria.getType().trim().isEmpty()) {
-            query.addCriteria(Criteria.where("type").is(criteria.getType()));
+            andCriteriaList.add(Criteria.where("type").is(criteria.getType().trim()));
         }
 
         if (criteria.getPlaceId() != null && !criteria.getPlaceId().trim().isEmpty()) {
-            query.addCriteria(Criteria.where("placeId").is(criteria.getPlaceId()));
+            andCriteriaList.add(Criteria.where("placeId").is(criteria.getPlaceId().trim()));
         }
 
-        // Add more criteria as needed based on ItemSearchCriteria fields
+        if (criteria.getPlace() != null && !criteria.getPlace().trim().isEmpty()) {
+            andCriteriaList.add(new Criteria().orOperator(
+                Criteria.where("details.place").is(criteria.getPlace().trim()),
+                Criteria.where("placeId").is(criteria.getPlace().trim())
+            ));
+        }
+
+        if (criteria.getRatings() != null && !criteria.getRatings().isEmpty()) {
+            List<Criteria> ratingCriteriaList = new ArrayList<>();
+            for (Double rating : criteria.getRatings()) {
+                if (rating != null) {
+                    ratingCriteriaList.add(Criteria.where("details.rating").gte(rating));
+                }
+            }
+            if (!ratingCriteriaList.isEmpty()) {
+                andCriteriaList.add(new Criteria().orOperator(ratingCriteriaList.toArray(new Criteria[0])));
+            }
+        }
+
+        if (criteria.getPriceRanges() != null && !criteria.getPriceRanges().isEmpty()) {
+            List<Criteria> priceCriteriaList = new ArrayList<>();
+            for (String priceRange : criteria.getPriceRanges()) {
+                Double[] bounds = parsePriceRange(priceRange);
+                if (bounds[0] == null && bounds[1] == null) {
+                    continue;
+                }
+
+                Criteria priceCriteria;
+                if (bounds[0] != null && bounds[1] != null) {
+                    priceCriteria = Criteria.where("price.baseRate").gte(bounds[0]).lte(bounds[1]);
+                } else if (bounds[0] != null) {
+                    priceCriteria = Criteria.where("price.baseRate").gte(bounds[0]);
+                } else {
+                    priceCriteria = Criteria.where("price.baseRate").lte(bounds[1]);
+                }
+                priceCriteriaList.add(priceCriteria);
+            }
+            if (!priceCriteriaList.isEmpty()) {
+                andCriteriaList.add(new Criteria().orOperator(priceCriteriaList.toArray(new Criteria[0])));
+            }
+        }
+
+        if (criteria.getCapacities() != null && !criteria.getCapacities().isEmpty()) {
+            List<Criteria> capacityCriteriaList = new ArrayList<>();
+            for (Integer capacity : criteria.getCapacities()) {
+                if (capacity == null) {
+                    continue;
+                }
+                capacityCriteriaList.add(new Criteria().orOperator(
+                    Criteria.where("dynamicData.capacity").lte(capacity),
+                    Criteria.where("dynamicData.maximum_capacity").lte(capacity),
+                    Criteria.where("dynamicData.field_hall_capacity").lte(capacity),
+                    Criteria.where("dynamicData.seating_capacity").lte(capacity),
+                    Criteria.where("details.capacity").lte(capacity)
+                ));
+            }
+            if (!capacityCriteriaList.isEmpty()) {
+                andCriteriaList.add(new Criteria().orOperator(capacityCriteriaList.toArray(new Criteria[0])));
+            }
+        }
+
+        if (!andCriteriaList.isEmpty()) {
+            query.addCriteria(new Criteria().andOperator(andCriteriaList.toArray(new Criteria[0])));
+        }
 
         return query;
+    }
+
+    static Double[] parsePriceRange(String priceRange) {
+        if (priceRange == null || priceRange.trim().isEmpty()) {
+            return new Double[]{null, null};
+        }
+
+        String normalized = priceRange.trim().toLowerCase();
+        if (normalized.startsWith("below") || normalized.startsWith("less than") || normalized.startsWith("<")) {
+            String value = normalized.replace("below", "")
+                .replace("less than", "")
+                .replace("<", "")
+                .trim();
+            return new Double[]{null, parseDoubleValue(value)};
+        }
+
+        if (normalized.startsWith("above") || normalized.startsWith("more than") || normalized.startsWith(">")) {
+            String value = normalized.replace("above", "")
+                .replace("more than", "")
+                .replace(">", "")
+                .trim();
+            return new Double[]{parseDoubleValue(value), null};
+        }
+
+        String[] bounds = normalized.split("\\s*(to|or|-|–|—)\\s*");
+        if (bounds.length == 2) {
+            return new Double[]{parseDoubleValue(bounds[0].trim()), parseDoubleValue(bounds[1].trim())};
+        }
+
+        return new Double[]{null, null};
+    }
+
+    private static Double parseDoubleValue(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return Double.parseDouble(value.replaceAll("[^0-9.-]", ""));
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    private boolean isItemAvailable(String itemId, LocalDateTime startDate, LocalDateTime endDate) {
+        Query bookingQuery = new Query();
+        bookingQuery.addCriteria(Criteria.where("itemId").is(itemId));
+        bookingQuery.addCriteria(Criteria.where("bookingFromDate").lt(endDate));
+        bookingQuery.addCriteria(Criteria.where("bookingToDate").gt(startDate));
+        bookingQuery.addCriteria(Criteria.where("status").nin("Cancelled", "CANCELLED", "INACTIVE", "inactive"));
+
+        List<Booking> overlappingBookings = mongoTemplate.find(bookingQuery, Booking.class);
+        return overlappingBookings.isEmpty();
     }
 
     /**
@@ -258,6 +436,9 @@ public class ItemService {
         }
         if (item.getDetails() == null) {
             item.setDetails(existingItem.getDetails());
+        }
+        if (item.getPromotions() == null) {
+            item.setPromotions(existingItem.getPromotions());
         }
 
         // Preserve bundle-related fields if not provided
@@ -354,6 +535,75 @@ public class ItemService {
         }
 
         return mongoTemplate.find(query, Item.class);
+    }
+
+    /**
+     * Get the top places by item count.
+     *
+     * @param limit maximum number of places to return
+     * @return List of place-count maps, sorted by count descending
+     */
+    public List<Map<String, Object>> getTopPlacesByItemCount(int limit) {
+        MatchOperation matchValidPlace = Aggregation.match(
+            Criteria.where("details.place").exists(true).ne("\"").ne(null)
+        );
+        GroupOperation groupByPlace = Aggregation.group("details.place").count().as("count");
+        SortOperation sortByCountDesc = Aggregation.sort(Sort.Direction.DESC, "count");
+        LimitOperation limitOperation = Aggregation.limit(limit);
+
+        Aggregation aggregation = Aggregation.newAggregation(
+            matchValidPlace,
+            groupByPlace,
+            sortByCountDesc,
+            limitOperation
+        );
+
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, Item.class, Document.class);
+
+        List<Map<String, Object>> places = new ArrayList<>();
+        for (Document doc : results) {
+            Object id = doc.get("_id");
+            Object countValue = doc.get("count");
+            if (id != null && countValue instanceof Number) {
+                Map<String, Object> placeGroup = new HashMap<>();
+                placeGroup.put("place", id.toString());
+                placeGroup.put("count", ((Number) countValue).intValue());
+                places.add(placeGroup);
+            }
+        }
+
+        return places;
+    }
+
+    /**
+     * Get all available locations from items.
+     *
+     * @return List of unique place names
+     */
+    public List<String> getAllAvailablePlaces() {
+        MatchOperation matchValidPlace = Aggregation.match(
+            Criteria.where("details.place").exists(true).ne("\"").ne(null)
+        );
+        GroupOperation groupByPlace = Aggregation.group("details.place");
+        SortOperation sortByPlace = Aggregation.sort(Sort.Direction.ASC, "_id");
+
+        Aggregation aggregation = Aggregation.newAggregation(
+            matchValidPlace,
+            groupByPlace,
+            sortByPlace
+        );
+
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, Item.class, Document.class);
+
+        List<String> places = new ArrayList<>();
+        for (Document doc : results) {
+            Object id = doc.get("_id");
+            if (id != null) {
+                places.add(id.toString());
+            }
+        }
+
+        return places;
     }
 
     /**

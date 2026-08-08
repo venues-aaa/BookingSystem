@@ -12,7 +12,8 @@ import java.util.Date;
  * ItemType - Represents a category with its dynamic form schema
  *
  * This model has been extended to support the dynamic form builder feature.
- * Admin can design custom forms for each category (Hall, Catering, Decoration, etc.)
+ * Admin can design custom forms for each category (Hall, Catering, Decoration,
+ * etc.)
  *
  * @author Hall Booking System
  * @version 2.0 - Extended with FormSchema support
@@ -58,21 +59,26 @@ public class ItemType implements Serializable {
 
 	/**
 	 * The dynamic form schema designed by admin for BOOKING (Customer side)
-	 * Contains all field definitions and layout configuration for the booking experience
+	 * Contains all field definitions and layout configuration for the booking
+	 * experience
 	 * Used when customers book items in this category
 	 *
-	 * If null, the system falls back to default booking form (date, time, attendees)
+	 * If null, the system falls back to default booking form (date, time,
+	 * attendees)
 	 */
 	private FormSchema bookingFormSchema;
 
 	/**
-	 * Primary name field ID - Specifies which field in formSchema should be used as the item's display name
+	 * Primary name field ID - Specifies which field in formSchema should be used as
+	 * the item's display name
 	 * Example: "name", "restaurant_name", "field_hall_name", "service_name"
 	 *
-	 * This eliminates the need for code to guess which field contains the item name.
+	 * This eliminates the need for code to guess which field contains the item
+	 * name.
 	 * Admin sets this when creating/editing the category.
 	 *
-	 * If null, system falls back to intelligent field detection (checks common name patterns)
+	 * If null, system falls back to intelligent field detection (checks common name
+	 * patterns)
 	 */
 	private String primaryNameFieldId;
 
@@ -101,4 +107,16 @@ public class ItemType implements Serializable {
 	 * User who last modified this category
 	 */
 	private String lastModifiedBy;
+
+	/**
+	 * type of the category (e.g., "hall", "catering", "decoration", "photography",
+	 * etc.)
+	 * This is used for filtering and categorization in the system.
+	 */
+	private String type;
+
+	/**
+	 * Image to depict item type visually
+	 */
+	private String posterImage;
 }

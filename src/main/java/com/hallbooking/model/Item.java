@@ -89,6 +89,11 @@ public class Item implements Serializable{
 	private FilterDetails filter;
 
 	/**
+     * Promotion / featured info
+     */
+	private Featured promotions;
+
+	/**
 	 * Customer reviews
 	 */
 	private List<ItemReviews> reviews;
@@ -152,4 +157,5 @@ public class Item implements Serializable{
 	 * User who last updated this item
 	 */
  	private String lastUpdatedBy;
+	
 }

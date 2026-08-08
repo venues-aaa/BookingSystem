@@ -15,7 +15,7 @@ public class ItemReviews implements Serializable{
 	private String userName;
 	private double rating;
 	private String heading;
-	private String comments;
+	private String comment;
 	private Date date;
 	private String status;
 

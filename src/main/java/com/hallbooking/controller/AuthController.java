@@ -11,16 +11,20 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
+import java.time.Duration;
 import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * AuthController - JWT-based authentication endpoints
@@ -52,32 +56,34 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             // Find user by email (support both email and usernameOrEmail fields)
-            String email = loginRequest.getEmail() != null ? loginRequest.getEmail() : loginRequest.getUsernameOrEmail();
+            String email = loginRequest.getEmail() != null ? loginRequest.getEmail()
+                    : loginRequest.getUsernameOrEmail();
             Query query = Query.query(Criteria.where("emailId").is(email));
             User user = mongoTemplate.findOne(query, User.class);
 
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponse("Invalid email or password"));
+                        .body(new ErrorResponse("Invalid email or password"));
             }
 
             if (!user.getIsActive()) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponse("Account is inactive"));
+                        .body(new ErrorResponse("Account is inactive"));
             }
+
+            Map<String, String> claims = new HashMap<>();
+            claims.put("user", user.getId());
 
             // Authenticate
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    email,
-                    loginRequest.getPassword()
-                )
-            );
+                    new UsernamePasswordAuthenticationToken(
+                            email,
+                            loginRequest.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // Generate JWT token
-            String jwt = jwtTokenProvider.generateToken(authentication);
+            String jwt = jwtTokenProvider.generateToken(authentication, claims);
 
             // Update last login
             user.setLastLoginOn(new Date());
@@ -90,13 +96,25 @@ public class AuthController {
             userResponse.setFirstName(user.getDetails().getFirstName());
             userResponse.setLastName(user.getDetails().getLastName());
             userResponse.setRole(user.getDetails().getRole());
+            userResponse.setAddress(user.getDetails().getAddress());
+            userResponse.setPhone(user.getPhone());
+
+            ResponseCookie cookie = ResponseCookie.from("authToken", jwt)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(Duration.ofDays(1))
+                .sameSite("Lax")
+                .build();
 
             JwtResponse jwtResponse = new JwtResponse(jwt, userResponse);
 
-            return ResponseEntity.ok(jwtResponse);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(jwtResponse);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorResponse("Invalid email or password"));
+                    .body(new ErrorResponse("Invalid email or password"));
         }
     }
 
@@ -107,7 +125,7 @@ public class AuthController {
     public ResponseEntity<?> getCurrentUser(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorResponse("Not authenticated"));
+                    .body(new ErrorResponse("Not authenticated"));
         }
 
         String email = authentication.getName();
@@ -116,7 +134,7 @@ public class AuthController {
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponse("User not found"));
+                    .body(new ErrorResponse("User not found"));
         }
 
         UserResponse userResponse = new UserResponse();
@@ -139,7 +157,7 @@ public class AuthController {
             Query query = Query.query(Criteria.where("emailId").is(user.getEmailId()));
             if (mongoTemplate.exists(query, User.class)) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorResponse("Email already registered"));
+                        .body(new ErrorResponse("Email already registered"));
             }
 
             // Hash password
@@ -159,10 +177,10 @@ public class AuthController {
             mongoTemplate.save(user);
 
             return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new SuccessResponse("User registered successfully"));
+                    .body(new SuccessResponse("User registered successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse("Registration failed: " + e.getMessage()));
+                    .body(new ErrorResponse("Registration failed: " + e.getMessage()));
         }
     }
 
